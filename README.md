@@ -1,11 +1,8 @@
-
 # Primer Color Tool
 
 A tool for creating cohesive and consistent color scales
 
 ## Run locally
-
-
 
 ```bash
 # Clone the project
@@ -20,5 +17,3 @@ yarn
 # Start the development server
 yarn start
 ```
-
-  
