@@ -13,7 +13,7 @@ export const HStack = styled.div<{ spacing?: number | string }>`
 export const VStack = styled.div<{ spacing?: number | string }>`
   display: grid;
   grid-auto-flow: row;
-  grid-auto-columns: max-content;
+  grid-auto-rows: max-content;
   gap: ${props => px(props.spacing)};
   align-items: center;
 `;

@@ -1,6 +1,7 @@
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import React from "react";
 import { Button } from "../components/button";
+import { ImportScales } from "../components/import-scales";
 import { Input } from "../components/input";
 import { HStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
@@ -40,23 +41,31 @@ export function Palette({
             onChange={event =>
               send({
                 type: "CHANGE_PALETTE_NAME",
-                paletteId: palette.id,
+                paletteId,
                 name: event.target.value,
               })
             }
           />
         </HStack>
-        <Button
-          onClick={() => {
-            send({ type: "DELETE_PALETTE", paletteId: palette.id });
+        <HStack spacing={8}>
+          <ImportScales
+            onImport={(scales, replace) =>
+              send({ type: "IMPORT_SCALES", paletteId, scales, replace })
+            }
+          />
+          <Button
+            onClick={() => {
+              send({ type: "DELETE_PALETTE", paletteId });
 
-            // Navigate to home page after deleting a palette
-            navigate("/");
-          }}
-        >
-          Delete palette
-        </Button>
+              // Navigate to home page after deleting a palette
+              navigate("/");
+            }}
+          >
+            Delete palette
+          </Button>
+        </HStack>
       </header>
+      <pre>{JSON.stringify(palette, null, 2)}</pre>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { useInterpret, useService } from "@xstate/react";
 import React from "react";
 import { v4 as uniqueId } from "uuid";
 import { interpret, Machine } from "xstate";
-import { Palette } from "./types";
+import { Palette, Scale } from "./types";
 
 const GLOBAL_STATE_KEY = "global_state";
 
@@ -14,7 +14,13 @@ type MachineContext = {
 type MachineEvent =
   | { type: "CREATE_PALETTE" }
   | { type: "DELETE_PALETTE"; paletteId: string }
-  | { type: "CHANGE_PALETTE_NAME"; paletteId: string; name: string };
+  | { type: "CHANGE_PALETTE_NAME"; paletteId: string; name: string }
+  | {
+      type: "IMPORT_SCALES";
+      paletteId: string;
+      scales: Record<string, Scale>;
+      replace: boolean;
+    };
 
 const machine = Machine<MachineContext, MachineEvent>({
   id: "global-state",
@@ -28,6 +34,7 @@ const machine = Machine<MachineContext, MachineEvent>({
         context.palettes[paletteId] = {
           id: paletteId,
           name: "Untitled",
+          scales: {},
         };
       }),
     },
@@ -39,6 +46,15 @@ const machine = Machine<MachineContext, MachineEvent>({
     CHANGE_PALETTE_NAME: {
       actions: assign((context, event) => {
         context.palettes[event.paletteId].name = event.name;
+      }),
+    },
+    IMPORT_SCALES: {
+      actions: assign((context, event) => {
+        if (event.replace) {
+          context.palettes[event.paletteId].scales = event.scales;
+        } else {
+          Object.assign(context.palettes[event.paletteId].scales, event.scales);
+        }
       }),
     },
   },
