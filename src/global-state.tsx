@@ -1,6 +1,8 @@
+import { assign } from "@xstate/immer";
 import { useInterpret, useService } from "@xstate/react";
 import React from "react";
 import { interpret, Machine } from "xstate";
+import { v4 as uniqueId } from "uuid";
 import { Palette } from "./types";
 
 const GLOBAL_STATE_KEY = "global_state";
@@ -9,12 +11,23 @@ type MachineContext = {
   palettes: Record<string, Palette>;
 };
 
-type MachineEvent = { type: "CREATED_PALETTE" };
+type MachineEvent = { type: "CREATE_PALETTE" };
 
 const machine = Machine<MachineContext, MachineEvent>({
   id: "global-state",
   context: {
     palettes: {},
+  },
+  on: {
+    CREATE_PALETTE: {
+      actions: assign(context => {
+        const paletteId = uniqueId();
+        context.palettes[paletteId] = {
+          id: paletteId,
+          name: "Untitled",
+        };
+      }),
+    },
   },
 });
 
