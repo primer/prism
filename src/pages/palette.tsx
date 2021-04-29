@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "../components/button";
 import { ImportScales } from "../components/import-scales";
 import { Input } from "../components/input";
-import { HStack } from "../components/stack";
+import { HStack, VStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
 
 export function Palette({
@@ -14,7 +14,7 @@ export function Palette({
 
   if (!palette) {
     return (
-      <div>
+      <div style={{ padding: 16 }}>
         <p>Palette not found</p>
         <Link to="/">Go home</Link>
       </div>
@@ -22,9 +22,18 @@ export function Palette({
   }
 
   return (
-    <div>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "300px 1fr",
+        gridTemplateRows: "auto 1fr",
+        gridTemplateAreas: '"header header" "sidebar main"',
+        height: "100vh",
+      }}
+    >
       <header
         style={{
+          gridArea: "header",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -65,7 +74,17 @@ export function Palette({
           </Button>
         </HStack>
       </header>
-      <pre>{JSON.stringify(palette, null, 2)}</pre>
+      <div style={{ gridArea: "sidebar", overflow: "auto", padding: 16 }}>
+        <span>Scales</span>
+        <VStack>
+          {Object.values(palette.scales).map(scale => (
+            <Link key={scale.id} to={`scale/${scale.id}`}>
+              <span style={{ fontSize: 14 }}>{scale.name}</span>
+            </Link>
+          ))}
+        </VStack>
+      </div>
+      <main style={{ gridArea: "main", overflow: "auto" }}></main>
     </div>
   );
 }
