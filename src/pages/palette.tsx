@@ -75,13 +75,15 @@ export function Palette({
         </HStack>
       </header>
       <div style={{ gridArea: "sidebar", overflow: "auto", padding: 16 }}>
-        <span>Scales</span>
-        <VStack>
-          {Object.values(palette.scales).map(scale => (
-            <Link key={scale.id} to={`scale/${scale.id}`}>
-              <span style={{ fontSize: 14 }}>{scale.name}</span>
-            </Link>
-          ))}
+        <VStack spacing={8}>
+          <span>Scales</span>
+          <VStack>
+            {Object.values(palette.scales).map(scale => (
+              <div key={scale.id}>
+                <span style={{ fontSize: 14 }}>{scale.name}</span>
+              </div>
+            ))}
+          </VStack>
         </VStack>
       </div>
       <main style={{ gridArea: "main", overflow: "auto" }}></main>
