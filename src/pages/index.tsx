@@ -1,5 +1,6 @@
 import { Link, RouteComponentProps } from "@reach/router";
 import React from "react";
+import { Button } from "../components/button";
 import { useGlobalState } from "../global-state";
 
 export function Index(props: RouteComponentProps) {
@@ -13,7 +14,7 @@ export function Index(props: RouteComponentProps) {
           </li>
         ))}
       </ul>
-      <button onClick={() => send("CREATE_PALETTE")}>Create palette</button>
+      <Button onClick={() => send("CREATE_PALETTE")}>Create palette</Button>
     </div>
   );
 }

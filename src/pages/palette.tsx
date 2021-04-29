@@ -1,5 +1,8 @@
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import React from "react";
+import { Button } from "../components/button";
+import { Input } from "../components/input";
+import { HStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
 
 export function Palette({
@@ -25,22 +28,25 @@ export function Palette({
           alignItems: "center",
           justifyContent: "space-between",
           padding: 16,
-          borderBottom: "1px solid lightgray",
+          borderBottom: "1px solid gainsboro",
         }}
       >
-        <input
-          type="text"
-          aria-label="Palette name"
-          value={palette.name}
-          onChange={event =>
-            send({
-              type: "CHANGE_PALETTE_NAME",
-              paletteId: palette.id,
-              name: event.target.value,
-            })
-          }
-        />
-        <button
+        <HStack spacing={16}>
+          <Link to="/">Home</Link>
+          <Input
+            type="text"
+            aria-label="Palette name"
+            value={palette.name}
+            onChange={event =>
+              send({
+                type: "CHANGE_PALETTE_NAME",
+                paletteId: palette.id,
+                name: event.target.value,
+              })
+            }
+          />
+        </HStack>
+        <Button
           onClick={() => {
             send({ type: "DELETE_PALETTE", paletteId: palette.id });
 
@@ -49,7 +55,7 @@ export function Palette({
           }}
         >
           Delete palette
-        </button>
+        </Button>
       </header>
     </div>
   );
