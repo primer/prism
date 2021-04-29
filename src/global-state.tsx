@@ -13,7 +13,8 @@ type MachineContext = {
 
 type MachineEvent =
   | { type: "CREATE_PALETTE" }
-  | { type: "DELETE_PALETTE"; paletteId: string };
+  | { type: "DELETE_PALETTE"; paletteId: string }
+  | { type: "CHANGE_PALETTE_NAME"; paletteId: string; name: string };
 
 const machine = Machine<MachineContext, MachineEvent>({
   id: "global-state",
@@ -33,6 +34,11 @@ const machine = Machine<MachineContext, MachineEvent>({
     DELETE_PALETTE: {
       actions: assign((context, event) => {
         delete context.palettes[event.paletteId];
+      }),
+    },
+    CHANGE_PALETTE_NAME: {
+      actions: assign((context, event) => {
+        context.palettes[event.paletteId].name = event.name;
       }),
     },
   },

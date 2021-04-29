@@ -19,17 +19,38 @@ export function Palette({
 
   return (
     <div>
-      <span>{palette.name}</span>
-      <button
-        onClick={() => {
-          send({ type: "DELETE_PALETTE", paletteId: palette.id });
-
-          // Navigate to home page after deleting a palette
-          navigate("/");
+      <header
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: 16,
+          borderBottom: "1px solid lightgray",
         }}
       >
-        Delete palette
-      </button>
+        <input
+          type="text"
+          aria-label="Palette name"
+          value={palette.name}
+          onChange={event =>
+            send({
+              type: "CHANGE_PALETTE_NAME",
+              paletteId: palette.id,
+              name: event.target.value,
+            })
+          }
+        />
+        <button
+          onClick={() => {
+            send({ type: "DELETE_PALETTE", paletteId: palette.id });
+
+            // Navigate to home page after deleting a palette
+            navigate("/");
+          }}
+        >
+          Delete palette
+        </button>
+      </header>
     </div>
   );
 }
