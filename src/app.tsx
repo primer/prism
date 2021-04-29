@@ -1,5 +1,10 @@
 import React from "react";
+import { GlobalStateProvider } from "./global-state";
 
 export function App() {
-  return <div>Hello world</div>;
+  return (
+    <GlobalStateProvider>
+      <div>Hello world</div>
+    </GlobalStateProvider>
+  );
 }
