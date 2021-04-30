@@ -8,6 +8,7 @@ import { ImportScales } from "../components/import-scales";
 import { Input } from "../components/input";
 import { HStack, VStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
+import { colorToHex } from "../utils";
 
 const Wrapper = styled.div<{ backgroundColor: string }>`
   --color-text: ${props => readableColor(props.backgroundColor)};
@@ -130,11 +131,32 @@ export function Palette({
                   textDecoration: "none",
                 }}
               >
-                <span>{scale.name}</span>
+                <VStack spacing={4}>
+                  <span>{scale.name}</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      height: 24,
+                    }}
+                  >
+                    {scale.colors.map(color => (
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor: colorToHex(color),
+                        }}
+                      />
+                    ))}
+                  </div>
+                </VStack>
               </Link>
             ))}
           </VStack>
-          <Button onClick={() => send({ type: "CREATE_SCALE", paletteId })}>
+          <Button
+            style={{ marginTop: 16 }}
+            onClick={() => send({ type: "CREATE_SCALE", paletteId })}
+          >
             Add scale
           </Button>
         </VStack>
