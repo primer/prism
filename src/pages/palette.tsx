@@ -1,6 +1,7 @@
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import React from "react";
 import { Button } from "../components/button";
+import { ExportScales } from "../components/export-scales";
 import { ImportScales } from "../components/import-scales";
 import { Input } from "../components/input";
 import { HStack, VStack } from "../components/stack";
@@ -62,6 +63,7 @@ export function Palette({
               send({ type: "IMPORT_SCALES", paletteId, scales, replace })
             }
           />
+          <ExportScales palette={palette} />
           <Button
             onClick={() => {
               send({ type: "DELETE_PALETTE", paletteId });

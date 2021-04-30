@@ -19,6 +19,7 @@
     "@xstate/immer": "^0.2.0",
     "@xstate/react": "^1.3.2",
     "color2k": "^1.2.4",
+    "copy-to-clipboard": "^3.3.1",
     "hsluv": "^0.1.0",
     "lodash-es": "^4.17.21",
     "react": "^17.0.2",

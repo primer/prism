@@ -11,4 +11,8 @@ export const Button = styled.button`
   border: 1px solid gray;
   border-radius: 3px;
   appearance: none;
+
+  &:active {
+    background-color: gray;
+  }
 `;

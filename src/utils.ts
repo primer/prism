@@ -8,3 +8,7 @@ export function hexToColor(hex: string): Color {
     .map(value => Math.round(value * 100) / 100);
   return { hue, saturation, lightness };
 }
+
+export function colorToHex(color: Color): string {
+  return hsluv.hsluvToHex([color.hue, color.saturation, color.lightness]);
+}
