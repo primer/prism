@@ -1,4 +1,5 @@
 import copy from "copy-to-clipboard";
+import { camelCase } from "lodash-es";
 import React from "react";
 import { Palette } from "../types";
 import { colorToHex } from "../utils";
@@ -16,8 +17,16 @@ export function ExportScales({ palette }: ExportScalesProps) {
     () =>
       Object.values(palette.scales).reduce<Record<string, string[]>>(
         (acc, scale) => {
+          let key = camelCase(scale.name);
+          let i = 1;
+
+          while (key in acc) {
+            i++;
+            key = `${camelCase(scale.name)}${i}`;
+          }
+
           // TODO: add curve values
-          acc[scale.name] = scale.colors.map(colorToHex);
+          acc[key] = scale.colors.map(colorToHex);
           return acc;
         },
         {}
