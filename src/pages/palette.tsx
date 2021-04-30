@@ -17,7 +17,7 @@ export function Palette({
   if (!palette) {
     return (
       <div style={{ padding: 16 }}>
-        <p>Palette not found</p>
+        <p style={{ marginTop: 0 }}>Palette not found</p>
         <Link to="/">Go home</Link>
       </div>
     );

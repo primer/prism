@@ -5,7 +5,7 @@ export const Input = styled.input`
   padding: 0 8px;
   font-family: inherit;
   font-size: 14px;
-  line-height: 1;
+  line-height: 32px;
   border: 1px solid gray;
   border-radius: 3px;
 `;

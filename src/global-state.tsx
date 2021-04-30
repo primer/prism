@@ -24,6 +24,7 @@ type MachineEvent =
       replace: boolean;
     }
   | { type: "CREATE_SCALE"; paletteId: string }
+  | { type: "DELETE_SCALE"; paletteId: string; scaleId: string }
   | {
       type: "CHANGE_SCALE_NAME";
       paletteId: string;
@@ -78,6 +79,11 @@ const machine = Machine<MachineContext, MachineEvent>({
           name,
           colors: [color],
         };
+      }),
+    },
+    DELETE_SCALE: {
+      actions: assign((context, event) => {
+        delete context.palettes[event.paletteId].scales[event.scaleId];
       }),
     },
     CHANGE_SCALE_NAME: {
