@@ -35,7 +35,9 @@ type MachineEvent =
       paletteId: string;
       scaleId: string;
       name: string;
-    };
+    }
+  | { type: "CREATE_COLOR"; paletteId: string; scaleId: string }
+  | { type: "POP_COLOR"; paletteId: string; scaleId: string };
 
 const machine = Machine<MachineContext, MachineEvent>({
   id: "global-state",
@@ -102,6 +104,28 @@ const machine = Machine<MachineContext, MachineEvent>({
       actions: assign((context, event) => {
         context.palettes[event.paletteId].scales[event.scaleId].name =
           event.name;
+      }),
+    },
+    CREATE_COLOR: {
+      actions: assign((context, event) => {
+        const colors =
+          context.palettes[event.paletteId].scales[event.scaleId].colors;
+        let color = colors[colors.length - 1];
+
+        if (!color) {
+          const randomIndex = randomIntegerInRange(0, cssColorNames.length);
+          const name = cssColorNames[randomIndex];
+          color = hexToColor(name);
+        }
+
+        context.palettes[event.paletteId].scales[event.scaleId].colors.push(
+          color
+        );
+      }),
+    },
+    POP_COLOR: {
+      actions: assign((context, event) => {
+        context.palettes[event.paletteId].scales[event.scaleId].colors.pop();
       }),
     },
   },

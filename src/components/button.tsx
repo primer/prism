@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 export const Button = styled.button`
   height: 32px;
-  padding: 0 16px;
+  padding: 0 8px;
+  margin: 0;
   font-family: inherit;
   font-weight: 400;
   font-size: 14px;
