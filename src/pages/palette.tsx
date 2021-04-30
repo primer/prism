@@ -9,7 +9,8 @@ import { useGlobalState } from "../global-state";
 
 export function Palette({
   paletteId = "",
-}: RouteComponentProps<{ paletteId: string }>) {
+  children,
+}: React.PropsWithChildren<RouteComponentProps<{ paletteId: string }>>) {
   const [state, send] = useGlobalState();
   const palette = state.context.palettes[paletteId];
 
@@ -82,9 +83,9 @@ export function Palette({
           <span>Scales</span>
           <VStack>
             {Object.values(palette.scales).map(scale => (
-              <div key={scale.id}>
+              <Link key={scale.id} to={`scale/${scale.id}`}>
                 <span style={{ fontSize: 14 }}>{scale.name}</span>
-              </div>
+              </Link>
             ))}
           </VStack>
           <Button onClick={() => send({ type: "CREATE_SCALE", paletteId })}>
@@ -92,7 +93,7 @@ export function Palette({
           </Button>
         </VStack>
       </div>
-      <main style={{ gridArea: "main", overflow: "auto" }}></main>
+      <main style={{ gridArea: "main", overflow: "auto" }}>{children}</main>
     </div>
   );
 }
