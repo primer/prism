@@ -1,4 +1,4 @@
-import { keyBy } from "lodash-es";
+import { isArray, keyBy } from "lodash-es";
 import React from "react";
 import { v4 as uniqueId } from "uuid";
 import exampleScales from "../example-scales.json";
@@ -31,12 +31,13 @@ export function ImportScales({ onImport }: ImportScalesProps) {
     event.preventDefault();
 
     try {
-      const parsedCode: Record<string, string[]> = JSON.parse(code);
+      const parsedCode: Record<string, string | string[]> = JSON.parse(code);
 
       const scales: Scale[] = Object.entries(parsedCode).map(
         ([name, scale]) => {
           const id = uniqueId();
-          return { id, name, colors: scale.map(hexToColor) };
+          const scaleArray = isArray(scale) ? scale : [scale];
+          return { id, name, colors: scaleArray.map(hexToColor) };
         }
       );
 

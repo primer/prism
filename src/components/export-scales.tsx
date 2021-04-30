@@ -15,7 +15,7 @@ type ExportScalesProps = {
 export function ExportScales({ palette }: ExportScalesProps) {
   const hexScales = React.useMemo(
     () =>
-      Object.values(palette.scales).reduce<Record<string, string[]>>(
+      Object.values(palette.scales).reduce<Record<string, string | string[]>>(
         (acc, scale) => {
           let key = camelCase(scale.name);
           let i = 1;
@@ -26,7 +26,9 @@ export function ExportScales({ palette }: ExportScalesProps) {
           }
 
           // TODO: add curve values
-          acc[key] = scale.colors.map(colorToHex);
+          const colors = scale.colors.map(colorToHex);
+
+          acc[key] = colors.length === 1 ? colors[0] : colors;
           return acc;
         },
         {}
