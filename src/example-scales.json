@@ -1,6 +1,6 @@
 {
-  "black": ["#010409"],
-  "white": ["#f0f6fc"],
+  "black": "#010409",
+  "white": "#f0f6fc",
   "gray": [
     "#f0f6fc",
     "#c9d1d9",

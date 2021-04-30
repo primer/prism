@@ -3,7 +3,9 @@ import { useInterpret, useService } from "@xstate/react";
 import React from "react";
 import { v4 as uniqueId } from "uuid";
 import { interpret, Machine } from "xstate";
+import cssColorNames from "./css-color-names.json";
 import { Palette, Scale } from "./types";
+import { hexToColor, randomIntegerInRange } from "./utils";
 
 const GLOBAL_STATE_KEY = "global_state";
 
@@ -61,10 +63,14 @@ const machine = Machine<MachineContext, MachineEvent>({
     CREATE_SCALE: {
       actions: assign((context, event) => {
         const scaleId = uniqueId();
+        const randomIndex = randomIntegerInRange(0, cssColorNames.length);
+        const name = cssColorNames[randomIndex];
+        const color = hexToColor(name);
+
         context.palettes[event.paletteId].scales[scaleId] = {
           id: scaleId,
-          name: "Untitled",
-          colors: [],
+          name,
+          colors: [color],
         };
       }),
     },

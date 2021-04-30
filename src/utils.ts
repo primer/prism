@@ -12,3 +12,7 @@ export function hexToColor(hex: string): Color {
 export function colorToHex(color: Color): string {
   return hsluv.hsluvToHex([color.hue, color.saturation, color.lightness]);
 }
+
+export function randomIntegerInRange(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
