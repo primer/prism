@@ -78,13 +78,24 @@ export function Palette({
           </Button>
         </HStack>
       </header>
-      <div style={{ gridArea: "sidebar", overflow: "auto", padding: 16 }}>
-        <VStack spacing={8}>
+      <div
+        style={{
+          gridArea: "sidebar",
+          overflow: "auto",
+
+          borderRight: "1px solid gainsboro",
+        }}
+      >
+        <VStack spacing={8} style={{ padding: 16 }}>
           <span>Scales</span>
-          <VStack>
+          <VStack spacing={8}>
             {Object.values(palette.scales).map(scale => (
-              <Link key={scale.id} to={`scale/${scale.id}`}>
-                <span style={{ fontSize: 14 }}>{scale.name}</span>
+              <Link
+                key={scale.id}
+                to={`scale/${scale.id}`}
+                style={{ fontSize: 14, textDecoration: "none" }}
+              >
+                <span>{scale.name}</span>
               </Link>
             ))}
           </VStack>
@@ -93,7 +104,15 @@ export function Palette({
           </Button>
         </VStack>
       </div>
-      <main style={{ gridArea: "main", overflow: "auto" }}>{children}</main>
+      <main
+        style={{
+          gridArea: "main",
+          overflow: "auto",
+          display: "grid",
+        }}
+      >
+        {children}
+      </main>
     </div>
   );
 }

@@ -23,7 +23,13 @@ type MachineEvent =
       scales: Record<string, Scale>;
       replace: boolean;
     }
-  | { type: "CREATE_SCALE"; paletteId: string };
+  | { type: "CREATE_SCALE"; paletteId: string }
+  | {
+      type: "CHANGE_SCALE_NAME";
+      paletteId: string;
+      scaleId: string;
+      name: string;
+    };
 
 const machine = Machine<MachineContext, MachineEvent>({
   id: "global-state",
@@ -72,6 +78,12 @@ const machine = Machine<MachineContext, MachineEvent>({
           name,
           colors: [color],
         };
+      }),
+    },
+    CHANGE_SCALE_NAME: {
+      actions: assign((context, event) => {
+        context.palettes[event.paletteId].scales[event.scaleId].name =
+          event.name;
       }),
     },
   },
