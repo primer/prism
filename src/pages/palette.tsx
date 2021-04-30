@@ -65,6 +65,7 @@ export function Palette({
           />
           <ExportScales palette={palette} />
           <Button
+            variant="danger"
             onClick={() => {
               send({ type: "DELETE_PALETTE", paletteId });
 
