@@ -13,5 +13,6 @@ export type Scale = {
 export type Palette = {
   id: string;
   name: string;
+  backgroundColor: string;
   scales: Record<string, Scale>;
 };

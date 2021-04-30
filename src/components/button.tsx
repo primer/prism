@@ -1,28 +1,19 @@
 import styled from "styled-components";
 
-export const Button = styled.button<{ variant?: "danger" }>`
+export const Button = styled.button`
   height: 32px;
   padding: 0 16px;
   font-family: inherit;
   font-weight: 400;
   font-size: 14px;
   line-height: 1;
-  background-color: gainsboro;
-  border: 1px solid darkgray;
+  color: var(--color-text);
+  background-color: var(--color-background-secondary, gainsboro);
+  border: 1px solid var(--color-border, darkgray);
   border-radius: 3px;
   appearance: none;
 
   &:active {
-    background-color: darkgray;
+    background-color: var(--color-border, darkgray);
   }
-
-  ${props => {
-    switch (props.variant) {
-      case "danger":
-        return {
-          color: "firebrick",
-          borderColor: "firebrick",
-        };
-    }
-  }}
 `;

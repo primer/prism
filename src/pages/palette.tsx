@@ -1,11 +1,30 @@
 import { Link, navigate, RouteComponentProps } from "@reach/router";
+import { mix, readableColor, transparentize } from "color2k";
 import React from "react";
+import styled from "styled-components";
 import { Button } from "../components/button";
 import { ExportScales } from "../components/export-scales";
 import { ImportScales } from "../components/import-scales";
 import { Input } from "../components/input";
 import { HStack, VStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
+
+const Wrapper = styled.div<{ backgroundColor: string }>`
+  --color-text: ${props => readableColor(props.backgroundColor)};
+  --color-background: ${props => props.backgroundColor};
+  --color-background-secondary: ${props =>
+    mix(readableColor(props.backgroundColor), props.backgroundColor, 0.9)};
+  --color-border: ${props =>
+    mix(readableColor(props.backgroundColor), props.backgroundColor, 0.75)};
+
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "header header" "sidebar main";
+  color: var(--color-text);
+  background-color: var(--color-background);
+  height: 100vh;
+`;
 
 export function Palette({
   paletteId = "",
@@ -24,15 +43,7 @@ export function Palette({
   }
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "300px 1fr",
-        gridTemplateRows: "auto 1fr",
-        gridTemplateAreas: '"header header" "sidebar main"',
-        height: "100vh",
-      }}
-    >
+    <Wrapper backgroundColor={palette.backgroundColor}>
       <header
         style={{
           gridArea: "header",
@@ -40,11 +51,13 @@ export function Palette({
           alignItems: "center",
           justifyContent: "space-between",
           padding: 16,
-          borderBottom: "1px solid gainsboro",
+          borderBottom: "1px solid var(--color-border, gainsboro)",
         }}
       >
         <HStack spacing={16}>
-          <Link to="/">Home</Link>
+          <Link to="/" style={{ color: "inherit" }}>
+            Home
+          </Link>
           <Input
             type="text"
             aria-label="Palette name"
@@ -59,6 +72,26 @@ export function Palette({
           />
         </HStack>
         <HStack spacing={8}>
+          <input
+            type="color"
+            value={palette.backgroundColor}
+            style={{
+              appearance: "none",
+              border: "1px solid var(--color-border, darkgray)",
+              backgroundColor: "var(--color-background-secondary, gainsboro)",
+              padding: "0px 2px",
+              margin: 0,
+              borderRadius: 3,
+              height: 32,
+            }}
+            onChange={event =>
+              send({
+                type: "CHANGE_PALETTE_BACKGROUND_COLOR",
+                paletteId,
+                backgroundColor: event.target.value,
+              })
+            }
+          />
           <ImportScales
             onImport={(scales, replace) =>
               send({ type: "IMPORT_SCALES", paletteId, scales, replace })
@@ -66,7 +99,6 @@ export function Palette({
           />
           <ExportScales palette={palette} />
           <Button
-            variant="danger"
             onClick={() => {
               send({ type: "DELETE_PALETTE", paletteId });
 
@@ -82,8 +114,7 @@ export function Palette({
         style={{
           gridArea: "sidebar",
           overflow: "auto",
-
-          borderRight: "1px solid gainsboro",
+          borderRight: "1px solid var(--color-border, gainsboro)",
         }}
       >
         <VStack spacing={8} style={{ padding: 16 }}>
@@ -93,7 +124,11 @@ export function Palette({
               <Link
                 key={scale.id}
                 to={`scale/${scale.id}`}
-                style={{ fontSize: 14, textDecoration: "none" }}
+                style={{
+                  color: "inherit",
+                  fontSize: 14,
+                  textDecoration: "none",
+                }}
               >
                 <span>{scale.name}</span>
               </Link>
@@ -113,6 +148,6 @@ export function Palette({
       >
         {children}
       </main>
-    </div>
+    </Wrapper>
   );
 }

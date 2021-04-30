@@ -34,7 +34,10 @@ export function Scale({
       </div>
       <VStack
         spacing={16}
-        style={{ padding: 16, borderLeft: "1px solid gainsboro" }}
+        style={{
+          padding: 16,
+          borderLeft: "1px solid var(--color-border, gainsboro)",
+        }}
       >
         <VStack spacing={8}>
           <Input
@@ -51,7 +54,6 @@ export function Scale({
             }
           />
           <Button
-            variant="danger"
             onClick={() => {
               send({ type: "DELETE_SCALE", paletteId, scaleId });
               navigate(`/${paletteId}`);

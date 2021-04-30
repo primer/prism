@@ -6,6 +6,8 @@ export const Input = styled.input`
   font-family: inherit;
   font-size: 14px;
   line-height: 32px;
-  border: 1px solid gray;
+  border: 1px solid var(--color-border, gray);
   border-radius: 3px;
+  color: var(--color-text);
+  background-color: var(--color-background);
 `;

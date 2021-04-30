@@ -23,6 +23,11 @@ type MachineEvent =
       scales: Record<string, Scale>;
       replace: boolean;
     }
+  | {
+      type: "CHANGE_PALETTE_BACKGROUND_COLOR";
+      paletteId: string;
+      backgroundColor: string;
+    }
   | { type: "CREATE_SCALE"; paletteId: string }
   | { type: "DELETE_SCALE"; paletteId: string; scaleId: string }
   | {
@@ -44,6 +49,7 @@ const machine = Machine<MachineContext, MachineEvent>({
         context.palettes[paletteId] = {
           id: paletteId,
           name: "Untitled",
+          backgroundColor: "#ffffff",
           scales: {},
         };
       }),
@@ -56,6 +62,12 @@ const machine = Machine<MachineContext, MachineEvent>({
     CHANGE_PALETTE_NAME: {
       actions: assign((context, event) => {
         context.palettes[event.paletteId].name = event.name;
+      }),
+    },
+    CHANGE_PALETTE_BACKGROUND_COLOR: {
+      actions: assign((context, event) => {
+        context.palettes[event.paletteId].backgroundColor =
+          event.backgroundColor;
       }),
     },
     IMPORT_SCALES: {
