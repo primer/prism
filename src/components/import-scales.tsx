@@ -1,38 +1,13 @@
-import * as Dialog from "@radix-ui/react-dialog";
 import { keyBy } from "lodash-es";
 import React from "react";
-import styled from "styled-components";
 import { v4 as uniqueId } from "uuid";
 import exampleScales from "../example-scales.json";
 import { Scale } from "../types";
 import { hexToColor } from "../utils";
 import { Button } from "./button";
+import * as Dialog from "./dialog";
 import { HStack, VStack } from "./stack";
 import { Textarea } from "./textarea";
-
-const StyledOverlay = styled(Dialog.Overlay)`
-  background-color: rgba(0, 0, 0, 0.15);
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-`;
-
-const StyledContent = styled(Dialog.Content)`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  min-width: 400px;
-  max-width: fit-content;
-  max-height: 85vh;
-  margin-top: -5vh;
-  background-color: white;
-  border-radius: 6px;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
-  overflow: auto;
-`;
 
 const PLACEHOLDER = `{
   "gray": [
@@ -80,8 +55,8 @@ export function ImportScales({ onImport }: ImportScalesProps) {
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Trigger as={Button}>Import scales</Dialog.Trigger>
-      <StyledOverlay />
-      <StyledContent>
+      <Dialog.Overlay />
+      <Dialog.Content>
         <div
           style={{
             display: "flex",
@@ -132,7 +107,7 @@ export function ImportScales({ onImport }: ImportScalesProps) {
             <Button>Import</Button>
           </VStack>
         </form>
-      </StyledContent>
+      </Dialog.Content>
     </Dialog.Root>
   );
 }
