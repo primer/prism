@@ -9,6 +9,6 @@ export const Button = styled.button`
   line-height: 1;
   background-color: gainsboro;
   border: 1px solid gray;
-  border-radius: 4px;
+  border-radius: 3px;
   appearance: none;
 `;

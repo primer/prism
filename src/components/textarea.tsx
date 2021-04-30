@@ -5,5 +5,5 @@ export const Textarea = styled.textarea`
   font-family: inherit;
   font-size: 14px;
   border: 1px solid gray;
-  border-radius: 4px;
+  border-radius: 3px;
 `;

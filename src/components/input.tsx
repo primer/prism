@@ -7,5 +7,5 @@ export const Input = styled.input`
   font-size: 14px;
   line-height: 1;
   border: 1px solid gray;
-  border-radius: 4px;
+  border-radius: 3px;
 `;

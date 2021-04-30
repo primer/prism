@@ -29,8 +29,8 @@ const StyledContent = styled(Dialog.Content)`
   max-height: 85vh;
   margin-top: -5vh;
   background-color: white;
-  border-radius: 4px;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
   overflow: auto;
 `;
 
