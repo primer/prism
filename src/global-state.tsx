@@ -20,7 +20,8 @@ type MachineEvent =
       paletteId: string;
       scales: Record<string, Scale>;
       replace: boolean;
-    };
+    }
+  | { type: "CREATE_SCALE"; paletteId: string };
 
 const machine = Machine<MachineContext, MachineEvent>({
   id: "global-state",
@@ -55,6 +56,16 @@ const machine = Machine<MachineContext, MachineEvent>({
         } else {
           Object.assign(context.palettes[event.paletteId].scales, event.scales);
         }
+      }),
+    },
+    CREATE_SCALE: {
+      actions: assign((context, event) => {
+        const scaleId = uniqueId();
+        context.palettes[event.paletteId].scales[scaleId] = {
+          id: scaleId,
+          name: "Untitled",
+          colors: [],
+        };
       }),
     },
   },

@@ -86,6 +86,9 @@ export function Palette({
               </div>
             ))}
           </VStack>
+          <Button onClick={() => send({ type: "CREATE_SCALE", paletteId })}>
+            Add scale
+          </Button>
         </VStack>
       </div>
       <main style={{ gridArea: "main", overflow: "auto" }}></main>
