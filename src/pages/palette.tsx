@@ -1,5 +1,5 @@
 import { Link, navigate, RouteComponentProps } from "@reach/router";
-import { mix, readableColor, transparentize } from "color2k";
+import { mix, readableColor } from "color2k";
 import React from "react";
 import styled from "styled-components";
 import { Button } from "../components/button";
