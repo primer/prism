@@ -1,4 +1,4 @@
-import { navigate, RouteComponentProps } from "@reach/router";
+import { Link, navigate, RouteComponentProps } from "@reach/router";
 import React from "react";
 import { Button } from "../components/button";
 import { Input } from "../components/input";
@@ -9,7 +9,11 @@ import { colorToHex } from "../utils";
 export function Scale({
   paletteId = "",
   scaleId = "",
-}: RouteComponentProps<{ paletteId: string; scaleId: string }>) {
+  children,
+}: React.PropsWithChildren<
+  RouteComponentProps<{ paletteId: string; scaleId: string }>
+>) {
+  const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
   const [state, send] = useGlobalState();
   const palette = state.context.palettes[paletteId];
   const scale = palette.scales[scaleId];
@@ -86,12 +90,20 @@ export function Scale({
             display: "flex",
           }}
         >
-          {scale.colors.map(color => (
-            <div
-              style={{
-                width: "100%",
-                height: "100%",
-                backgroundColor: colorToHex(color),
+          {scale.colors.map((color, index) => (
+            <Link
+              to={index.toString()}
+              replace={true}
+              getProps={({ isCurrent }) => {
+                return {
+                  style: {
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: colorToHex(color),
+                    zIndex: isCurrent ? 1 : 0,
+                    transform: isCurrent ? "scale(1.02)" : "none",
+                  },
+                };
               }}
             />
           ))}
@@ -126,6 +138,7 @@ export function Scale({
           >
             Delete scale
           </Button>
+          <div>{children}</div>
         </VStack>
       </VStack>
     </div>
