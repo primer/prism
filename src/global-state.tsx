@@ -37,7 +37,8 @@ type MachineEvent =
       name: string;
     }
   | { type: "CREATE_COLOR"; paletteId: string; scaleId: string }
-  | { type: "POP_COLOR"; paletteId: string; scaleId: string };
+  | { type: "POP_COLOR"; paletteId: string; scaleId: string }
+  | { type: "DELETE_COLOR"; paletteId: string; scaleId: string; index: number };
 
 const machine = Machine<MachineContext, MachineEvent>({
   id: "global-state",
@@ -126,6 +127,14 @@ const machine = Machine<MachineContext, MachineEvent>({
     POP_COLOR: {
       actions: assign((context, event) => {
         context.palettes[event.paletteId].scales[event.scaleId].colors.pop();
+      }),
+    },
+    DELETE_COLOR: {
+      actions: assign((context, event) => {
+        context.palettes[event.paletteId].scales[event.scaleId].colors.splice(
+          event.index,
+          1
+        );
       }),
     },
   },

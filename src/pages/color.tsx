@@ -1,6 +1,7 @@
 import { RouteComponentProps } from "@reach/router";
 import { toHsla, toRgba } from "color2k";
 import React from "react";
+import { Button } from "../components/button";
 import { Input } from "../components/input";
 import { VStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
@@ -78,6 +79,19 @@ export function Color({
       <code>{toRgba(hex)}</code>
 
       <code>{toHsla(hex)}</code>
+
+      <Button
+        onClick={() =>
+          send({
+            type: "DELETE_COLOR",
+            paletteId,
+            scaleId,
+            index: parseInt(index),
+          })
+        }
+      >
+        Delete color
+      </Button>
     </VStack>
   );
 }

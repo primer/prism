@@ -138,6 +138,7 @@ export function Scale({
           >
             Delete scale
           </Button>
+          <hr />
           <div>{children}</div>
         </VStack>
       </VStack>
