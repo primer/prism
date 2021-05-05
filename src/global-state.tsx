@@ -118,12 +118,14 @@ const machine = Machine<MachineContext, MachineEvent>({
       actions: assign((context, event) => {
         const colors =
           context.palettes[event.paletteId].scales[event.scaleId].colors;
-        let color = colors[colors.length - 1];
+        let color = { ...colors[colors.length - 1] };
 
         if (!color) {
           const randomIndex = randomIntegerInRange(0, cssColorNames.length);
           const name = cssColorNames[randomIndex];
           color = hexToColor(name);
+        } else {
+          color.lightness = Math.max(0, color.lightness - 10);
         }
 
         context.palettes[event.paletteId].scales[event.scaleId].colors.push(
