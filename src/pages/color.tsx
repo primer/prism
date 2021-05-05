@@ -29,7 +29,7 @@ export function Color({
   const hex = colorToHex(color);
 
   return (
-    <VStack spacing={16}>
+    <VStack spacing={16} style={{ padding: 16 }}>
       <span>
         {scale.name}.{index}
       </span>

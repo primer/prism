@@ -1576,6 +1576,13 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
 
+"@radix-ui/react-polymorphic@0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-polymorphic/-/react-polymorphic-0.0.11.tgz#23f26b14e67a0e57cd981c37618d603b952af80d"
+  integrity sha512-CztM4962esOx3i1ls6GuY9RBYIY2Df1Bmp5emHRTxZi8owyCZwZYPctYaDuMO0qIGikPiKD8HBion/m7VWUyEA==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+
 "@radix-ui/react-portal@0.0.11":
   version "0.0.11"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-portal/-/react-portal-0.0.11.tgz#961561e17e4945df1a4e24fbe6e20d5491b486f2"
@@ -1601,6 +1608,23 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-polymorphic" "0.0.10"
+
+"@radix-ui/react-primitive@0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-primitive/-/react-primitive-0.0.12.tgz#b4bad44d95c415cf16aa3ac6cf83de7813d6f27f"
+  integrity sha512-qJz8Rb95MOD+w/y6NQnEhNp/Lm8XEDfiwAIF/HRwEVBGYZ82qV/vWjfWCAtnoWlMoN6MpI2YN1pdU5mu/qQyzA==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/react-polymorphic" "0.0.11"
+
+"@radix-ui/react-separator@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-separator/-/react-separator-0.0.12.tgz#d7c625efdfc5857daf8c37c479111d91d4d43df2"
+  integrity sha512-RqXIGluoZ7VKCU0Wwa4t+prPl8966vIc6Cw2QvGOHPFWegUScFXaEu6OtnQxNXms9VgGptTn8R2+KvfplNLRog==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/react-polymorphic" "0.0.11"
+    "@radix-ui/react-primitive" "0.0.12"
 
 "@radix-ui/react-use-body-pointer-events@0.0.6":
   version "0.0.6"

@@ -1,3 +1,4 @@
+import { Separator } from "../components/separator";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import React from "react";
 import { Button } from "../components/button";
@@ -110,13 +111,11 @@ export function Scale({
         </div>
       </div>
       <VStack
-        spacing={16}
         style={{
-          padding: 16,
           borderLeft: "1px solid var(--color-border, gainsboro)",
         }}
       >
-        <VStack spacing={8}>
+        <VStack spacing={8} style={{ padding: 16 }}>
           <Input
             type="text"
             aria-label="Scale name"
@@ -138,9 +137,9 @@ export function Scale({
           >
             Delete scale
           </Button>
-          <hr />
-          <div>{children}</div>
         </VStack>
+        <Separator />
+        <div>{children}</div>
       </VStack>
     </div>
   );
