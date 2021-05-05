@@ -19,7 +19,8 @@ export function Color({
   const [state, send] = useGlobalState();
   const palette = state.context.palettes[paletteId];
   const scale = palette.scales[scaleId];
-  const color = scale.colors[parseInt(index)];
+  const indexAsNumber = parseInt(index, 10);
+  const color = scale.colors[indexAsNumber];
 
   if (!color) {
     return null;
@@ -48,6 +49,19 @@ export function Color({
             type="number"
             style={{ width: "100%" }}
             value={color.hue}
+            min={0}
+            max={360}
+            onChange={event => {
+              send({
+                type: "CHANGE_COLOR_VALUE",
+                paletteId,
+                scaleId,
+                index: indexAsNumber,
+                value: {
+                  hue: event.target.valueAsNumber || 0,
+                },
+              });
+            }}
           />
         </VStack>
         <VStack spacing={4}>
@@ -59,6 +73,19 @@ export function Color({
             type="number"
             style={{ width: "100%" }}
             value={color.saturation}
+            min={0}
+            max={100}
+            onChange={event => {
+              send({
+                type: "CHANGE_COLOR_VALUE",
+                paletteId,
+                scaleId,
+                index: indexAsNumber,
+                value: {
+                  saturation: event.target.valueAsNumber || 0,
+                },
+              });
+            }}
           />
         </VStack>
         <VStack spacing={4}>
@@ -70,6 +97,19 @@ export function Color({
             type="number"
             style={{ width: "100%" }}
             value={color.lightness}
+            min={0}
+            max={100}
+            onChange={event => {
+              send({
+                type: "CHANGE_COLOR_VALUE",
+                paletteId,
+                scaleId,
+                index: indexAsNumber,
+                value: {
+                  lightness: event.target.valueAsNumber || 0,
+                },
+              });
+            }}
           />
         </VStack>
       </div>
