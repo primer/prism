@@ -9,6 +9,7 @@ import { Input } from "../components/input";
 import { Separator } from "../components/separator";
 import { HStack, VStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
+import { Color } from "../types";
 import { colorToHex, getColor } from "../utils";
 
 const Wrapper = styled.div<{ backgroundColor: string }>`
@@ -188,7 +189,7 @@ export function Palette({
                     }}
                   >
                     {curve.values.map(value => {
-                      let color;
+                      let color: Color;
 
                       switch (curve.type) {
                         case "hue":

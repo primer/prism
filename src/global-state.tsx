@@ -51,6 +51,12 @@ type MachineEvent =
       paletteId: string;
       scaleId: string;
       curveType: Curve["type"];
+    }
+  | {
+      type: "CHANGE_CURVE_NAME";
+      paletteId: string;
+      curveId: string;
+      name: string;
     };
 
 const machine = Machine<MachineContext, MachineEvent>({
@@ -193,6 +199,12 @@ const machine = Machine<MachineContext, MachineEvent>({
           ...color,
           [event.curveType]: 0,
         }));
+      }),
+    },
+    CHANGE_CURVE_NAME: {
+      actions: assign((context, event) => {
+        context.palettes[event.paletteId].curves[event.curveId].name =
+          event.name;
       }),
     },
   },
