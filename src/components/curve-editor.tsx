@@ -40,6 +40,7 @@ export function CurveEditor({
   const nodeRadius = 12;
   const columnWidth = width / values.length;
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const xScale = React.useCallback(
     scaleLinear()
       .domain([0, values.length - 1])
@@ -47,6 +48,7 @@ export function CurveEditor({
     [values.length, width, columnWidth]
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const yScale = React.useCallback(
     scaleLinear()
       .domain([min, max])
