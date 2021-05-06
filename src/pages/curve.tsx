@@ -6,7 +6,7 @@ import { Separator } from "../components/separator";
 import { VStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
 import { Color } from "../types";
-import { colorToHex } from "../utils";
+import { colorToHex, getColor } from "../utils";
 
 export function Curve({
   paletteId = "",
@@ -15,6 +15,13 @@ export function Curve({
   const [state, send] = useGlobalState();
   const palette = state.context.palettes[paletteId];
   const curve = palette.curves[curveId];
+  const scales = React.useMemo(
+    () =>
+      Object.values(palette.scales).filter(scale =>
+        Object.values(scale.curves).includes(curveId)
+      ),
+    [palette, curveId]
+  );
 
   if (!curve) {
     return (
@@ -138,6 +145,47 @@ export function Curve({
               </div>
             );
           })}
+        </VStack>
+        <Separator />
+        <VStack spacing={8} style={{ padding: 16 }}>
+          <span>Used by</span>
+          <VStack spacing={8}>
+            {scales.map(scale => (
+              <Link
+                key={scale.id}
+                to={`/${paletteId}/scale/${scale.id}`}
+                style={{
+                  color: "inherit",
+                  fontSize: 14,
+                  textDecoration: "none",
+                }}
+              >
+                <VStack spacing={4}>
+                  <span>{scale.name}</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      height: 24,
+                    }}
+                  >
+                    {scale.colors.map((_, index) => {
+                      const color = getColor(palette.curves, scale, index);
+                      console.log(color);
+                      return (
+                        <div
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            backgroundColor: colorToHex(color),
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </VStack>
+              </Link>
+            ))}
+          </VStack>
         </VStack>
       </VStack>
     </div>
