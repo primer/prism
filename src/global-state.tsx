@@ -111,6 +111,12 @@ type MachineEvent =
       paletteId: string;
       curveId: string;
       values: number[];
+    }
+  | {
+      type: "CHANGE_SCALE_COLORS";
+      paletteId: string;
+      scaleId: string;
+      colors: Color[];
     };
 
 const machine = Machine<MachineContext, MachineEvent>({
@@ -327,6 +333,12 @@ const machine = Machine<MachineContext, MachineEvent>({
       actions: assign((context, event) => {
         context.palettes[event.paletteId].curves[event.curveId].values =
           event.values;
+      }),
+    },
+    CHANGE_SCALE_COLORS: {
+      actions: assign((context, event) => {
+        context.palettes[event.paletteId].scales[event.scaleId].colors =
+          event.colors;
       }),
     },
   },

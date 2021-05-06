@@ -34,3 +34,12 @@ export function getColor(
 
   return { hue, saturation, lightness };
 }
+
+export function getRange(type: Curve["type"]) {
+  const ranges = {
+    hue: { min: 0, max: 360 },
+    saturation: { min: 0, max: 100 },
+    lightness: { min: 0, max: 100 },
+  };
+  return ranges[type];
+}

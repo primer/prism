@@ -18,6 +18,7 @@ type CurveEditorProps = {
   onChange?: (values: number[], shiftKey: boolean) => void;
   disabled?: boolean;
   label?: string;
+  style?: React.SVGAttributes<SVGSVGElement>["style"];
 };
 
 // TODO: arrow key support
@@ -34,6 +35,7 @@ export function CurveEditor({
   step = 0.1,
   disabled = false,
   label = "",
+  style = {},
 }: CurveEditorProps) {
   const nodeRadius = 12;
   const columnWidth = width / values.length;
@@ -64,6 +66,8 @@ export function CurveEditor({
       width={width}
       height={height}
       fill="none"
+      style={style}
+      pointerEvents={disabled ? "none" : "all"}
     >
       <DraggableCore
         disabled={disabled}
@@ -146,7 +150,7 @@ export function CurveEditor({
               <text
                 x={x - nodeRadius - 8}
                 y={y}
-                fill="black"
+                fill={disabled ? "gray" : "black"}
                 style={{
                   textTransform: "uppercase",
                   fontFamily: "system-ui, sans-serif",

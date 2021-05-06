@@ -1,13 +1,16 @@
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import React from "react";
 import { Button } from "../components/button";
+import { CurveEditor } from "../components/curve-editor";
 import { Input } from "../components/input";
 import { PlusIcon } from "../components/plus-icon";
 import { Select } from "../components/select";
 import { Separator } from "../components/separator";
-import { HStack, VStack } from "../components/stack";
+import { HStack, VStack, ZStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
-import { colorToHex, getColor } from "../utils";
+import { Curve } from "../types";
+import { colorToHex, getColor, getRange } from "../utils";
+import useMeasure from "react-use-measure";
 
 export function Scale({
   paletteId = "",
@@ -19,6 +22,8 @@ export function Scale({
   const [state, send] = useGlobalState();
   const palette = state.context.palettes[paletteId];
   const scale = palette.scales[scaleId];
+  // TODO: allow resizing
+  const [ref, { width, height }] = useMeasure();
 
   if (!scale) {
     return (
@@ -74,30 +79,94 @@ export function Scale({
             </Button>
           </HStack>
         </div>
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
-          {scale.colors.map((_, index) => (
-            <Link
-              to={index.toString()}
-              replace={true}
-              getProps={({ isCurrent }) => {
-                const color = getColor(palette.curves, scale, index);
-                return {
-                  style: {
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: colorToHex(color),
-                    zIndex: isCurrent ? 1 : 0,
-                    transform: isCurrent ? "scale(1.02)" : "none",
-                  },
-                };
-              }}
-            />
-          ))}
-        </div>
+        <ZStack>
+          <div
+            ref={ref}
+            style={{
+              display: "flex",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            {scale.colors.map((_, index) => (
+              <Link
+                to={index.toString()}
+                replace={true}
+                getProps={({ isCurrent }) => {
+                  const color = getColor(palette.curves, scale, index);
+                  return {
+                    style: {
+                      width: "100%",
+                      height: "100%",
+                      backgroundColor: colorToHex(color),
+                      // zIndex: isCurrent ? 1 : 0,
+                      // transform: isCurrent ? "scale(1.02)" : "none",
+                      boxShadow: isCurrent
+                        ? `0 -8px 0 ${colorToHex(color)}`
+                        : "none",
+                    },
+                  };
+                }}
+              />
+            ))}
+          </div>
+          {(Object.entries(scale.curves) as [
+            Curve["type"],
+            string | undefined
+          ][]).map(([type, curveId]) => {
+            if (!curveId) return null;
+
+            return (
+              <CurveEditor
+                values={palette.curves[curveId].values}
+                {...getRange(type)}
+                width={width}
+                height={height}
+                disabled
+                label={`${type[0].toUpperCase()}`}
+              />
+            );
+          })}
+          {(["hue", "saturation", "lightness"] as const).map(type => {
+            return (
+              <CurveEditor
+                values={scale.colors.map(
+                  (color, index) => getColor(palette.curves, scale, index)[type]
+                )}
+                {...getRange(type)}
+                width={width}
+                height={height}
+                label={`${type[0].toUpperCase()}`}
+                onChange={(values, shiftKey) => {
+                  if (shiftKey && scale.curves[type]) {
+                    send({
+                      type: "CHANGE_CURVE_VALUES",
+                      paletteId,
+                      curveId: scale.curves[type] ?? "",
+                      values: values.map(
+                        (value, index) => value - scale.colors[index][type]
+                      ),
+                    });
+                  } else {
+                    send({
+                      type: "CHANGE_SCALE_COLORS",
+                      paletteId,
+                      scaleId,
+                      colors: scale.colors.map((color, index) => ({
+                        ...color,
+                        [type]:
+                          values[index] -
+                          (palette.curves[scale.curves[type] ?? ""]?.values[
+                            index
+                          ] ?? 0),
+                      })),
+                    });
+                  }
+                }}
+              />
+            );
+          })}
+        </ZStack>
       </div>
       <VStack
         style={{
