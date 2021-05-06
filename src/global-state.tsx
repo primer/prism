@@ -14,9 +14,18 @@ type MachineContext = {
 };
 
 type MachineEvent =
-  | { type: "CREATE_PALETTE" }
-  | { type: "DELETE_PALETTE"; paletteId: string }
-  | { type: "CHANGE_PALETTE_NAME"; paletteId: string; name: string }
+  | {
+      type: "CREATE_PALETTE";
+    }
+  | {
+      type: "DELETE_PALETTE";
+      paletteId: string;
+    }
+  | {
+      type: "CHANGE_PALETTE_NAME";
+      paletteId: string;
+      name: string;
+    }
   | {
       type: "IMPORT_SCALES";
       paletteId: string;
@@ -28,17 +37,37 @@ type MachineEvent =
       paletteId: string;
       backgroundColor: string;
     }
-  | { type: "CREATE_SCALE"; paletteId: string }
-  | { type: "DELETE_SCALE"; paletteId: string; scaleId: string }
+  | {
+      type: "CREATE_SCALE";
+      paletteId: string;
+    }
+  | {
+      type: "DELETE_SCALE";
+      paletteId: string;
+      scaleId: string;
+    }
   | {
       type: "CHANGE_SCALE_NAME";
       paletteId: string;
       scaleId: string;
       name: string;
     }
-  | { type: "CREATE_COLOR"; paletteId: string; scaleId: string }
-  | { type: "POP_COLOR"; paletteId: string; scaleId: string }
-  | { type: "DELETE_COLOR"; paletteId: string; scaleId: string; index: number }
+  | {
+      type: "CREATE_COLOR";
+      paletteId: string;
+      scaleId: string;
+    }
+  | {
+      type: "POP_COLOR";
+      paletteId: string;
+      scaleId: string;
+    }
+  | {
+      type: "DELETE_COLOR";
+      paletteId: string;
+      scaleId: string;
+      index: number;
+    }
   | {
       type: "CHANGE_COLOR_VALUE";
       paletteId: string;
@@ -57,6 +86,11 @@ type MachineEvent =
       paletteId: string;
       curveId: string;
       name: string;
+    }
+  | {
+      type: "DELETE_CURVE";
+      paletteId: string;
+      curveId: string;
     };
 
 const machine = Machine<MachineContext, MachineEvent>({
@@ -205,6 +239,36 @@ const machine = Machine<MachineContext, MachineEvent>({
       actions: assign((context, event) => {
         context.palettes[event.paletteId].curves[event.curveId].name =
           event.name;
+      }),
+    },
+    DELETE_CURVE: {
+      actions: assign((context, event) => {
+        // Find and remove references to curve
+        Object.values(context.palettes[event.paletteId].scales).forEach(
+          scale => {
+            (Object.entries(scale.curves) as [
+              Curve["type"],
+              string | undefined
+            ][]).forEach(([type, curveId]) => {
+              if (curveId === event.curveId) {
+                // Update color values
+                scale.colors = scale.colors.map((color, index) => ({
+                  ...color,
+                  [type]:
+                    context.palettes[event.paletteId].curves[curveId].values[
+                      index
+                    ] + color[type],
+                }));
+
+                // Delete curve from scale
+                delete scale.curves[type];
+              }
+            });
+          }
+        );
+
+        // Delete curve
+        delete context.palettes[event.paletteId].curves[event.curveId];
       }),
     },
   },

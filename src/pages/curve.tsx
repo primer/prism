@@ -1,4 +1,4 @@
-import { Link, RouteComponentProps } from "@reach/router";
+import { Link, navigate, RouteComponentProps } from "@reach/router";
 import React from "react";
 import { Button } from "../components/button";
 import { Input } from "../components/input";
@@ -106,10 +106,10 @@ export function Curve({
             }
           />
           <Button
-          // onClick={() => {
-          //   send({ type: "DELETE_SCALE", paletteId, scaleId });
-          //   navigate(`/${paletteId}`);
-          // }}
+            onClick={() => {
+              send({ type: "DELETE_CURVE", paletteId, curveId });
+              navigate(`/${paletteId}`);
+            }}
           >
             Delete curve
           </Button>
