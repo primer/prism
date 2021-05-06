@@ -11,10 +11,7 @@ import { colorToHex } from "../utils";
 export function Curve({
   paletteId = "",
   curveId = "",
-  children,
-}: React.PropsWithChildren<
-  RouteComponentProps<{ paletteId: string; curveId: string }>
->) {
+}: RouteComponentProps<{ paletteId: string; curveId: string }>) {
   const [state, send] = useGlobalState();
   const palette = state.context.palettes[paletteId];
   const curve = palette.curves[curveId];
@@ -67,19 +64,13 @@ export function Curve({
             }
 
             return (
-              <Link
-                to={index.toString()}
-                replace={true}
-                getProps={({ isCurrent }) => {
-                  return {
-                    style: {
-                      width: "100%",
-                      height: "100%",
-                      backgroundColor: colorToHex(color),
-                      zIndex: isCurrent ? 1 : 0,
-                      transform: isCurrent ? "scale(1.02)" : "none",
-                    },
-                  };
+              <label
+                key={index}
+                htmlFor={index.toString()}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: colorToHex(color),
                 }}
               />
             );
@@ -113,9 +104,41 @@ export function Curve({
           >
             Delete curve
           </Button>
+          {curve.values.map((value, index) => {
+            const ranges = {
+              hue: { min: 0, max: 360 },
+              saturation: { min: 0, max: 100 },
+              lightness: { min: 0, max: 100 },
+            };
+
+            return (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "24px 1fr",
+                  alignItems: "center",
+                }}
+              >
+                <label htmlFor={index.toString()}>{index}</label>
+                <Input
+                  type="number"
+                  id={index.toString()}
+                  value={value}
+                  onChange={event =>
+                    send({
+                      type: "CHANGE_CURVE_VALUE",
+                      paletteId,
+                      curveId,
+                      index,
+                      value: event.target.valueAsNumber || 0,
+                    })
+                  }
+                  {...ranges[curve.type]}
+                />
+              </div>
+            );
+          })}
         </VStack>
-        <Separator />
-        <div>{children}</div>
       </VStack>
     </div>
   );

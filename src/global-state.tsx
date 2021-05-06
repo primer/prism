@@ -98,6 +98,13 @@ type MachineEvent =
       scaleId: string;
       curveType: Curve["type"];
       curveId: string;
+    }
+  | {
+      type: "CHANGE_CURVE_VALUE";
+      paletteId: string;
+      curveId: string;
+      index: number;
+      value: number;
     };
 
 const machine = Machine<MachineContext, MachineEvent>({
@@ -301,6 +308,13 @@ const machine = Machine<MachineContext, MachineEvent>({
 
           delete scale.curves[event.curveType];
         }
+      }),
+    },
+    CHANGE_CURVE_VALUE: {
+      actions: assign((context, event) => {
+        context.palettes[event.paletteId].curves[event.curveId].values[
+          event.index
+        ] = event.value;
       }),
     },
   },
