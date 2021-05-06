@@ -34,7 +34,7 @@ export function ExportScales({ palette }: ExportScalesProps) {
         },
         {}
       ),
-    [palette.scales]
+    [palette.curves, palette.scales]
   );
 
   const code = React.useMemo(() => JSON.stringify(hexScales, null, 2), [
