@@ -1,12 +1,20 @@
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import React from "react";
 import { Button } from "../components/button";
+import { CurveEditor } from "../components/curve-editor";
 import { Input } from "../components/input";
 import { Separator } from "../components/separator";
-import { VStack } from "../components/stack";
+import { VStack, ZStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
 import { Color } from "../types";
 import { colorToHex, getColor } from "../utils";
+import useMeasure from "react-use-measure";
+
+const ranges = {
+  hue: { min: 0, max: 360 },
+  saturation: { min: 0, max: 100 },
+  lightness: { min: 0, max: 100 },
+};
 
 export function Curve({
   paletteId = "",
@@ -22,6 +30,8 @@ export function Curve({
       ),
     [palette, curveId]
   );
+  // TODO: allow resizing
+  const [ref, { width, height }] = useMeasure();
 
   if (!curve) {
     return (
@@ -39,9 +49,12 @@ export function Curve({
         height: "100%",
       }}
     >
-      <div style={{ display: "grid", padding: 16 }}>
+      <ZStack style={{ padding: 16 }}>
         <div
+          ref={ref}
           style={{
+            width: "100%",
+            height: "100%",
             display: "flex",
           }}
         >
@@ -83,7 +96,17 @@ export function Curve({
             );
           })}
         </div>
-      </div>
+        <CurveEditor
+          values={curve.values}
+          {...ranges[curve.type]}
+          width={width}
+          height={height}
+          onChange={values =>
+            send({ type: "CHANGE_CURVE_VALUES", paletteId, curveId, values })
+          }
+          label={curve.type[0].toUpperCase()}
+        />
+      </ZStack>
       <VStack
         style={{
           borderLeft: "1px solid var(--color-border, gainsboro)",
@@ -112,12 +135,6 @@ export function Curve({
             Delete curve
           </Button>
           {curve.values.map((value, index) => {
-            const ranges = {
-              hue: { min: 0, max: 360 },
-              saturation: { min: 0, max: 100 },
-              lightness: { min: 0, max: 100 },
-            };
-
             return (
               <div
                 style={{
