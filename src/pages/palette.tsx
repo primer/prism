@@ -6,9 +6,10 @@ import { Button } from "../components/button";
 import { ExportScales } from "../components/export-scales";
 import { ImportScales } from "../components/import-scales";
 import { Input } from "../components/input";
+import { Separator } from "../components/separator";
 import { HStack, VStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
-import { colorToHex } from "../utils";
+import { colorToHex, getColor } from "../utils";
 
 const Wrapper = styled.div<{ backgroundColor: string }>`
   --color-text: ${props => readableColor(props.backgroundColor)};
@@ -139,15 +140,19 @@ export function Palette({
                       height: 24,
                     }}
                   >
-                    {scale.colors.map(color => (
-                      <div
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          backgroundColor: colorToHex(color),
-                        }}
-                      />
-                    ))}
+                    {scale.colors.map((_, index) => {
+                      const color = getColor(palette.curves, scale, index);
+                      console.log(color);
+                      return (
+                        <div
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            backgroundColor: colorToHex(color),
+                          }}
+                        />
+                      );
+                    })}
                   </div>
                 </VStack>
               </Link>
@@ -159,6 +164,69 @@ export function Palette({
           >
             Add scale
           </Button>
+        </VStack>
+        <Separator />
+        <VStack spacing={8} style={{ padding: 16 }}>
+          <span>Curves</span>
+          <VStack spacing={8}>
+            {Object.values(palette.curves).map(curve => (
+              <Link
+                key={curve.id}
+                to={`curve/${curve.id}`}
+                style={{
+                  color: "inherit",
+                  fontSize: 14,
+                  textDecoration: "none",
+                }}
+              >
+                <VStack spacing={4}>
+                  <span>{curve.name}</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      height: 24,
+                    }}
+                  >
+                    {curve.values.map(value => {
+                      let color;
+
+                      switch (curve.type) {
+                        case "hue":
+                          color = {
+                            hue: value,
+                            saturation: 100,
+                            lightness: 50,
+                          };
+                          break;
+
+                        case "saturation":
+                          color = {
+                            hue: 0,
+                            saturation: 0,
+                            lightness: 100 - value,
+                          };
+                          break;
+
+                        case "lightness":
+                          color = { hue: 0, saturation: 0, lightness: value };
+                          break;
+                      }
+
+                      return (
+                        <div
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            backgroundColor: colorToHex(color),
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </VStack>
+              </Link>
+            ))}
+          </VStack>
         </VStack>
       </div>
       <main

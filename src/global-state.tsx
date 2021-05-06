@@ -4,8 +4,8 @@ import React from "react";
 import { v4 as uniqueId } from "uuid";
 import { interpret, Machine } from "xstate";
 import cssColorNames from "./css-color-names.json";
-import { Color, Palette, Scale } from "./types";
-import { hexToColor, randomIntegerInRange } from "./utils";
+import { Color, Curve, Palette, Scale } from "./types";
+import { getColor, hexToColor, randomIntegerInRange } from "./utils";
 
 const GLOBAL_STATE_KEY = "global_state";
 
@@ -45,6 +45,12 @@ type MachineEvent =
       scaleId: string;
       index: number;
       value: Partial<Color>;
+    }
+  | {
+      type: "CREATE_CURVE_FROM_SCALE";
+      paletteId: string;
+      scaleId: string;
+      curveType: Curve["type"];
     };
 
 const machine = Machine<MachineContext, MachineEvent>({
@@ -156,6 +162,37 @@ const machine = Machine<MachineContext, MachineEvent>({
           ],
           event.value
         );
+      }),
+    },
+    CREATE_CURVE_FROM_SCALE: {
+      actions: assign((context, event) => {
+        // Create curve
+        const curveId = uniqueId();
+        const palette = context.palettes[event.paletteId];
+        const scale = palette.scales[event.scaleId];
+        const values = scale.colors
+          .map((_, index) => getColor(palette.curves, scale, index))
+          .map(color => color[event.curveType]);
+
+        context.palettes[event.paletteId].curves[curveId] = {
+          id: curveId,
+          name: `${scale.name} ${event.curveType}`,
+          type: event.curveType,
+          values,
+        };
+
+        // Add curve id to scale
+        context.palettes[event.paletteId].scales[event.scaleId].curves[
+          event.curveType
+        ] = curveId;
+
+        // Reset color offsets
+        context.palettes[event.paletteId].scales[
+          event.scaleId
+        ].colors = scale.colors.map(color => ({
+          ...color,
+          [event.curveType]: 0,
+        }));
       }),
     },
   },

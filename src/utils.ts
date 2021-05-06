@@ -1,4 +1,4 @@
-import { Color } from "./types";
+import { Color, Curve, Scale } from "./types";
 import hsluv from "hsluv";
 import { toHex } from "color2k";
 
@@ -15,4 +15,22 @@ export function colorToHex(color: Color): string {
 
 export function randomIntegerInRange(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function getColor(
+  curves: Record<string, Curve>,
+  scale: Scale,
+  index: number
+) {
+  const color = scale.colors[index];
+
+  const hueCurve = curves[scale.curves.hue ?? ""]?.values ?? [];
+  const saturationCurve = curves[scale.curves.saturation ?? ""]?.values ?? [];
+  const lightnessCurve = curves[scale.curves.lightness ?? ""]?.values ?? [];
+
+  const hue = color.hue + (hueCurve[index] ?? 0);
+  const saturation = color.saturation + (saturationCurve[index] ?? 0);
+  const lightness = color.lightness + (lightnessCurve[index] ?? 0);
+
+  return { hue, saturation, lightness };
 }

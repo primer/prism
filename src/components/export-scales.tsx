@@ -2,7 +2,7 @@ import copy from "copy-to-clipboard";
 import { camelCase } from "lodash-es";
 import React from "react";
 import { Palette } from "../types";
-import { colorToHex } from "../utils";
+import { colorToHex, getColor } from "../utils";
 import { Button } from "./button";
 import * as Dialog from "./dialog";
 import { VStack } from "./stack";
@@ -25,8 +25,9 @@ export function ExportScales({ palette }: ExportScalesProps) {
             key = `${camelCase(scale.name)}${i}`;
           }
 
-          // TODO: add curve values
-          const colors = scale.colors.map(colorToHex);
+          const colors = scale.colors
+            .map((_, index) => getColor(palette.curves, scale, index))
+            .map(colorToHex);
 
           acc[key] = colors.length === 1 ? colors[0] : colors;
           return acc;

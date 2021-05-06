@@ -5,7 +5,7 @@ import { Button } from "../components/button";
 import { Input } from "../components/input";
 import { VStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
-import { colorToHex } from "../utils";
+import { colorToHex, getColor } from "../utils";
 
 export function Color({
   paletteId = "",
@@ -26,7 +26,8 @@ export function Color({
     return null;
   }
 
-  const hex = colorToHex(color);
+  const computedColor = getColor(palette.curves, scale, indexAsNumber);
+  const hex = colorToHex(computedColor);
 
   return (
     <VStack spacing={16} style={{ padding: 16 }}>
@@ -42,7 +43,7 @@ export function Color({
       >
         <VStack spacing={4}>
           <label htmlFor="hue" style={{ fontSize: 14 }}>
-            H
+            {scale.curves.hue ? "H offset" : "H"}
           </label>
           <Input
             id="hue"
@@ -66,7 +67,7 @@ export function Color({
         </VStack>
         <VStack spacing={4}>
           <label htmlFor="saturation" style={{ fontSize: 14 }}>
-            S
+            {scale.curves.saturation ? "S offset" : "S"}
           </label>
           <Input
             id="saturation"
@@ -90,7 +91,7 @@ export function Color({
         </VStack>
         <VStack spacing={4}>
           <label htmlFor="lightness" style={{ fontSize: 14 }}>
-            L
+            {scale.curves.lightness ? "L offset" : "L"}
           </label>
           <Input
             id="lightness"
@@ -113,6 +114,11 @@ export function Color({
           />
         </VStack>
       </div>
+
+      <code>
+        hsluv({computedColor.hue}, {computedColor.saturation}%,{" "}
+        {computedColor.lightness}%)
+      </code>
 
       <code>{hex}</code>
 
