@@ -141,7 +141,15 @@ export function Scale({
                 key={`${scale.name}-hue-curve`}
                 id="hue-curve"
                 value={scale.curves.hue}
-                disabled
+                onChange={event =>
+                  send({
+                    type: "CHANGE_SCALE_CURVE",
+                    paletteId,
+                    scaleId,
+                    curveType: "hue",
+                    curveId: event.target.value,
+                  })
+                }
               >
                 <option value="">None</option>
                 {Object.values(palette.curves)
@@ -181,7 +189,15 @@ export function Scale({
                 key={`${scale.name}-saturation-curve`}
                 id="saturation-curve"
                 value={scale.curves.saturation}
-                disabled
+                onChange={event =>
+                  send({
+                    type: "CHANGE_SCALE_CURVE",
+                    paletteId,
+                    scaleId,
+                    curveType: "saturation",
+                    curveId: event.target.value,
+                  })
+                }
               >
                 <option value="">None</option>
                 {Object.values(palette.curves)
@@ -221,7 +237,15 @@ export function Scale({
                 key={`${scale.name}-lightness-curve`}
                 id="lightness-curve"
                 value={scale.curves.lightness}
-                disabled
+                onChange={event =>
+                  send({
+                    type: "CHANGE_SCALE_CURVE",
+                    paletteId,
+                    scaleId,
+                    curveType: "lightness",
+                    curveId: event.target.value,
+                  })
+                }
               >
                 <option value="">None</option>
                 {Object.values(palette.curves)

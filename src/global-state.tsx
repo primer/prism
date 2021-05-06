@@ -91,6 +91,13 @@ type MachineEvent =
       type: "DELETE_CURVE";
       paletteId: string;
       curveId: string;
+    }
+  | {
+      type: "CHANGE_SCALE_CURVE";
+      paletteId: string;
+      scaleId: string;
+      curveType: Curve["type"];
+      curveId: string;
     };
 
 const machine = Machine<MachineContext, MachineEvent>({
@@ -269,6 +276,31 @@ const machine = Machine<MachineContext, MachineEvent>({
 
         // Delete curve
         delete context.palettes[event.paletteId].curves[event.curveId];
+      }),
+    },
+    CHANGE_SCALE_CURVE: {
+      actions: assign((context, event) => {
+        const palette = context.palettes[event.paletteId];
+        const scale = palette.scales[event.scaleId];
+
+        // Update color values
+        if (event.curveId) {
+          scale.colors = scale.colors.map((color, index) => ({
+            ...color,
+            [event.curveType]: 0,
+          }));
+
+          scale.curves[event.curveType] = event.curveId;
+        } else {
+          scale.colors = scale.colors.map((color, index) => ({
+            ...color,
+            [event.curveType]: getColor(palette.curves, scale, index)[
+              event.curveType
+            ],
+          }));
+
+          delete scale.curves[event.curveType];
+        }
       }),
     },
   },
