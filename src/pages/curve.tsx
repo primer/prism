@@ -187,7 +187,6 @@ export function Curve({
                   >
                     {scale.colors.map((_, index) => {
                       const color = getColor(palette.curves, scale, index);
-                      console.log(color);
                       return (
                         <div
                           style={{

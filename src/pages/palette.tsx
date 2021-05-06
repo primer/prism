@@ -75,6 +75,18 @@ export function Palette({
           />
         </HStack>
         <HStack spacing={8}>
+          <Button
+            onClick={() => send("UNDO")}
+            disabled={state.context.past.length === 0}
+          >
+            Undo
+          </Button>
+          <Button
+            onClick={() => send("REDO")}
+            disabled={state.context.future.length === 0}
+          >
+            Redo
+          </Button>
           <input
             type="color"
             value={palette.backgroundColor}
@@ -143,7 +155,6 @@ export function Palette({
                   >
                     {scale.colors.map((_, index) => {
                       const color = getColor(palette.curves, scale, index);
-                      console.log(color);
                       return (
                         <div
                           style={{

@@ -11,6 +11,8 @@ const GLOBAL_STATE_KEY = "global_state";
 
 type MachineContext = {
   palettes: Record<string, Palette>;
+  past: Record<string, Palette>[];
+  future: Record<string, Palette>[];
 };
 
 type MachineEvent =
@@ -117,14 +119,43 @@ type MachineEvent =
       paletteId: string;
       scaleId: string;
       colors: Color[];
-    };
+    }
+  | { type: "UNDO" }
+  | { type: "REDO" };
 
 const machine = Machine<MachineContext, MachineEvent>({
   id: "global-state",
   context: {
     palettes: {},
+    past: [],
+    future: [],
   },
+  initial: "idle",
   on: {
+    UNDO: {
+      actions: assign(context => {
+        if (context.past.length > 0) {
+          // Insert the present state at the beginning of the future
+          context.future.push(context.palettes);
+          // Set the present to the last state in the past
+          context.palettes = context.past[context.past.length - 1];
+          // Remove the last state from the past
+          context.past = context.past.slice(0, context.past.length - 1);
+        }
+      }),
+    },
+    REDO: {
+      actions: assign(context => {
+        if (context.future.length > 0) {
+          // Insert the present state at the beginning of the past
+          context.past.push(context.palettes);
+          // Set the present to the last state in the future
+          context.palettes = context.future[0];
+          // Remove the first state from the future
+          context.future = context.future.slice(1);
+        }
+      }),
+    },
     CREATE_PALETTE: {
       actions: assign(context => {
         const paletteId = uniqueId();
@@ -138,22 +169,26 @@ const machine = Machine<MachineContext, MachineEvent>({
       }),
     },
     DELETE_PALETTE: {
+      target: "debouncing",
       actions: assign((context, event) => {
         delete context.palettes[event.paletteId];
       }),
     },
     CHANGE_PALETTE_NAME: {
+      target: "debouncing",
       actions: assign((context, event) => {
         context.palettes[event.paletteId].name = event.name;
       }),
     },
     CHANGE_PALETTE_BACKGROUND_COLOR: {
+      target: "debouncing",
       actions: assign((context, event) => {
         context.palettes[event.paletteId].backgroundColor =
           event.backgroundColor;
       }),
     },
     IMPORT_SCALES: {
+      target: "debouncing",
       actions: assign((context, event) => {
         if (event.replace) {
           context.palettes[event.paletteId].scales = event.scales;
@@ -163,6 +198,7 @@ const machine = Machine<MachineContext, MachineEvent>({
       }),
     },
     CREATE_SCALE: {
+      target: "debouncing",
       actions: assign((context, event) => {
         const scaleId = uniqueId();
         const randomIndex = randomIntegerInRange(0, cssColorNames.length);
@@ -178,17 +214,20 @@ const machine = Machine<MachineContext, MachineEvent>({
       }),
     },
     DELETE_SCALE: {
+      target: "debouncing",
       actions: assign((context, event) => {
         delete context.palettes[event.paletteId].scales[event.scaleId];
       }),
     },
     CHANGE_SCALE_NAME: {
+      target: "debouncing",
       actions: assign((context, event) => {
         context.palettes[event.paletteId].scales[event.scaleId].name =
           event.name;
       }),
     },
     CREATE_COLOR: {
+      target: "debouncing",
       actions: assign((context, event) => {
         const colors =
           context.palettes[event.paletteId].scales[event.scaleId].colors;
@@ -208,11 +247,13 @@ const machine = Machine<MachineContext, MachineEvent>({
       }),
     },
     POP_COLOR: {
+      target: "debouncing",
       actions: assign((context, event) => {
         context.palettes[event.paletteId].scales[event.scaleId].colors.pop();
       }),
     },
     DELETE_COLOR: {
+      target: "debouncing",
       actions: assign((context, event) => {
         context.palettes[event.paletteId].scales[event.scaleId].colors.splice(
           event.index,
@@ -221,6 +262,7 @@ const machine = Machine<MachineContext, MachineEvent>({
       }),
     },
     CHANGE_COLOR_VALUE: {
+      target: "debouncing",
       actions: assign((context, event) => {
         Object.assign(
           context.palettes[event.paletteId].scales[event.scaleId].colors[
@@ -231,6 +273,7 @@ const machine = Machine<MachineContext, MachineEvent>({
       }),
     },
     CREATE_CURVE_FROM_SCALE: {
+      target: "debouncing",
       actions: assign((context, event) => {
         // Create curve
         const curveId = uniqueId();
@@ -262,12 +305,14 @@ const machine = Machine<MachineContext, MachineEvent>({
       }),
     },
     CHANGE_CURVE_NAME: {
+      target: "debouncing",
       actions: assign((context, event) => {
         context.palettes[event.paletteId].curves[event.curveId].name =
           event.name;
       }),
     },
     DELETE_CURVE: {
+      target: "debouncing",
       actions: assign((context, event) => {
         // Find and remove references to curve
         Object.values(context.palettes[event.paletteId].scales).forEach(
@@ -298,6 +343,7 @@ const machine = Machine<MachineContext, MachineEvent>({
       }),
     },
     CHANGE_SCALE_CURVE: {
+      target: "debouncing",
       actions: assign((context, event) => {
         const palette = context.palettes[event.paletteId];
         const scale = palette.scales[event.scaleId];
@@ -323,6 +369,7 @@ const machine = Machine<MachineContext, MachineEvent>({
       }),
     },
     CHANGE_CURVE_VALUE: {
+      target: "debouncing",
       actions: assign((context, event) => {
         context.palettes[event.paletteId].curves[event.curveId].values[
           event.index
@@ -330,16 +377,40 @@ const machine = Machine<MachineContext, MachineEvent>({
       }),
     },
     CHANGE_CURVE_VALUES: {
+      target: "debouncing",
       actions: assign((context, event) => {
         context.palettes[event.paletteId].curves[event.curveId].values =
           event.values;
       }),
     },
     CHANGE_SCALE_COLORS: {
+      target: "debouncing",
       actions: assign((context, event) => {
         context.palettes[event.paletteId].scales[event.scaleId].colors =
           event.colors;
       }),
+    },
+  },
+  states: {
+    idle: {
+      exit: assign((context, event) => {
+        // Insert present state at the end of the past
+        context.past.push(context.palettes);
+
+        // Limit length of past
+        const size = 50;
+        context.past = context.past.slice(-size);
+
+        // Clear the future
+        context.future = [];
+      }),
+    },
+    debouncing: {
+      after: {
+        400: {
+          target: "idle",
+        },
+      },
     },
   },
 });
@@ -352,9 +423,13 @@ export function GlobalStateProvider({ children }: React.PropsWithChildren<{}>) {
     []
   );
 
-  const service = useInterpret(machine, { state: initialState }, state => {
-    localStorage.setItem(GLOBAL_STATE_KEY, JSON.stringify(state));
-  });
+  const service = useInterpret(
+    machine,
+    { state: initialState, devTools: true },
+    state => {
+      localStorage.setItem(GLOBAL_STATE_KEY, JSON.stringify(state));
+    }
+  );
 
   return (
     <GlobalStateContext.Provider value={service}>
