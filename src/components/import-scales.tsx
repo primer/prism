@@ -37,7 +37,7 @@ export function ImportScales({ onImport }: ImportScalesProps) {
         ([name, scale]) => {
           const id = uniqueId();
           const scaleArray = isArray(scale) ? scale : [scale];
-          return { id, name, colors: scaleArray.map(hexToColor) };
+          return { id, name, colors: scaleArray.map(hexToColor), curves: {} };
         }
       );
 

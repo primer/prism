@@ -4,10 +4,18 @@ export type Color = {
   lightness: number; // 0-100
 };
 
+export type Curve = {
+  id: string;
+  name: string;
+  type: "hue" | "saturation" | "lightness";
+  values: number[];
+};
+
 export type Scale = {
   id: string;
   name: string;
   colors: Color[];
+  curves: Partial<Record<Curve["type"], string>>;
 };
 
 export type Palette = {
@@ -15,4 +23,5 @@ export type Palette = {
   name: string;
   backgroundColor: string;
   scales: Record<string, Scale>;
+  curves: Record<string, Curve>;
 };

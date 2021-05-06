@@ -61,6 +61,7 @@ const machine = Machine<MachineContext, MachineEvent>({
           name: "Untitled",
           backgroundColor: "#ffffff",
           scales: {},
+          curves: {},
         };
       }),
     },
@@ -100,6 +101,7 @@ const machine = Machine<MachineContext, MachineEvent>({
           id: scaleId,
           name,
           colors: [color],
+          curves: {},
         };
       }),
     },
