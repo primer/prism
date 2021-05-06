@@ -10,7 +10,7 @@ import { Palette } from "./pages/palette";
 import { Scale } from "./pages/scale";
 
 export function App() {
-  const [state, send] = useGlobalState();
+  const [, send] = useGlobalState();
 
   useHotkeys("command+z, ctrl+z", () => send("UNDO"));
   useHotkeys("command+shift+z, ctrl+shift+z", () => send("REDO"));
