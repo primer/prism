@@ -29,6 +29,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-draggable": "^4.4.3",
+    "react-hotkeys-hook": "^3.3.1",
     "react-scripts": "4.0.3",
     "react-use-measure": "^2.0.4",
     "styled-components": "^5.2.3",
