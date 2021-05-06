@@ -16,6 +16,14 @@ export function Index(props: RouteComponentProps) {
         ))}
       </VStack>
       <Button onClick={() => send("CREATE_PALETTE")}>Create palette</Button>
+      <Button
+        onClick={() => {
+          localStorage.clear();
+          window.location.reload();
+        }}
+      >
+        Clear local storage
+      </Button>
     </VStack>
   );
 }
