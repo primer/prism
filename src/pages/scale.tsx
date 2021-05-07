@@ -163,10 +163,6 @@ export function Scale({
                   height={height}
                   label={`${type[0].toUpperCase()}`}
                   onChange={(values, shiftKey, index) => {
-                    if (index) {
-                      navigate(`/${paletteId}/scale/${scaleId}/${index}`);
-                    }
-
                     if (shiftKey && scale.curves[type]) {
                       send({
                         type: "CHANGE_CURVE_VALUES",
