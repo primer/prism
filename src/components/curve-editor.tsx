@@ -15,7 +15,7 @@ type CurveEditorProps = {
   step?: number;
   width?: number;
   height?: number;
-  onChange?: (values: number[], shiftKey: boolean) => void;
+  onChange?: (values: number[], shiftKey: boolean, index?: number) => void;
   disabled?: boolean;
   label?: string;
   style?: React.SVGAttributes<SVGSVGElement>["style"];
@@ -126,7 +126,8 @@ export function CurveEditor({
                 const value = guard(min, max, yScale.invert(y + data.deltaY));
                 draft[index] = round(value, step);
               }),
-              event.shiftKey
+              event.shiftKey,
+              index
             );
           }}
         >
