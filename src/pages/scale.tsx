@@ -99,10 +99,8 @@ export function Scale({
                       width: "100%",
                       height: "100%",
                       backgroundColor: colorToHex(color),
-                      // zIndex: isCurrent ? 1 : 0,
-                      // transform: isCurrent ? "scale(1.02)" : "none",
                       boxShadow: isCurrent
-                        ? `0 -8px 0 ${colorToHex(color)}`
+                        ? `0 -1px 0 var(--color-background), 0 -3px 0 var(--color-text)`
                         : "none",
                     },
                   };
