@@ -24,6 +24,11 @@ export function Scale({
   const scale = palette.scales[scaleId];
   // TODO: allow resizing
   const [ref, { width, height }] = useMeasure();
+  const [visibleCurves, setVisibleCurves] = React.useState({
+    hue: true,
+    saturation: true,
+    lightness: true,
+  });
 
   if (!scale) {
     return (
@@ -50,7 +55,24 @@ export function Scale({
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div></div>
+          <HStack spacing={8}>
+            {Object.entries(visibleCurves).map(([type, isVisible]) => {
+              return (
+                <Button
+                  onClick={() =>
+                    setVisibleCurves({ ...visibleCurves, [type]: !isVisible })
+                  }
+                  style={{
+                    background: isVisible
+                      ? "var(--color-background-secondary)"
+                      : "var(--color-background)",
+                  }}
+                >
+                  {type[0].toUpperCase()}
+                </Button>
+              );
+            })}
+          </HStack>
           <HStack spacing={8}>
             <Button
               aria-label="Remove color from end of scale"
@@ -111,63 +133,68 @@ export function Scale({
           {(Object.entries(scale.curves) as [
             Curve["type"],
             string | undefined
-          ][]).map(([type, curveId]) => {
-            if (!curveId) return null;
+          ][])
+            .filter(([type]) => visibleCurves[type])
+            .map(([type, curveId]) => {
+              if (!curveId) return null;
 
-            return (
-              <CurveEditor
-                values={palette.curves[curveId].values}
-                {...getRange(type)}
-                width={width}
-                height={height}
-                disabled
-                label={`${type[0].toUpperCase()}`}
-              />
-            );
-          })}
-          {(["hue", "saturation", "lightness"] as const).map(type => {
-            return (
-              <CurveEditor
-                values={scale.colors.map(
-                  (color, index) => getColor(palette.curves, scale, index)[type]
-                )}
-                {...getRange(type)}
-                width={width}
-                height={height}
-                label={`${type[0].toUpperCase()}`}
-                onChange={(values, shiftKey, index) => {
-                  if (index) {
-                    navigate(index.toString());
-                  }
+              return (
+                <CurveEditor
+                  values={palette.curves[curveId].values}
+                  {...getRange(type)}
+                  width={width}
+                  height={height}
+                  disabled
+                  label={`${type[0].toUpperCase()}`}
+                />
+              );
+            })}
+          {(["hue", "saturation", "lightness"] as const)
+            .filter(type => visibleCurves[type])
+            .map(type => {
+              return (
+                <CurveEditor
+                  values={scale.colors.map(
+                    (color, index) =>
+                      getColor(palette.curves, scale, index)[type]
+                  )}
+                  {...getRange(type)}
+                  width={width}
+                  height={height}
+                  label={`${type[0].toUpperCase()}`}
+                  onChange={(values, shiftKey, index) => {
+                    if (index) {
+                      navigate(`/${paletteId}/scale/${scaleId}/${index}`);
+                    }
 
-                  if (shiftKey && scale.curves[type]) {
-                    send({
-                      type: "CHANGE_CURVE_VALUES",
-                      paletteId,
-                      curveId: scale.curves[type] ?? "",
-                      values: values.map(
-                        (value, index) => value - scale.colors[index][type]
-                      ),
-                    });
-                  } else {
-                    send({
-                      type: "CHANGE_SCALE_COLORS",
-                      paletteId,
-                      scaleId,
-                      colors: scale.colors.map((color, index) => ({
-                        ...color,
-                        [type]:
-                          values[index] -
-                          (palette.curves[scale.curves[type] ?? ""]?.values[
-                            index
-                          ] ?? 0),
-                      })),
-                    });
-                  }
-                }}
-              />
-            );
-          })}
+                    if (shiftKey && scale.curves[type]) {
+                      send({
+                        type: "CHANGE_CURVE_VALUES",
+                        paletteId,
+                        curveId: scale.curves[type] ?? "",
+                        values: values.map(
+                          (value, index) => value - scale.colors[index][type]
+                        ),
+                      });
+                    } else {
+                      send({
+                        type: "CHANGE_SCALE_COLORS",
+                        paletteId,
+                        scaleId,
+                        colors: scale.colors.map((color, index) => ({
+                          ...color,
+                          [type]:
+                            values[index] -
+                            (palette.curves[scale.curves[type] ?? ""]?.values[
+                              index
+                            ] ?? 0),
+                        })),
+                      });
+                    }
+                  }}
+                />
+              );
+            })}
         </ZStack>
       </div>
       <VStack
