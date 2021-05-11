@@ -10,7 +10,6 @@ import { HStack, VStack, ZStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
 import { Curve } from "../types";
 import { colorToHex, getColor, getRange } from "../utils";
-import useMeasure from "react-use-measure";
 
 export function Scale({
   paletteId = "",
@@ -23,7 +22,6 @@ export function Scale({
   const palette = state.context.palettes[paletteId];
   const scale = palette.scales[scaleId];
   // TODO: allow resizing
-  const [ref, { width, height }] = useMeasure();
   const [visibleCurves, setVisibleCurves] = React.useState({
     hue: true,
     saturation: true,
@@ -103,7 +101,6 @@ export function Scale({
         </div>
         <ZStack>
           <div
-            ref={ref}
             style={{
               display: "flex",
               width: "100%",
@@ -142,8 +139,6 @@ export function Scale({
                 <CurveEditor
                   values={palette.curves[curveId].values}
                   {...getRange(type)}
-                  width={width}
-                  height={height}
                   disabled
                   label={`${type[0].toUpperCase()}`}
                 />
@@ -159,8 +154,6 @@ export function Scale({
                       getColor(palette.curves, scale, index)[type]
                   )}
                   {...getRange(type)}
-                  width={width}
-                  height={height}
                   label={`${type[0].toUpperCase()}`}
                   onChange={(values, shiftKey, index) => {
                     if (shiftKey && scale.curves[type]) {

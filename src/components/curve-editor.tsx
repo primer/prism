@@ -3,6 +3,7 @@ import React from "react";
 import { DraggableCore } from "react-draggable";
 import produce from "immer";
 import { guard } from "color2k";
+import useMeasure from "react-use-measure";
 
 function round(num: number, step: number) {
   return Math.round(num * (1 / step)) / (1 / step);
@@ -13,8 +14,6 @@ type CurveEditorProps = {
   min: number;
   max: number;
   step?: number;
-  width?: number;
-  height?: number;
   onChange?: (values: number[], shiftKey: boolean, index?: number) => void;
   disabled?: boolean;
   label?: string;
@@ -30,13 +29,12 @@ export function CurveEditor({
   min,
   max,
   onChange,
-  width = 500,
-  height = 300,
   step = 0.1,
   disabled = false,
   label = "",
   style = {},
 }: CurveEditorProps) {
+  const [ref, { width, height }] = useMeasure();
   const nodeRadius = 12;
   const columnWidth = width / values.length;
 
@@ -64,9 +62,9 @@ export function CurveEditor({
 
   return (
     <svg
-      viewBox={`0 0 ${width} ${height}`}
-      width={width}
-      height={height}
+      ref={ref}
+      width="100%"
+      height="100%"
       fill="none"
       style={style}
       pointerEvents={disabled ? "none" : "all"}

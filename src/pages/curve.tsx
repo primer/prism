@@ -8,7 +8,6 @@ import { VStack, ZStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
 import { Color } from "../types";
 import { colorToHex, getColor } from "../utils";
-import useMeasure from "react-use-measure";
 
 const ranges = {
   hue: { min: 0, max: 360 },
@@ -30,8 +29,6 @@ export function Curve({
       ),
     [palette, curveId]
   );
-  // TODO: allow resizing
-  const [ref, { width, height }] = useMeasure();
 
   if (!curve) {
     return (
@@ -51,7 +48,6 @@ export function Curve({
     >
       <ZStack style={{ padding: 16 }}>
         <div
-          ref={ref}
           style={{
             width: "100%",
             height: "100%",
@@ -99,8 +95,6 @@ export function Curve({
         <CurveEditor
           values={curve.values}
           {...ranges[curve.type]}
-          width={width}
-          height={height}
           onChange={values =>
             send({ type: "CHANGE_CURVE_VALUES", paletteId, curveId, values })
           }
