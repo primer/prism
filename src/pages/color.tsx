@@ -2,6 +2,7 @@ import { RouteComponentProps } from "@reach/router";
 import { toHsla, toRgba } from "color2k";
 import React from "react";
 import { Button } from "../components/button";
+import { ContrastPanel } from "../components/contrast-panel";
 import { Input } from "../components/input";
 import { VStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
@@ -138,6 +139,8 @@ export function Color({
       >
         Delete color
       </Button>
+
+      <ContrastPanel color1={hex} color2={palette.backgroundColor} />
     </VStack>
   );
 }
