@@ -1,4 +1,4 @@
-import { Link, navigate, RouteComponentProps, useParams } from "@reach/router";
+import { Link, navigate, RouteComponentProps } from "@reach/router";
 import React from "react";
 import { Button } from "../components/button";
 import { Color } from "../components/color";
