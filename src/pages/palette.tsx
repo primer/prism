@@ -29,6 +29,16 @@ const Wrapper = styled.div<{ backgroundColor: string }>`
   height: 100vh;
 `;
 
+const Main = styled.main`
+  grid-area: main;
+  display: flex;
+  overflow: auto;
+
+  & > * {
+    flex-grow: 1;
+  }
+`;
+
 export function Palette({
   paletteId = "",
   children,
@@ -241,15 +251,7 @@ export function Palette({
           </VStack>
         </VStack>
       </div>
-      <main
-        style={{
-          gridArea: "main",
-          overflow: "auto",
-          display: "grid",
-        }}
-      >
-        {children}
-      </main>
+      <Main>{children}</Main>
     </Wrapper>
   );
 }

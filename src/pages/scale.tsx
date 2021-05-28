@@ -39,13 +39,13 @@ export function Scale({
   return (
     <div
       style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 300px",
+        display: "flex",
         height: "100%",
       }}
     >
       <div
         style={{
+          flexGrow: 1,
           display: "grid",
           gridTemplateRows: "auto 1fr",
           gap: 16,
@@ -127,10 +127,12 @@ export function Scale({
               />
             ))}
           </div>
-          {(Object.entries(scale.curves) as [
-            Curve["type"],
-            string | undefined
-          ][])
+          {(
+            Object.entries(scale.curves) as [
+              Curve["type"],
+              string | undefined
+            ][]
+          )
             .filter(([type]) => visibleCurves[type])
             .map(([type, curveId]) => {
               if (!curveId) return null;
@@ -189,6 +191,9 @@ export function Scale({
       <VStack
         style={{
           borderLeft: "1px solid var(--color-border, gainsboro)",
+          width: 300,
+          flexShrink: 0,
+          overflow: "auto",
         }}
       >
         <VStack spacing={16} style={{ padding: 16 }}>
