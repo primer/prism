@@ -3,7 +3,6 @@ import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useGlobalState } from "./global-state";
 import { Index } from "./pages";
-import { Color } from "./pages/color";
 import { Curve } from "./pages/curve";
 import { NotFound } from "./pages/not-found";
 import { Palette } from "./pages/palette";
@@ -19,9 +18,8 @@ export function App() {
     <Router>
       <Index path="/" />
       <Palette path="/:paletteId">
-        <Scale path="scale/:scaleId">
-          <Color path=":index" />
-        </Scale>
+        <Scale path="scale/:scaleId"></Scale>
+        <Scale path="scale/:scaleId/:index"></Scale>
         <Curve path="curve/:curveId"></Curve>
       </Palette>
       <NotFound default />

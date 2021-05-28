@@ -1,6 +1,7 @@
-import { Link, navigate, RouteComponentProps } from "@reach/router";
+import { Link, navigate, RouteComponentProps, useParams } from "@reach/router";
 import React from "react";
 import { Button } from "../components/button";
+import { Color } from "../components/color";
 import { CurveEditor } from "../components/curve-editor";
 import { Input } from "../components/input";
 import { PlusIcon } from "../components/plus-icon";
@@ -14,9 +15,10 @@ import { colorToHex, getColor, getRange } from "../utils";
 export function Scale({
   paletteId = "",
   scaleId = "",
+  index = "",
   children,
 }: React.PropsWithChildren<
-  RouteComponentProps<{ paletteId: string; scaleId: string }>
+  RouteComponentProps<{ paletteId: string; scaleId: string; index: string }>
 >) {
   const [state, send] = useGlobalState();
   const palette = state.context.palettes[paletteId];
@@ -50,9 +52,16 @@ export function Scale({
           gridTemplateRows: "auto 1fr",
           gap: 16,
           padding: 16,
+          height: "100%",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div
+          style={{
+            flexShrink: 0,
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           <HStack spacing={8}>
             {Object.entries(visibleCurves).map(([type, isVisible]) => {
               return (
@@ -99,7 +108,7 @@ export function Scale({
             </Button>
           </HStack>
         </div>
-        <ZStack>
+        <ZStack style={{ overflow: "auto" }}>
           <div
             style={{
               display: "flex",
@@ -109,7 +118,7 @@ export function Scale({
           >
             {scale.colors.map((_, index) => (
               <Link
-                to={index.toString()}
+                to={`/${paletteId}/scale/${scaleId}/${index}`}
                 replace={true}
                 getProps={({ isCurrent }) => {
                   const color = getColor(palette.curves, scale, index);
@@ -119,7 +128,7 @@ export function Scale({
                       height: "100%",
                       backgroundColor: colorToHex(color),
                       boxShadow: isCurrent
-                        ? `0 -1px 0 var(--color-background), 0 -3px 0 var(--color-text)`
+                        ? `inset 0 3px 0 var(--color-background)`
                         : "none",
                     },
                   };
@@ -187,6 +196,35 @@ export function Scale({
               );
             })}
         </ZStack>
+        {index ? (
+          <div style={{ flexShrink: 0, display: "flex", height: 32 }}>
+            {Object.values(palette.scales)
+              .filter(scale => scale.colors.length > parseInt(index))
+              .map(scale => (
+                <Link
+                  to={`/${paletteId}/scale/${scale.id}/${index}`}
+                  replace={true}
+                  getProps={({ isCurrent }) => {
+                    const color = getColor(
+                      palette.curves,
+                      scale,
+                      parseInt(index)
+                    );
+                    return {
+                      style: {
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: colorToHex(color),
+                        boxShadow: isCurrent
+                          ? `inset 0 3px 0 var(--color-background)`
+                          : "none",
+                      },
+                    };
+                  }}
+                />
+              ))}
+          </div>
+        ) : null}
       </div>
       <VStack
         style={{
@@ -364,8 +402,12 @@ export function Scale({
             </div>
           </VStack>
         </VStack>
-        <Separator />
-        <div>{children}</div>
+        {index ? (
+          <>
+            <Separator />
+            <Color paletteId={paletteId} scaleId={scaleId} index={index} />
+          </>
+        ) : null}
       </VStack>
     </div>
   );

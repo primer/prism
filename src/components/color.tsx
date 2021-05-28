@@ -1,10 +1,9 @@
-import { RouteComponentProps } from "@reach/router";
 import { toHsla, toRgba } from "color2k";
 import React from "react";
-import { Button } from "../components/button";
-import { ContrastPanel } from "../components/contrast-panel";
-import { Input } from "../components/input";
-import { VStack } from "../components/stack";
+import { Button } from "./button";
+import { ContrastPanel } from "./contrast-panel";
+import { Input } from "./input";
+import { VStack } from "./stack";
 import { useGlobalState } from "../global-state";
 import { colorToHex, getColor } from "../utils";
 
@@ -12,11 +11,11 @@ export function Color({
   paletteId = "",
   scaleId = "",
   index = "",
-}: RouteComponentProps<{
+}: {
   paletteId: string;
   scaleId: string;
   index: string;
-}>) {
+}) {
   const [state, send] = useGlobalState();
   const palette = state.context.palettes[paletteId];
   const scale = palette.scales[scaleId];
