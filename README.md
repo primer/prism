@@ -2,6 +2,8 @@
 
 A tool for creating cohesive and consistent color scales
 
+https://primer-color-tool.netlify.app/
+
 ## Run locally
 
 ```bash
