@@ -1,6 +1,6 @@
 # Primer Color Tool
 
-A tool for creating cohesive and consistent color scales
+A tool for creating cohesive, consistent, and accessible color scales
 
 https://primer-color-tool.netlify.app/
 
