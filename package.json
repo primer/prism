@@ -42,8 +42,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build:preview": "REACT_APP_ENVIRONMENT=preview react-scripts build",
-    "build": "REACT_APP_ENVIRONMENT=production react-scripts build",
+    "build:preview": "react-scripts build",
+    "build": "PUBLIC_URL=/prism react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -124,7 +124,7 @@ export function Curve({
           <Button
             onClick={() => {
               send({ type: "DELETE_CURVE", paletteId, curveId });
-              navigate(`/${paletteId}`);
+              navigate(`/${routePrefix}/${paletteId}`);
             }}
           >
             Delete curve
