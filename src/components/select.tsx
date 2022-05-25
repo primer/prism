@@ -7,7 +7,7 @@ export const Select = styled.select`
   font-size: 14px;
   line-height: 32px;
   border: 1px solid var(--color-border, gray);
-  border-radius: 3px;
+  border-radius: 6px;
   color: var(--color-text);
   background-color: var(--color-background);
 `;
