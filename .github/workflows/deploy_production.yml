@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - rezrah/fix-routing
 
 permissions:
   contents: read
