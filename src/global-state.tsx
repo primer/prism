@@ -1,9 +1,12 @@
+import { navigate } from "@reach/router";
 import { assign } from "@xstate/immer";
 import { useInterpret, useService } from "@xstate/react";
+import { isArray, keyBy } from "lodash-es";
 import React from "react";
 import { v4 as uniqueId } from "uuid";
 import { interpret, Machine } from "xstate";
 import cssColorNames from "./css-color-names.json";
+import exampleScales from "./example-scales.json";
 import { Color, Curve, Palette, Scale } from "./types";
 import { getColor, hexToColor, randomIntegerInRange } from "./utils";
 
@@ -159,13 +162,22 @@ const machine = Machine<MachineContext, MachineEvent>({
     CREATE_PALETTE: {
       actions: assign(context => {
         const paletteId = uniqueId();
+        const scales: Scale[] = Object.entries(exampleScales).map(
+          ([name, scale]) => {
+            const id = uniqueId();
+            const scaleArray = isArray(scale) ? scale : [scale];
+            return { id, name, colors: scaleArray.map(hexToColor), curves: {} };
+          }
+        );
         context.palettes[paletteId] = {
           id: paletteId,
           name: "Untitled",
           backgroundColor: "#ffffff",
-          scales: {},
+          scales: keyBy(scales, "id"),
           curves: {},
         };
+
+        navigate(`/${paletteId}`);
       }),
     },
     DELETE_PALETTE: {
@@ -296,12 +308,11 @@ const machine = Machine<MachineContext, MachineEvent>({
         ] = curveId;
 
         // Reset color offsets
-        context.palettes[event.paletteId].scales[
-          event.scaleId
-        ].colors = scale.colors.map(color => ({
-          ...color,
-          [event.curveType]: 0,
-        }));
+        context.palettes[event.paletteId].scales[event.scaleId].colors =
+          scale.colors.map(color => ({
+            ...color,
+            [event.curveType]: 0,
+          }));
       }),
     },
     CHANGE_CURVE_NAME: {
@@ -317,10 +328,12 @@ const machine = Machine<MachineContext, MachineEvent>({
         // Find and remove references to curve
         Object.values(context.palettes[event.paletteId].scales).forEach(
           scale => {
-            (Object.entries(scale.curves) as [
-              Curve["type"],
-              string | undefined
-            ][]).forEach(([type, curveId]) => {
+            (
+              Object.entries(scale.curves) as [
+                Curve["type"],
+                string | undefined
+              ][]
+            ).forEach(([type, curveId]) => {
               if (curveId === event.curveId) {
                 // Update color values
                 scale.colors = scale.colors.map((color, index) => ({
