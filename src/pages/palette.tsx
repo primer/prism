@@ -131,7 +131,7 @@ export function Palette({
               send({ type: "DELETE_PALETTE", paletteId });
 
               // Navigate to home page after deleting a palette
-              navigate("/");
+              navigate(`${routePrefix}/`);
             }}
           >
             Delete palette

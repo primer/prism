@@ -252,7 +252,7 @@ export function Scale({
           <Button
             onClick={() => {
               send({ type: "DELETE_SCALE", paletteId, scaleId });
-              navigate(`/${paletteId}`);
+              navigate(`${routePrefix}/${paletteId}`);
             }}
           >
             Delete scale
