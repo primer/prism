@@ -8,10 +8,10 @@ https://primer-color-tool.netlify.app/
 
 ```bash
 # Clone the project
-git clone git@github.com:primer/color-tool.git
+git clone git@github.com:primer/prism.git
 
 # Go to the project directory
-cd color-tool
+cd prism
 
 # Install dependencies
 yarn
