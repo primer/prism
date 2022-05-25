@@ -11,6 +11,7 @@ import { HStack, VStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
 import { Color } from "../types";
 import { colorToHex, getColor } from "../utils";
+import {routePrefix} from "../constants"
 
 const Wrapper = styled.div<{ backgroundColor: string }>`
   --color-text: ${props => readableColor(props.backgroundColor)};
@@ -50,10 +51,12 @@ export function Palette({
     return (
       <div style={{ padding: 16 }}>
         <p style={{ marginTop: 0 }}>Palette not found</p>
-        <Link to="/">Go home</Link>
+        <Link to={`${routePrefix}/`}>Go home</Link>
       </div>
     );
   }
+
+
 
   return (
     <Wrapper backgroundColor={palette.backgroundColor}>
@@ -68,7 +71,7 @@ export function Palette({
         }}
       >
         <HStack spacing={16}>
-          <Link to="/" style={{ color: "inherit" }}>
+          <Link to={`${routePrefix}/`} style={{ color: "inherit" }}>
             Home
           </Link>
           <Input
