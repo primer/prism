@@ -1,0 +1,20 @@
+name: Deploy (production)
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    uses: primer/.github/.github/workflows/deploy.yml@main
+    with:
+      node_version: 16
+      install: yarn
+      build: yarn build
+      output_dir: build
