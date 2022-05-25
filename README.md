@@ -1,6 +1,6 @@
-# Primer Color Tool
+# Primer Prism
 
-A tool for creating cohesive, consistent, and accessible color scales
+A tool for creating and maintaining cohesive, consistent, and accessible color palettes
 
 https://primer-color-tool.netlify.app/
 
