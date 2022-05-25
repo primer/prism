@@ -8,6 +8,7 @@ import { VStack, ZStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
 import { Color } from "../types";
 import { colorToHex, getColor } from "../utils";
+import {routePrefix} from "../constants"
 
 const ranges = {
   hue: { min: 0, max: 360 },
@@ -164,7 +165,7 @@ export function Curve({
             {scales.map(scale => (
               <Link
                 key={scale.id}
-                to={`/${paletteId}/scale/${scale.id}`}
+                to={`${routePrefix}/${paletteId}/scale/${scale.id}`}
                 style={{
                   color: "inherit",
                   fontSize: 14,

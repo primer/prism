@@ -11,6 +11,7 @@ import { HStack, VStack, ZStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
 import { Curve } from "../types";
 import { colorToHex, getColor, getRange } from "../utils";
+import {routePrefix} from "../constants"
 
 export function Scale({
   paletteId = "",
@@ -118,7 +119,7 @@ export function Scale({
           >
             {scale.colors.map((_, index) => (
               <Link
-                to={`/${paletteId}/scale/${scaleId}/${index}`}
+                to={`${routePrefix}/${paletteId}/scale/${scaleId}/${index}`}
                 replace={true}
                 getProps={({ isCurrent }) => {
                   const color = getColor(palette.curves, scale, index);
@@ -202,7 +203,7 @@ export function Scale({
               .filter(scale => scale.colors.length > parseInt(index))
               .map(scale => (
                 <Link
-                  to={`/${paletteId}/scale/${scale.id}/${index}`}
+                  to={`${routePrefix}/${paletteId}/scale/${scale.id}/${index}`}
                   replace={true}
                   getProps={({ isCurrent }) => {
                     const color = getColor(

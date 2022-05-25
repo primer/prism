@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "../components/button";
 import { VStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
+import {routePrefix} from "../constants"
 
 export function Index(props: RouteComponentProps) {
   const [state, send] = useGlobalState();
@@ -11,7 +12,7 @@ export function Index(props: RouteComponentProps) {
       <VStack as="ul" style={{ margin: 0, padding: 0, listStyle: "none" }}>
         {Object.values(state.context.palettes).map(palette => (
           <li key={palette.id}>
-            <Link to={`/${palette.id}`}>{palette.name}</Link>
+            <Link to={`${routePrefix}/${palette.id}`}>{palette.name}</Link>
           </li>
         ))}
       </VStack>
