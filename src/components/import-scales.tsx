@@ -1,13 +1,12 @@
+import { Button as PrimerButton, Flash, Textarea } from "@primer/react";
+import { Dialog } from "@primer/react/lib-esm/Dialog/Dialog";
 import { isArray, keyBy } from "lodash-es";
 import React from "react";
 import { v4 as uniqueId } from "uuid";
-import exampleScales from "../example-scales.json";
 import { Scale } from "../types";
 import { hexToColor } from "../utils";
 import { Button } from "./button";
-import * as Dialog from "./dialog";
 import { HStack, VStack } from "./stack";
-import { Textarea } from "./textarea";
 
 const PLACEHOLDER = `{
   "gray": [
@@ -49,66 +48,54 @@ export function ImportScales({ onImport }: ImportScalesProps) {
       setError("");
       setReplace(false);
     } catch (error) {
-      setError(error.message);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError(String(error));
+      }
     }
   };
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-      <Dialog.Trigger as={Button}>Import scales</Dialog.Trigger>
-      <Dialog.Overlay />
-      <Dialog.Content>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: 16,
-            borderBottom: "1px solid gainsboro",
-          }}
-        >
-          <span>Import scales</span>
-          <Dialog.Close as={Button}>Close</Dialog.Close>
-        </div>
-        <form onSubmit={handleSubmit}>
-          <VStack spacing={16} style={{ padding: 16 }}>
-            {error ? (
-              <pre style={{ margin: 0, color: "firebrick" }}>{error}</pre>
-            ) : null}
-            <VStack spacing={4}>
-              <label htmlFor="code" style={{ fontSize: 14 }}>
-                Paste JSON
-              </label>
-              <Textarea
-                id="code"
-                rows={12}
-                style={{ fontFamily: "monospace" }}
-                placeholder={PLACEHOLDER}
-                value={code}
-                onChange={event => setCode(event.target.value)}
-              />
+    <>
+      <Button onClick={() => setIsOpen(true)}>Import</Button>
+      {isOpen ? (
+        <Dialog title="Import" onClose={() => setIsOpen(false)}>
+          <form onSubmit={handleSubmit}>
+            <VStack spacing={16}>
+              {error ? <Flash variant="danger">{error}</Flash> : null}
+              <VStack spacing={4}>
+                <label htmlFor="code" style={{ fontSize: 14 }}>
+                  Paste JSON
+                </label>
+                <Textarea
+                  id="code"
+                  rows={12}
+                  sx={{ fontFamily: "mono" }}
+                  placeholder={PLACEHOLDER}
+                  value={code}
+                  onChange={event => setCode(event.target.value)}
+                />
+              </VStack>
+              <HStack spacing={4}>
+                <input
+                  type="checkbox"
+                  id="replace"
+                  checked={replace}
+                  onChange={event => setReplace(event.target.checked)}
+                />
+                <label
+                  htmlFor="replace"
+                  style={{ fontSize: 14, lineHeight: 1 }}
+                >
+                  Replace existing scales
+                </label>
+              </HStack>
+              <PrimerButton>Import</PrimerButton>
             </VStack>
-            <Button
-              type="button"
-              onClick={() => setCode(JSON.stringify(exampleScales, null, 2))}
-            >
-              Load example scales
-            </Button>
-            <HStack spacing={4}>
-              <input
-                type="checkbox"
-                id="replace"
-                checked={replace}
-                onChange={event => setReplace(event.target.checked)}
-              />
-              <label htmlFor="replace" style={{ fontSize: 14, lineHeight: 1 }}>
-                Replace existing scales
-              </label>
-            </HStack>
-            <Button>Import</Button>
-          </VStack>
-        </form>
-      </Dialog.Content>
-    </Dialog.Root>
+          </form>
+        </Dialog>
+      ) : null}
+    </>
   );
 }

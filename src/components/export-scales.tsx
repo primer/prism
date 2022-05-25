@@ -1,18 +1,19 @@
+import { Button as PrimerButton, Textarea } from "@primer/react";
+import { Dialog } from "@primer/react/lib-esm/Dialog/Dialog";
 import copy from "copy-to-clipboard";
 import { camelCase } from "lodash-es";
 import React from "react";
 import { Palette } from "../types";
 import { colorToHex, getColor } from "../utils";
 import { Button } from "./button";
-import * as Dialog from "./dialog";
 import { VStack } from "./stack";
-import { Textarea } from "./textarea";
 
 type ExportScalesProps = {
   palette: Palette;
 };
 
 export function ExportScales({ palette }: ExportScalesProps) {
+  const [isOpen, setIsOpen] = React.useState(false);
   const hexScales = React.useMemo(
     () =>
       Object.values(palette.scales).reduce<Record<string, string | string[]>>(
@@ -37,47 +38,41 @@ export function ExportScales({ palette }: ExportScalesProps) {
     [palette.curves, palette.scales]
   );
 
-  const code = React.useMemo(() => JSON.stringify(hexScales, null, 2), [
-    hexScales,
-  ]);
+  const code = React.useMemo(
+    () => JSON.stringify(hexScales, null, 2),
+    [hexScales]
+  );
 
   const svg = React.useMemo(() => generateSvg(hexScales), [hexScales]);
 
   return (
-    <Dialog.Root>
-      <Dialog.Trigger as={Button}>Export scales</Dialog.Trigger>
-      <Dialog.Overlay />
-      <Dialog.Content>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: 16,
-            borderBottom: "1px solid gainsboro",
-          }}
-        >
-          <span>Export scales</span>
-          <Dialog.Close as={Button}>Close</Dialog.Close>
-        </div>
-        <VStack spacing={16} style={{ padding: 16 }}>
-          <Textarea
-            aria-label="Copy JSON"
-            rows={12}
-            value={code}
-            style={{ fontFamily: "monospace" }}
-            readOnly
-            disabled
-          />
-          <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}
-          >
-            <Button onClick={() => copy(code)}>Copy JSON</Button>
-            <Button onClick={() => copy(svg)}>Copy SVG</Button>
-          </div>
-        </VStack>
-      </Dialog.Content>
-    </Dialog.Root>
+    <>
+      <Button onClick={() => setIsOpen(true)}>Export</Button>
+      {isOpen ? (
+        <Dialog title="Export" onClose={() => setIsOpen(false)}>
+          <VStack spacing={16}>
+            <Textarea
+              aria-label="Copy JSON"
+              rows={16}
+              value={code}
+              readOnly
+              resize="vertical"
+              sx={{ fontFamily: "mono" }}
+            />
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 16,
+              }}
+            >
+              <PrimerButton onClick={() => copy(code)}>Copy JSON</PrimerButton>
+              <PrimerButton onClick={() => copy(svg)}>Copy SVG</PrimerButton>
+            </div>
+          </VStack>
+        </Dialog>
+      ) : null}
+    </>
   );
 }
 
