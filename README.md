@@ -2,7 +2,7 @@
 
 A tool for creating and maintaining cohesive, consistent, and accessible color palettes
 
-https://primer-color-tool.netlify.app/
+[primer.style/prism](https://primer-prism.netlify.com)
 
 ## Run locally
 
