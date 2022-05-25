@@ -1,0 +1,22 @@
+name: Deploy (preview)
+
+on:
+  pull_request:
+
+permissions:
+  checks: write
+  deployments: write
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    if: ${{ github.repository == 'primer/prism' }}
+    name: Deploy
+    uses: primer/.github/.github/workflows/deploy_preview.yml@main
+    with:
+      node_version: 16
+      install: yarn
+      build: yarn build
+      output_dir: build
+

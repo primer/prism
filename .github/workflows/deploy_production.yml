@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - rezrah/app-github-pages # for testing
 
 permissions:
   contents: read
