@@ -15,7 +15,7 @@ export function App() {
   useHotkeys("command+shift+z, ctrl+shift+z", () => send("REDO"));
 
   return (
-    <Router>
+    <Router basepath={process.env.NODE_ENV === 'production' ? 'prism' : ''}>
       <Index path="/" />
       <Palette path="/:paletteId">
         <Scale path="scale/:scaleId"></Scale>
