@@ -1,5 +1,6 @@
 {
   "name": "color-tool",
+  "homepage": "https://primer.github.io/prism",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
