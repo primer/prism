@@ -421,7 +421,7 @@ const machine = Machine<MachineContext, MachineEvent>({
     },
     debouncing: {
       after: {
-        400: {
+        200: {
           target: "idle",
         },
       },
