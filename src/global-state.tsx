@@ -178,7 +178,7 @@ const machine = Machine<MachineContext, MachineEvent>({
           curves: {},
         };
 
-        navigate(`${routePrefix}/${paletteId}`);
+        navigate(`${routePrefix}/local/${paletteId}`);
       }),
     },
     DELETE_PALETTE: {

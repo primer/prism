@@ -48,7 +48,7 @@ export function Index(props: RouteComponentProps) {
             <li key={palette.id}>
               <Box
                 as={Link}
-                to={`${routePrefix}/${palette.id}`}
+                to={`${routePrefix}/local/${palette.id}`}
                 sx={{
                   display: "grid",
                   gap: 3,

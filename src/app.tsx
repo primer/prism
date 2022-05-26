@@ -28,7 +28,7 @@ export function App() {
       <GlobalStyles />
       <Router>
         <Index path={`${routePrefix}/`} />
-        <Palette path={`${routePrefix}/:paletteId`}>
+        <Palette path={`${routePrefix}/local/:paletteId`}>
           <Scale path="scale/:scaleId"></Scale>
           <Scale path="scale/:scaleId/:index"></Scale>
           <Curve path="curve/:curveId"></Curve>

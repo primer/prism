@@ -107,7 +107,7 @@ export function Scale({
           >
             {scale.colors.map((_, index) => (
               <Link
-                to={`${routePrefix}/${paletteId}/scale/${scaleId}/${index}`}
+                to={`${routePrefix}/local/${paletteId}/scale/${scaleId}/${index}`}
                 replace={true}
                 getProps={({ isCurrent }) => {
                   const color = getColor(palette.curves, scale, index);
@@ -191,7 +191,7 @@ export function Scale({
               .filter(scale => scale.colors.length > parseInt(index))
               .map(scale => (
                 <Link
-                  to={`${routePrefix}/${paletteId}/scale/${scale.id}/${index}`}
+                  to={`${routePrefix}/local/${paletteId}/scale/${scale.id}/${index}`}
                   replace={true}
                   getProps={({ isCurrent }) => {
                     const color = getColor(

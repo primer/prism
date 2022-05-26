@@ -124,7 +124,7 @@ export function Curve({
           <Button
             onClick={() => {
               send({ type: "DELETE_CURVE", paletteId, curveId });
-              navigate(`/${routePrefix}/${paletteId}`);
+              navigate(`${routePrefix}/local/${paletteId}`);
             }}
           >
             Delete curve
@@ -165,7 +165,7 @@ export function Curve({
             {scales.map(scale => (
               <Link
                 key={scale.id}
-                to={`${routePrefix}/${paletteId}/scale/${scale.id}`}
+                to={`${routePrefix}/local/${paletteId}/scale/${scale.id}`}
                 style={{
                   color: "inherit",
                   fontSize: 14,
