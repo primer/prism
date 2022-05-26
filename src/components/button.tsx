@@ -9,6 +9,7 @@ export const Button = styled(PrimerButton)`
   background-color: var(--color-background-secondary);
   border: 1px solid var(--color-border);
   box-shadow: none;
+  margin: 0;
 
   &:not([disabled]):hover,
   &:not([disabled]):active {
@@ -27,6 +28,7 @@ export const IconButton = styled(PrimerIconButton)`
   background-color: var(--color-background-secondary);
   border: 1px solid var(--color-border);
   box-shadow: none;
+  margin: 0;
 
   &:not([disabled]):hover {
     background-color: var(--color-background-secondary-hover);

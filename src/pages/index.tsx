@@ -30,6 +30,7 @@ export function Index(props: RouteComponentProps) {
           aria-label="Create new palette"
           icon={PlusIcon}
           onClick={() => send("CREATE_PALETTE")}
+          sx={{ margin: 0 }}
         />
       </Box>
       <Box sx={{ p: 3 }}>

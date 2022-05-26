@@ -10,4 +10,5 @@ export const Select = styled.select`
   border-radius: 6px;
   color: var(--color-text);
   background-color: var(--color-background);
+  margin: 0;
 `;
