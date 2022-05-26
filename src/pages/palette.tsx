@@ -1,4 +1,4 @@
-import { MarkGithubIcon, TrashIcon, XIcon } from "@primer/octicons-react";
+import { MarkGithubIcon } from "@primer/octicons-react";
 import { Box, Text } from "@primer/react";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import { mix, readableColor } from "color2k";
@@ -9,12 +9,12 @@ import { ExportScales } from "../components/export-scales";
 import { ImportScales } from "../components/import-scales";
 import { Input } from "../components/input";
 import { Separator } from "../components/separator";
+import { SidebarPanel } from "../components/sidebar-panel";
 import { HStack, VStack } from "../components/stack";
 import { routePrefix } from "../constants";
 import { useGlobalState } from "../global-state";
 import { Color } from "../types";
 import { colorToHex, getColor } from "../utils";
-import { SidebarPanel } from "../components/sidebar-panel";
 
 const Wrapper = styled.div<{ backgroundColor: string }>`
   --color-text: ${props => readableColor(props.backgroundColor)};
@@ -279,7 +279,7 @@ export function Palette({
             style={{ marginTop: 16, width: "100%" }}
             onClick={() => send({ type: "CREATE_SCALE", paletteId })}
           >
-            Add scale
+            New scale
           </Button>
         </SidebarPanel>
         <Separator />
