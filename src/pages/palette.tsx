@@ -1,4 +1,4 @@
-import { MarkGithubIcon, TrashIcon } from "@primer/octicons-react";
+import { MarkGithubIcon, TrashIcon, XIcon } from "@primer/octicons-react";
 import { Box, Text } from "@primer/react";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import { mix, readableColor } from "color2k";
@@ -14,6 +14,7 @@ import { routePrefix } from "../constants";
 import { useGlobalState } from "../global-state";
 import { Color } from "../types";
 import { colorToHex, getColor } from "../utils";
+import { SidebarPanel } from "../components/sidebar-panel";
 
 const Wrapper = styled.div<{ backgroundColor: string }>`
   --color-text: ${props => readableColor(props.backgroundColor)};
@@ -65,10 +66,10 @@ export function Palette({
       <header
         style={{
           gridArea: "header",
-          display: "grid",
+          display: "flex",
           alignItems: "center",
-          gridTemplateColumns: "repeat(3,1fr)",
-          // justifyContent: "space-between",
+          // gridTemplateColumns: "repeat(3,1fr)",
+          justifyContent: "space-between",
           padding: 16,
           borderBottom: "1px solid var(--color-border, gainsboro)",
         }}
@@ -87,23 +88,12 @@ export function Palette({
             </Text>
           </Text>
         </Link>
-        <Input
-          type="text"
-          aria-label="Palette name"
-          value={palette.name}
-          style={{ justifySelf: "center", textAlign: "center" }}
-          onChange={event =>
-            send({
-              type: "CHANGE_PALETTE_NAME",
-              paletteId,
-              name: event.target.value,
-            })
-          }
-        />
-        <HStack spacing={8} style={{ justifyContent: "end" }}>
+
+        <HStack spacing={8}>
           <IconButton
-            aria-label="Unde"
+            aria-label="Undo"
             icon={() => (
+              // Custom undo icon
               <svg
                 aria-hidden
                 width="16"
@@ -128,6 +118,7 @@ export function Palette({
           <IconButton
             aria-label="Redo"
             icon={() => (
+              // Custom redo icon
               <svg
                 aria-hidden
                 width="16"
@@ -147,7 +138,7 @@ export function Palette({
             onClick={() => send("REDO")}
             disabled={state.context.future.length === 0}
           />
-          <input
+          {/* <input
             type="color"
             value={palette.backgroundColor}
             style={{
@@ -166,23 +157,13 @@ export function Palette({
                 backgroundColor: event.target.value,
               })
             }
-          />
+          /> */}
           <ImportScales
             onImport={(scales, replace) =>
               send({ type: "IMPORT_SCALES", paletteId, scales, replace })
             }
           />
           <ExportScales palette={palette} />
-          <IconButton
-            icon={TrashIcon}
-            aria-label="Delete palette"
-            onClick={() => {
-              send({ type: "DELETE_PALETTE", paletteId });
-
-              // Navigate to home page after deleting a palette
-              navigate(`${routePrefix}/`);
-            }}
-          />
         </HStack>
       </header>
       <div
@@ -190,10 +171,72 @@ export function Palette({
           gridArea: "sidebar",
           overflow: "auto",
           borderRight: "1px solid var(--color-border, gainsboro)",
+          paddingBottom: 16,
         }}
       >
-        <VStack spacing={8} style={{ padding: 16 }}>
-          <span>Scales</span>
+        <SidebarPanel title="Palette">
+          <VStack spacing={16}>
+            <VStack spacing={4}>
+              <label htmlFor="palette-name" style={{ fontSize: 14 }}>
+                Name
+              </label>
+              <Input
+                type="text"
+                id="palette-name"
+                value={palette.name}
+                style={{ width: "100%" }}
+                onChange={event =>
+                  send({
+                    type: "CHANGE_PALETTE_NAME",
+                    paletteId,
+                    name: event.target.value,
+                  })
+                }
+              />
+            </VStack>
+            <HStack spacing={8}>
+              <input
+                id="bg-color"
+                type="color"
+                value={palette.backgroundColor}
+                style={{
+                  appearance: "none",
+                  border: "1px solid var(--color-border, darkgray)",
+                  backgroundColor:
+                    "var(--color-background-secondary, gainsboro)",
+                  padding: "0px 2px",
+                  margin: 0,
+                  borderRadius: 6,
+                  height: 32,
+                  width: 64,
+                }}
+                onChange={event =>
+                  send({
+                    type: "CHANGE_PALETTE_BACKGROUND_COLOR",
+                    paletteId,
+                    backgroundColor: event.target.value,
+                  })
+                }
+              />
+              <label htmlFor="bg-color" style={{ fontSize: 14 }}>
+                Background color
+              </label>
+            </HStack>
+            <Button
+              aria-label="Delete palette"
+              onClick={() => {
+                send({ type: "DELETE_PALETTE", paletteId });
+
+                // Navigate to home page after deleting a palette
+                navigate(`${routePrefix}/`);
+              }}
+            >
+              Delete palette
+            </Button>
+          </VStack>
+        </SidebarPanel>
+        <Separator />
+        <SidebarPanel title="Scales">
           <VStack spacing={8}>
             {Object.values(palette.scales).map(scale => (
               <Link
@@ -233,15 +276,14 @@ export function Palette({
             ))}
           </VStack>
           <Button
-            style={{ marginTop: 16 }}
+            style={{ marginTop: 16, width: "100%" }}
             onClick={() => send({ type: "CREATE_SCALE", paletteId })}
           >
             Add scale
           </Button>
-        </VStack>
+        </SidebarPanel>
         <Separator />
-        <VStack spacing={8} style={{ padding: 16 }}>
-          <span>Curves</span>
+        <SidebarPanel title="Curves">
           <VStack spacing={8}>
             {Object.values(palette.curves).map(curve => (
               <Link
@@ -259,6 +301,8 @@ export function Palette({
                     style={{
                       display: "flex",
                       height: 24,
+                      borderRadius: 4,
+                      overflow: "hidden",
                     }}
                   >
                     {curve.values.map(value => {
@@ -301,7 +345,7 @@ export function Palette({
               </Link>
             ))}
           </VStack>
-        </VStack>
+        </SidebarPanel>
       </div>
       <Main>{children}</Main>
     </Wrapper>

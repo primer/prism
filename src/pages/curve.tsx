@@ -4,11 +4,12 @@ import { Button } from "../components/button";
 import { CurveEditor } from "../components/curve-editor";
 import { Input } from "../components/input";
 import { Separator } from "../components/separator";
+import { SidebarPanel } from "../components/sidebar-panel";
 import { VStack, ZStack } from "../components/stack";
+import { routePrefix } from "../constants";
 import { useGlobalState } from "../global-state";
 import { Color } from "../types";
 import { colorToHex, getColor } from "../utils";
-import {routePrefix} from "../constants"
 
 const ranges = {
   hue: { min: 0, max: 360 },
@@ -105,9 +106,83 @@ export function Curve({
       <VStack
         style={{
           borderLeft: "1px solid var(--color-border, gainsboro)",
+          width: 300,
+          flexShrink: 0,
+          overflow: "auto",
+          paddingBottom: 16,
         }}
       >
-        <VStack spacing={16} style={{ padding: 16 }}>
+        <SidebarPanel
+          title={`${
+            // Capitalize first letter of curve type
+            curve.type[0].toLocaleUpperCase() + curve.type.slice(1)
+          } curve`}
+        >
+          <VStack spacing={16}>
+            <VStack spacing={4}>
+              <label htmlFor="name" style={{ fontSize: 14 }}>
+                Name
+              </label>
+              <Input
+                type="text"
+                id="name"
+                aria-label="Curve name"
+                value={curve.name}
+                onChange={event =>
+                  send({
+                    type: "CHANGE_CURVE_NAME",
+                    paletteId,
+                    curveId,
+                    name: event.target.value,
+                  })
+                }
+              />
+            </VStack>
+
+            <Button
+              onClick={() => {
+                send({ type: "DELETE_CURVE", paletteId, curveId });
+                navigate(`${routePrefix}/local/${paletteId}`);
+              }}
+            >
+              Delete curve
+            </Button>
+          </VStack>
+        </SidebarPanel>
+        <Separator />
+        <SidebarPanel title="Values">
+          <VStack spacing={16}>
+            {curve.values.map((value, index) => {
+              return (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "24px 1fr",
+                    alignItems: "center",
+                  }}
+                >
+                  <label htmlFor={index.toString()}>{index}</label>
+                  <Input
+                    type="number"
+                    id={index.toString()}
+                    value={value}
+                    onChange={event =>
+                      send({
+                        type: "CHANGE_CURVE_VALUE",
+                        paletteId,
+                        curveId,
+                        index,
+                        value: event.target.valueAsNumber || 0,
+                      })
+                    }
+                    {...ranges[curve.type]}
+                  />
+                </div>
+              );
+            })}
+          </VStack>
+        </SidebarPanel>
+        {/* <VStack spacing={16} style={{ padding: 16 }}>
           <Input
             type="text"
             aria-label="Curve name"
@@ -157,10 +232,9 @@ export function Curve({
               </div>
             );
           })}
-        </VStack>
+        </VStack> */}
         <Separator />
-        <VStack spacing={8} style={{ padding: 16 }}>
-          <span>Used by</span>
+        <SidebarPanel title="Linked to">
           <VStack spacing={8}>
             {scales.map(scale => (
               <Link
@@ -178,6 +252,8 @@ export function Curve({
                     style={{
                       display: "flex",
                       height: 24,
+                      borderRadius: 4,
+                      overflow: "hidden",
                     }}
                   >
                     {scale.colors.map((_, index) => {
@@ -197,7 +273,7 @@ export function Curve({
               </Link>
             ))}
           </VStack>
-        </VStack>
+        </SidebarPanel>
       </VStack>
     </div>
   );

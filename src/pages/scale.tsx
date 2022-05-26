@@ -8,6 +8,7 @@ import { CurveEditor } from "../components/curve-editor";
 import { Input } from "../components/input";
 import { Select } from "../components/select";
 import { Separator } from "../components/separator";
+import { SidebarPanel } from "../components/sidebar-panel";
 import { VStack, ZStack } from "../components/stack";
 import { routePrefix } from "../constants";
 import { useGlobalState } from "../global-state";
@@ -221,182 +222,186 @@ export function Scale({
           width: 300,
           flexShrink: 0,
           overflow: "auto",
+          paddingBottom: 16,
         }}
       >
-        <VStack spacing={16} style={{ padding: 16 }}>
-          <VStack spacing={4}>
-            <label htmlFor="name" style={{ fontSize: 14 }}>
-              Scale name
-            </label>
-            <Input
-              type="text"
-              aria-label="Scale name"
-              value={scale.name}
-              onChange={event =>
-                send({
-                  type: "CHANGE_SCALE_NAME",
-                  paletteId,
-                  scaleId,
-                  name: event.target.value,
-                })
-              }
-            />
+        <SidebarPanel title="Scale">
+          <VStack spacing={16}>
+            <VStack spacing={4}>
+              <label htmlFor="name" style={{ fontSize: 14 }}>
+                Name
+              </label>
+              <Input
+                type="text"
+                aria-label="Scale name"
+                value={scale.name}
+                onChange={event =>
+                  send({
+                    type: "CHANGE_SCALE_NAME",
+                    paletteId,
+                    scaleId,
+                    name: event.target.value,
+                  })
+                }
+              />
+            </VStack>
+            <Button
+              onClick={() => {
+                send({ type: "DELETE_SCALE", paletteId, scaleId });
+                navigate(`${routePrefix}/local/${paletteId}`);
+              }}
+            >
+              Delete scale
+            </Button>
           </VStack>
-          <Button
-            onClick={() => {
-              send({ type: "DELETE_SCALE", paletteId, scaleId });
-              navigate(`${routePrefix}/${paletteId}`);
-            }}
-          >
-            Delete scale
-          </Button>
-        </VStack>
+        </SidebarPanel>
         <Separator />
-        <VStack spacing={16} style={{ padding: 16 }}>
-          <span>Linked curves</span>
-          <VStack spacing={4}>
-            <label htmlFor="lightness-curve" style={{ fontSize: 14 }}>
-              Hue curve
-            </label>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr auto",
-                gap: 8,
-              }}
-            >
-              <Select
-                key={`${scale.name}-hue-curve`}
-                id="hue-curve"
-                value={scale.curves.hue}
-                onChange={event =>
-                  send({
-                    type: "CHANGE_SCALE_CURVE",
-                    paletteId,
-                    scaleId,
-                    curveType: "hue",
-                    curveId: event.target.value,
-                  })
-                }
+        <SidebarPanel title="Linked curves">
+          <VStack spacing={16}>
+            <VStack spacing={4}>
+              <label htmlFor="lightness-curve" style={{ fontSize: 14 }}>
+                Hue curve
+              </label>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr auto",
+                  gap: 8,
+                }}
               >
-                <option value="">None</option>
-                {Object.values(palette.curves)
-                  .filter(curve => curve.type === "hue")
-                  .map(curve => (
-                    <option key={curve.id} value={curve.id}>
-                      {curve.name}
-                    </option>
-                  ))}
-              </Select>
-              <IconButton
-                icon={PlusIcon}
-                onClick={() =>
-                  send({
-                    type: "CREATE_CURVE_FROM_SCALE",
-                    paletteId,
-                    scaleId,
-                    curveType: "hue",
-                  })
-                }
-              />
-            </div>
-          </VStack>
-          <VStack spacing={4}>
-            <label htmlFor="saturation-curve" style={{ fontSize: 14 }}>
-              Saturation curve
-            </label>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr auto",
-                gap: 8,
-              }}
-            >
-              <Select
-                key={`${scale.name}-saturation-curve`}
-                id="saturation-curve"
-                value={scale.curves.saturation}
-                onChange={event =>
-                  send({
-                    type: "CHANGE_SCALE_CURVE",
-                    paletteId,
-                    scaleId,
-                    curveType: "saturation",
-                    curveId: event.target.value,
-                  })
-                }
+                <Select
+                  key={`${scale.name}-hue-curve`}
+                  id="hue-curve"
+                  value={scale.curves.hue}
+                  onChange={event =>
+                    send({
+                      type: "CHANGE_SCALE_CURVE",
+                      paletteId,
+                      scaleId,
+                      curveType: "hue",
+                      curveId: event.target.value,
+                    })
+                  }
+                >
+                  <option value="">None</option>
+                  {Object.values(palette.curves)
+                    .filter(curve => curve.type === "hue")
+                    .map(curve => (
+                      <option key={curve.id} value={curve.id}>
+                        {curve.name}
+                      </option>
+                    ))}
+                </Select>
+                <IconButton
+                  icon={PlusIcon}
+                  onClick={() =>
+                    send({
+                      type: "CREATE_CURVE_FROM_SCALE",
+                      paletteId,
+                      scaleId,
+                      curveType: "hue",
+                    })
+                  }
+                />
+              </div>
+            </VStack>
+            <VStack spacing={4}>
+              <label htmlFor="saturation-curve" style={{ fontSize: 14 }}>
+                Saturation curve
+              </label>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr auto",
+                  gap: 8,
+                }}
               >
-                <option value="">None</option>
-                {Object.values(palette.curves)
-                  .filter(curve => curve.type === "saturation")
-                  .map(curve => (
-                    <option key={curve.id} value={curve.id}>
-                      {curve.name}
-                    </option>
-                  ))}
-              </Select>
-              <IconButton
-                icon={PlusIcon}
-                onClick={() =>
-                  send({
-                    type: "CREATE_CURVE_FROM_SCALE",
-                    paletteId,
-                    scaleId,
-                    curveType: "saturation",
-                  })
-                }
-              />
-            </div>
-          </VStack>
-          <VStack spacing={4}>
-            <label htmlFor="lightness-curve" style={{ fontSize: 14 }}>
-              Lightness curve
-            </label>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr auto",
-                gap: 8,
-              }}
-            >
-              <Select
-                key={`${scale.name}-lightness-curve`}
-                id="lightness-curve"
-                value={scale.curves.lightness}
-                onChange={event =>
-                  send({
-                    type: "CHANGE_SCALE_CURVE",
-                    paletteId,
-                    scaleId,
-                    curveType: "lightness",
-                    curveId: event.target.value,
-                  })
-                }
+                <Select
+                  key={`${scale.name}-saturation-curve`}
+                  id="saturation-curve"
+                  value={scale.curves.saturation}
+                  onChange={event =>
+                    send({
+                      type: "CHANGE_SCALE_CURVE",
+                      paletteId,
+                      scaleId,
+                      curveType: "saturation",
+                      curveId: event.target.value,
+                    })
+                  }
+                >
+                  <option value="">None</option>
+                  {Object.values(palette.curves)
+                    .filter(curve => curve.type === "saturation")
+                    .map(curve => (
+                      <option key={curve.id} value={curve.id}>
+                        {curve.name}
+                      </option>
+                    ))}
+                </Select>
+                <IconButton
+                  icon={PlusIcon}
+                  onClick={() =>
+                    send({
+                      type: "CREATE_CURVE_FROM_SCALE",
+                      paletteId,
+                      scaleId,
+                      curveType: "saturation",
+                    })
+                  }
+                />
+              </div>
+            </VStack>
+            <VStack spacing={4}>
+              <label htmlFor="lightness-curve" style={{ fontSize: 14 }}>
+                Lightness curve
+              </label>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr auto",
+                  gap: 8,
+                }}
               >
-                <option value="">None</option>
-                {Object.values(palette.curves)
-                  .filter(curve => curve.type === "lightness")
-                  .map(curve => (
-                    <option key={curve.id} value={curve.id}>
-                      {curve.name}
-                    </option>
-                  ))}
-              </Select>
+                <Select
+                  key={`${scale.name}-lightness-curve`}
+                  id="lightness-curve"
+                  value={scale.curves.lightness}
+                  onChange={event =>
+                    send({
+                      type: "CHANGE_SCALE_CURVE",
+                      paletteId,
+                      scaleId,
+                      curveType: "lightness",
+                      curveId: event.target.value,
+                    })
+                  }
+                >
+                  <option value="">None</option>
+                  {Object.values(palette.curves)
+                    .filter(curve => curve.type === "lightness")
+                    .map(curve => (
+                      <option key={curve.id} value={curve.id}>
+                        {curve.name}
+                      </option>
+                    ))}
+                </Select>
 
-              <IconButton
-                icon={PlusIcon}
-                onClick={() =>
-                  send({
-                    type: "CREATE_CURVE_FROM_SCALE",
-                    paletteId,
-                    scaleId,
-                    curveType: "lightness",
-                  })
-                }
-              />
-            </div>
+                <IconButton
+                  icon={PlusIcon}
+                  onClick={() =>
+                    send({
+                      type: "CREATE_CURVE_FROM_SCALE",
+                      paletteId,
+                      scaleId,
+                      curveType: "lightness",
+                    })
+                  }
+                />
+              </div>
+            </VStack>
           </VStack>
-        </VStack>
+        </SidebarPanel>
         {index ? (
           <>
             <Separator />
