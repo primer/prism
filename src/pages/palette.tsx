@@ -1,3 +1,5 @@
+import { MarkGithubIcon, TrashIcon } from "@primer/octicons-react";
+import { Box, Text } from "@primer/react";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import { mix, readableColor } from "color2k";
 import React from "react";
@@ -8,12 +10,10 @@ import { ImportScales } from "../components/import-scales";
 import { Input } from "../components/input";
 import { Separator } from "../components/separator";
 import { HStack, VStack } from "../components/stack";
+import { routePrefix } from "../constants";
 import { useGlobalState } from "../global-state";
 import { Color } from "../types";
 import { colorToHex, getColor } from "../utils";
-import { routePrefix } from "../constants";
-import { TrashIcon } from "@primer/octicons-react";
-import { Box } from "@primer/react";
 
 const Wrapper = styled.div<{ backgroundColor: string }>`
   --color-text: ${props => readableColor(props.backgroundColor)};
@@ -65,31 +65,42 @@ export function Palette({
       <header
         style={{
           gridArea: "header",
-          display: "flex",
+          display: "grid",
           alignItems: "center",
-          justifyContent: "space-between",
+          gridTemplateColumns: "repeat(3,1fr)",
+          // justifyContent: "space-between",
           padding: 16,
           borderBottom: "1px solid var(--color-border, gainsboro)",
         }}
       >
-        <HStack spacing={16}>
-          <Link to={`${routePrefix}/`} style={{ color: "inherit" }}>
-            Home
-          </Link>
-          <Input
-            type="text"
-            aria-label="Palette name"
-            value={palette.name}
-            onChange={event =>
-              send({
-                type: "CHANGE_PALETTE_NAME",
-                paletteId,
-                name: event.target.value,
-              })
-            }
-          />
-        </HStack>
-        <HStack spacing={8}>
+        <Link
+          to={`${routePrefix}/`}
+          style={{
+            color: "inherit",
+            textDecoration: "none",
+          }}
+        >
+          <Text sx={{ display: "flex", alignItems: "center" }}>
+            <MarkGithubIcon size={32} />
+            <Text sx={{ ml: 2, fontSize: 3, fontWeight: "bold" }}>
+              Primer Prism
+            </Text>
+          </Text>
+        </Link>
+        <Input
+          type="text"
+          aria-label="Palette name"
+          value={palette.name}
+          style={{ justifySelf: "center", textAlign: "center" }}
+          onChange={event =>
+            send({
+              type: "CHANGE_PALETTE_NAME",
+              paletteId,
+              name: event.target.value,
+            })
+          }
+        />
+        <HStack spacing={8} style={{ justifyContent: "end" }}>
           <Button
             onClick={() => send("UNDO")}
             disabled={state.context.past.length === 0}
