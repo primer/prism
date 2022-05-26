@@ -226,7 +226,7 @@ export function Scale({
         <VStack spacing={16} style={{ padding: 16 }}>
           <VStack spacing={4}>
             <label htmlFor="name" style={{ fontSize: 14 }}>
-              Name
+              Scale name
             </label>
             <Input
               type="text"
