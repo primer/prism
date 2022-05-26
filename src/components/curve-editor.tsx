@@ -1,8 +1,9 @@
+import { Box } from "@primer/react";
+import { guard } from "color2k";
 import { scaleLinear } from "d3-scale";
+import produce from "immer";
 import React from "react";
 import { DraggableCore } from "react-draggable";
-import produce from "immer";
-import { guard } from "color2k";
 import useMeasure from "react-use-measure";
 
 function round(num: number, step: number) {
@@ -35,8 +36,11 @@ export function CurveEditor({
   style = {},
 }: CurveEditorProps) {
   const [ref, { width, height }] = useMeasure();
-  const nodeRadius = 12;
+  const nodeRadius = 20;
   const columnWidth = width / values.length;
+  const [dragging, setDragging] = React.useState<number | "line" | false>(
+    false
+  );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const xScale = React.useCallback(
@@ -67,10 +71,13 @@ export function CurveEditor({
       height="100%"
       fill="none"
       style={style}
-      pointerEvents={disabled ? "none" : "all"}
+      pointerEvents="none"
+      opacity={disabled ? 0.5 : 1}
     >
       <DraggableCore
         disabled={disabled}
+        onStart={() => setDragging("line")}
+        onStop={() => setDragging(false)}
         onDrag={(event, data) => {
           const delta =
             yScale.invert(points[0].y + data.deltaY) -
@@ -94,30 +101,55 @@ export function CurveEditor({
           );
         }}
       >
-        <g>
+        <Box
+          as="g"
+          pointerEvents={
+            disabled || (dragging !== false && dragging !== "line")
+              ? "none"
+              : "all"
+          }
+          sx={{
+            "& .target": {
+              opacity: dragging === "line" ? 1 : 0,
+            },
+            "&:hover .target": {
+              opacity: 1,
+            },
+          }}
+        >
           <polyline
-            stroke="black"
-            opacity={disabled ? 0 : 0.1}
+            className="target"
+            stroke="rgba(0,0,0,0.1)"
             strokeWidth={nodeRadius * 2}
             points={points.map(({ x, y }) => `${x},${y}`).join(" ")}
             strokeLinejoin="round"
             strokeLinecap="round"
-            cursor={disabled ? "default" : "ns-resize"}
           />
-          <polyline
-            stroke={disabled ? "gray" : "black"}
-            strokeWidth={1}
-            points={points.map(({ x, y }) => `${x},${y}`).join(" ")}
-            strokeLinejoin="round"
-            pointerEvents="none"
-          />
-        </g>
+          {!disabled ? (
+            <polyline
+              stroke="white"
+              strokeWidth={4}
+              points={points.map(({ x, y }) => `${x},${y}`).join(" ")}
+              strokeLinejoin="round"
+              opacity={0.5}
+            />
+          ) : (
+            <polyline
+              stroke="white"
+              strokeWidth={2}
+              points={points.map(({ x, y }) => `${x},${y}`).join(" ")}
+              strokeLinejoin="round"
+            />
+          )}
+        </Box>
       </DraggableCore>
 
       {points.map(({ x, y }, index) => (
         <DraggableCore
           key={index}
           disabled={disabled}
+          onStart={() => setDragging(index)}
+          onStop={() => setDragging(false)}
           onDrag={(event, data) => {
             onChange?.(
               produce(values, draft => {
@@ -129,29 +161,58 @@ export function CurveEditor({
             );
           }}
         >
-          <g>
+          <Box
+            as="g"
+            pointerEvents={
+              disabled || (dragging !== false && dragging !== index)
+                ? "none"
+                : "all"
+            }
+            sx={{
+              "& .target": {
+                opacity: dragging === index ? 1 : 0,
+              },
+              "&:hover .target": {
+                opacity: 1,
+              },
+            }}
+          >
             <circle
+              className="target"
               cx={x}
               cy={y}
               r={nodeRadius}
-              fill="black"
-              opacity={disabled ? 0 : 0.1}
-              cursor={disabled ? "default" : "ns-resize"}
+              fill="rgba(0,0,0,0.1)"
+              style={{ transformOrigin: `${x}px ${y}px` }}
             />
-            <circle
-              cx={x}
-              cy={y}
-              r={disabled ? 2 : 4}
-              fill={disabled ? "gray" : "white"}
-              stroke={disabled ? "none" : "black"}
-              strokeWidth={1}
-              pointerEvents="none"
-            />
+            {!disabled ? (
+              <>
+                <circle
+                  className="border"
+                  cx={x}
+                  cy={y}
+                  r={8.5}
+                  fill="none"
+                  stroke="rgba(0,0,0,0.2)"
+                  strokeWidth="1"
+                />
+                <circle className="handle" cx={x} cy={y} r={8} fill={"white"} />
+              </>
+            ) : (
+              <circle
+                className="node-handle"
+                cx={x}
+                cy={y}
+                r={4}
+                fill="white"
+              />
+            )}
+
             {index === 0 ? (
               <text
                 x={x - nodeRadius - 8}
                 y={y}
-                fill={disabled ? "gray" : "black"}
+                fill="black"
                 style={{
                   textTransform: "uppercase",
                   fontFamily: "system-ui, sans-serif",
@@ -164,7 +225,7 @@ export function CurveEditor({
                 {label}
               </text>
             ) : null}
-          </g>
+          </Box>
         </DraggableCore>
       ))}
     </svg>

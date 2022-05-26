@@ -56,14 +56,11 @@ export function Index(props: RouteComponentProps) {
                   p: 3,
                   textDecoration: "none",
                   borderRadius: 2,
-                  border: "1px solid",
-                  borderColor: "border.default",
+                  // border: "1px solid",
+                  // borderColor: "border.default",
                   overflow: "hidden",
                   color: readableColor(palette.backgroundColor),
                   backgroundColor: palette.backgroundColor,
-                  "&:hover": {
-                    boxShadow: "shadow.medium",
-                  },
                 }}
               >
                 <Box

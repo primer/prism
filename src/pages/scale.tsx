@@ -107,21 +107,30 @@ export function Scale({
             }}
           >
             {scale.colors.map((_, index) => (
-              <Link
-                to={`${routePrefix}/local/${paletteId}/scale/${scaleId}/${index}`}
-                replace={true}
-                getProps={({ isCurrent }) => {
-                  const color = getColor(palette.curves, scale, index);
-                  return {
-                    style: {
-                      width: "100%",
-                      height: "100%",
-                      backgroundColor: colorToHex(color),
-                      boxShadow: isCurrent
-                        ? `inset 0 3px 0 var(--color-background)`
-                        : "none",
-                    },
-                  };
+              // <Link
+              //   to={`${routePrefix}/local/${paletteId}/scale/${scaleId}/${index}`}
+              //   replace={true}
+              //   getProps={({ isCurrent }) => {
+              //     const color = getColor(palette.curves, scale, index);
+              //     return {
+              //       style: {
+              //         width: "100%",
+              //         height: "100%",
+              //         backgroundColor: colorToHex(color),
+              //         boxShadow: isCurrent
+              //           ? `inset 0 3px 0 var(--color-background)`
+              //           : "none",
+              //       },
+              //     };
+              //   }}
+              // />
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: colorToHex(
+                    getColor(palette.curves, scale, index)
+                  ),
                 }}
               />
             ))}
@@ -186,7 +195,7 @@ export function Scale({
               );
             })}
         </ZStack>
-        {index ? (
+        {/* {index ? (
           <div style={{ flexShrink: 0, display: "flex", height: 32 }}>
             {Object.values(palette.scales)
               .filter(scale => scale.colors.length > parseInt(index))
@@ -214,7 +223,7 @@ export function Scale({
                 />
               ))}
           </div>
-        ) : null}
+        ) : null} */}
       </div>
       <VStack
         style={{

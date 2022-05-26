@@ -54,6 +54,8 @@ export function Curve({
             width: "100%",
             height: "100%",
             display: "flex",
+            borderRadius: 6,
+            overflow: "hidden",
           }}
         >
           {curve.values.map((value, index) => {
