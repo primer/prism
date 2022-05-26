@@ -18,6 +18,7 @@ export function ContrastPanel({ color1, color2 }: ContrastPanelProps) {
             padding: "8px 16px",
             textAlign: "center",
             fontSize: 24,
+            borderRadius: 4,
           }}
         >
           Aa
