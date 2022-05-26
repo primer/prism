@@ -1,17 +1,18 @@
+import { DashIcon, PlusIcon } from "@primer/octicons-react";
+import { Box, ButtonGroup } from "@primer/react";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import React from "react";
-import { Button } from "../components/button";
+import { Button, IconButton } from "../components/button";
 import { Color } from "../components/color";
 import { CurveEditor } from "../components/curve-editor";
 import { Input } from "../components/input";
-import { PlusIcon } from "../components/plus-icon";
 import { Select } from "../components/select";
 import { Separator } from "../components/separator";
-import { HStack, VStack, ZStack } from "../components/stack";
+import { VStack, ZStack } from "../components/stack";
+import { routePrefix } from "../constants";
 import { useGlobalState } from "../global-state";
 import { Curve } from "../types";
 import { colorToHex, getColor, getRange } from "../utils";
-import {routePrefix} from "../constants"
 
 export function Scale({
   paletteId = "",
@@ -56,14 +57,14 @@ export function Scale({
           height: "100%",
         }}
       >
-        <div
-          style={{
+        <Box
+          sx={{
             flexShrink: 0,
             display: "flex",
             justifyContent: "space-between",
           }}
         >
-          <HStack spacing={8}>
+          <ButtonGroup>
             {Object.entries(visibleCurves).map(([type, isVisible]) => {
               return (
                 <Button
@@ -80,41 +81,28 @@ export function Scale({
                 </Button>
               );
             })}
-          </HStack>
-          <HStack spacing={8}>
-            <Button
+          </ButtonGroup>
+          <ButtonGroup>
+            <IconButton
+              icon={DashIcon}
               aria-label="Remove color from end of scale"
               onClick={() => send({ type: "POP_COLOR", paletteId, scaleId })}
-            >
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 15 15"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M2.25 7.5C2.25 7.22386 2.47386 7 2.75 7H12.25C12.5261 7 12.75 7.22386 12.75 7.5C12.75 7.77614 12.5261 8 12.25 8H2.75C2.47386 8 2.25 7.77614 2.25 7.5Z"
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </Button>
-            <Button
+            />
+            <IconButton
+              icon={PlusIcon}
               aria-label="Add color to end of scale"
               onClick={() => send({ type: "CREATE_COLOR", paletteId, scaleId })}
-            >
-              <PlusIcon />
-            </Button>
-          </HStack>
-        </div>
+            />
+          </ButtonGroup>
+        </Box>
         <ZStack style={{ overflow: "auto" }}>
-          <div
-            style={{
+          <Box
+            sx={{
               display: "flex",
               width: "100%",
               height: "100%",
+              overflow: "hidden",
+              borderRadius: 2,
             }}
           >
             {scale.colors.map((_, index) => (
@@ -136,7 +124,7 @@ export function Scale({
                 }}
               />
             ))}
-          </div>
+          </Box>
           {(
             Object.entries(scale.curves) as [
               Curve["type"],
@@ -236,19 +224,24 @@ export function Scale({
         }}
       >
         <VStack spacing={16} style={{ padding: 16 }}>
-          <Input
-            type="text"
-            aria-label="Scale name"
-            value={scale.name}
-            onChange={event =>
-              send({
-                type: "CHANGE_SCALE_NAME",
-                paletteId,
-                scaleId,
-                name: event.target.value,
-              })
-            }
-          />
+          <VStack spacing={4}>
+            <label htmlFor="name" style={{ fontSize: 14 }}>
+              Name
+            </label>
+            <Input
+              type="text"
+              aria-label="Scale name"
+              value={scale.name}
+              onChange={event =>
+                send({
+                  type: "CHANGE_SCALE_NAME",
+                  paletteId,
+                  scaleId,
+                  name: event.target.value,
+                })
+              }
+            />
+          </VStack>
           <Button
             onClick={() => {
               send({ type: "DELETE_SCALE", paletteId, scaleId });
@@ -257,6 +250,10 @@ export function Scale({
           >
             Delete scale
           </Button>
+        </VStack>
+        <Separator />
+        <VStack spacing={16} style={{ padding: 16 }}>
+          <span>Linked curves</span>
           <VStack spacing={4}>
             <label htmlFor="lightness-curve" style={{ fontSize: 14 }}>
               Hue curve
@@ -291,7 +288,8 @@ export function Scale({
                     </option>
                   ))}
               </Select>
-              <Button
+              <IconButton
+                icon={PlusIcon}
                 onClick={() =>
                   send({
                     type: "CREATE_CURVE_FROM_SCALE",
@@ -300,9 +298,7 @@ export function Scale({
                     curveType: "hue",
                   })
                 }
-              >
-                <PlusIcon />
-              </Button>
+              />
             </div>
           </VStack>
           <VStack spacing={4}>
@@ -339,7 +335,8 @@ export function Scale({
                     </option>
                   ))}
               </Select>
-              <Button
+              <IconButton
+                icon={PlusIcon}
                 onClick={() =>
                   send({
                     type: "CREATE_CURVE_FROM_SCALE",
@@ -348,9 +345,7 @@ export function Scale({
                     curveType: "saturation",
                   })
                 }
-              >
-                <PlusIcon />
-              </Button>
+              />
             </div>
           </VStack>
           <VStack spacing={4}>
@@ -388,7 +383,8 @@ export function Scale({
                   ))}
               </Select>
 
-              <Button
+              <IconButton
+                icon={PlusIcon}
                 onClick={() =>
                   send({
                     type: "CREATE_CURVE_FROM_SCALE",
@@ -397,9 +393,7 @@ export function Scale({
                     curveType: "lightness",
                   })
                 }
-              >
-                <PlusIcon />
-              </Button>
+              />
             </div>
           </VStack>
         </VStack>

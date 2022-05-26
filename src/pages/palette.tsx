@@ -2,7 +2,7 @@ import { Link, navigate, RouteComponentProps } from "@reach/router";
 import { mix, readableColor } from "color2k";
 import React from "react";
 import styled from "styled-components";
-import { Button } from "../components/button";
+import { Button, IconButton } from "../components/button";
 import { ExportScales } from "../components/export-scales";
 import { ImportScales } from "../components/import-scales";
 import { Input } from "../components/input";
@@ -11,13 +11,17 @@ import { HStack, VStack } from "../components/stack";
 import { useGlobalState } from "../global-state";
 import { Color } from "../types";
 import { colorToHex, getColor } from "../utils";
-import {routePrefix} from "../constants"
+import { routePrefix } from "../constants";
+import { TrashIcon } from "@primer/octicons-react";
+import { Box } from "@primer/react";
 
 const Wrapper = styled.div<{ backgroundColor: string }>`
   --color-text: ${props => readableColor(props.backgroundColor)};
   --color-background: ${props => props.backgroundColor};
   --color-background-secondary: ${props =>
     mix(readableColor(props.backgroundColor), props.backgroundColor, 0.9)};
+  --color-background-secondary-hover: ${props =>
+    mix(readableColor(props.backgroundColor), props.backgroundColor, 0.85)};
   --color-border: ${props =>
     mix(readableColor(props.backgroundColor), props.backgroundColor, 0.75)};
 
@@ -55,8 +59,6 @@ export function Palette({
       </div>
     );
   }
-
-
 
   return (
     <Wrapper backgroundColor={palette.backgroundColor}>
@@ -126,16 +128,16 @@ export function Palette({
             }
           />
           <ExportScales palette={palette} />
-          <Button
+          <IconButton
+            icon={TrashIcon}
+            aria-label="Delete palette"
             onClick={() => {
               send({ type: "DELETE_PALETTE", paletteId });
 
               // Navigate to home page after deleting a palette
               navigate("/");
             }}
-          >
-            Delete palette
-          </Button>
+          />
         </HStack>
       </header>
       <div
@@ -160,10 +162,12 @@ export function Palette({
               >
                 <VStack spacing={4}>
                   <span>{scale.name}</span>
-                  <div
-                    style={{
+                  <Box
+                    sx={{
                       display: "flex",
                       height: 24,
+                      borderRadius: 1,
+                      overflow: "hidden",
                     }}
                   >
                     {scale.colors.map((_, index) => {
@@ -178,7 +182,7 @@ export function Palette({
                         />
                       );
                     })}
-                  </div>
+                  </Box>
                 </VStack>
               </Link>
             ))}
