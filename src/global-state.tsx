@@ -9,6 +9,7 @@ import cssColorNames from "./css-color-names.json";
 import exampleScales from "./example-scales.json";
 import { Color, Curve, Palette, Scale } from "./types";
 import { getColor, hexToColor, randomIntegerInRange } from "./utils";
+import { routePrefix } from "./constants";
 
 const GLOBAL_STATE_KEY = "global_state";
 
@@ -177,7 +178,7 @@ const machine = Machine<MachineContext, MachineEvent>({
           curves: {},
         };
 
-        navigate(`/${paletteId}`);
+        navigate(`${routePrefix}/${paletteId}`);
       }),
     },
     DELETE_PALETTE: {
