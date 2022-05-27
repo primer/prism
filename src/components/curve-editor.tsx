@@ -311,7 +311,7 @@ export function CurveEditor({
 
             {index === 0 ? (
               <text
-                x={x - nodeRadius - 8}
+                x={x - nodeRadius - 4}
                 y={y}
                 fill="black"
                 style={{
