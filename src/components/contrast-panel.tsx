@@ -1,4 +1,6 @@
+import { Box } from "@primer/react";
 import { getContrast } from "color2k";
+import { getContrastScore } from "../utils";
 import { VStack } from "./stack";
 
 type ContrastPanelProps = {
@@ -35,7 +37,16 @@ export function ContrastPanel({ color1, color2 }: ContrastPanelProps) {
           Aa
         </div>
       </div>
-      <div style={{ fontSize: 14 }}>{contrast.toFixed(2)} : 1</div>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ fontSize: 14 }}>{contrast.toFixed(2)}</div>
+        <div style={{ fontSize: 14 }}>{getContrastScore(contrast)}</div>
+      </Box>
     </VStack>
   );
 }
