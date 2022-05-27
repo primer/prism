@@ -30,7 +30,6 @@ export function App() {
         <Index path={`${routePrefix}/`} />
         <Palette path={`${routePrefix}/local/:paletteId`}>
           <Scale path="scale/:scaleId"></Scale>
-          <Scale path="scale/:scaleId/:index"></Scale>
           <Curve path="curve/:curveId"></Curve>
         </Palette>
         <NotFound default />

@@ -16,6 +16,8 @@ type CurveEditorProps = {
   max: number;
   step?: number;
   onChange?: (values: number[], shiftKey: boolean, index?: number) => void;
+  onFocus?: (index: number) => void;
+  onBlur?: () => void;
   disabled?: boolean;
   label?: string;
   style?: React.SVGAttributes<SVGSVGElement>["style"];
@@ -30,6 +32,8 @@ export function CurveEditor({
   min,
   max,
   onChange,
+  onFocus,
+  onBlur,
   step = 0.1,
   disabled = false,
   label = "",
@@ -41,6 +45,7 @@ export function CurveEditor({
   const [dragging, setDragging] = React.useState<number | "line" | false>(
     false
   );
+  const [focused, setFocused] = React.useState<number | "line" | false>(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const xScale = React.useCallback(
@@ -70,9 +75,54 @@ export function CurveEditor({
       width="100%"
       height="100%"
       fill="none"
-      style={style}
       pointerEvents="none"
       opacity={disabled ? 0.5 : 1}
+      style={{ position: "relative" }}
+      onKeyDown={event => {
+        let delta: number | undefined;
+        switch (event.key) {
+          case "ArrowUp":
+            delta = 1;
+            break;
+          case "ArrowDown":
+            delta = -1;
+            break;
+        }
+
+        if (delta) {
+          if (focused === "line") {
+            const clampedDelta = values.reduce((acc, value) => {
+              if (value + acc < min) {
+                return min - value;
+              }
+
+              if (value + acc > max) {
+                return max - value;
+              }
+
+              return acc;
+            }, delta);
+
+            onChange?.(
+              values.map(value => round(value + clampedDelta, step)),
+              event.shiftKey
+            );
+          } else if (typeof focused === "number") {
+            onChange?.(
+              produce(values, draft => {
+                const value = guard(
+                  min,
+                  max,
+                  yScale.invert(points[focused].y) + (delta || 0)
+                );
+                draft[focused] = round(value, step);
+              }),
+              event.shiftKey,
+              focused
+            );
+          }
+        }
+      }}
     >
       <DraggableCore
         disabled={disabled}
@@ -109,6 +159,7 @@ export function CurveEditor({
               : "all"
           }
           sx={{
+            outline: "none",
             "& .target": {
               opacity: dragging === "line" ? 1 : 0,
             },
@@ -116,6 +167,13 @@ export function CurveEditor({
               opacity: 1,
             },
           }}
+          onFocus={() => {
+            setFocused("line");
+          }}
+          onBlur={() => {
+            setFocused(false);
+          }}
+          tabIndex={disabled ? undefined : 0}
         >
           <polyline
             className="target"
@@ -126,13 +184,28 @@ export function CurveEditor({
             strokeLinecap="round"
           />
           {!disabled ? (
-            <polyline
-              stroke="white"
-              strokeWidth={4}
-              points={points.map(({ x, y }) => `${x},${y}`).join(" ")}
-              strokeLinejoin="round"
-              opacity={0.5}
-            />
+            <>
+              <polyline
+                stroke="white"
+                strokeWidth={focused === "line" ? 6 : 4}
+                points={points.map(({ x, y }) => `${x},${y}`).join(" ")}
+                strokeLinejoin="round"
+                opacity={focused === "line" ? 1 : 0.5}
+              />
+              {focused === "line" ? (
+                <Box
+                  as="polyline"
+                  className="line-focus-ring"
+                  points={points.map(({ x, y }) => `${x},${y}`).join(" ")}
+                  strokeLinejoin="round"
+                  fill="none"
+                  sx={{
+                    stroke: (theme: any) => theme.colors.accent.emphasis,
+                  }}
+                  strokeWidth="2"
+                />
+              ) : null}
+            </>
           ) : (
             <polyline
               stroke="white"
@@ -163,11 +236,7 @@ export function CurveEditor({
         >
           <Box
             as="g"
-            pointerEvents={
-              disabled || (dragging !== false && dragging !== index)
-                ? "none"
-                : "all"
-            }
+            pointerEvents={disabled ? "none" : "all"}
             sx={{
               "& .target": {
                 opacity: dragging === index ? 1 : 0,
@@ -175,7 +244,19 @@ export function CurveEditor({
               "&:hover .target": {
                 opacity: 1,
               },
+              "&:focus": {
+                outline: "none",
+              },
             }}
+            onFocus={() => {
+              setFocused(index);
+              onFocus?.(index);
+            }}
+            onBlur={() => {
+              setFocused(false);
+              onBlur?.();
+            }}
+            tabIndex={disabled ? undefined : 0}
           >
             <circle
               className="target"
@@ -191,12 +272,32 @@ export function CurveEditor({
                   className="border"
                   cx={x}
                   cy={y}
-                  r={8.5}
+                  r={focused === index || focused === "line" ? 10.5 : 8.5}
                   fill="none"
                   stroke="rgba(0,0,0,0.2)"
                   strokeWidth="1"
                 />
-                <circle className="handle" cx={x} cy={y} r={8} fill={"white"} />
+                <circle
+                  className="handle"
+                  cx={x}
+                  cy={y}
+                  r={focused === index || focused === "line" ? 10 : 8}
+                  fill={"white"}
+                />
+                {focused === index || focused === "line" ? (
+                  <Box
+                    as="circle"
+                    className="focus-ring"
+                    cx={x}
+                    cy={y}
+                    r={7}
+                    fill="none"
+                    strokeWidth="2"
+                    sx={{
+                      stroke: (theme: any) => theme.colors.accent.emphasis,
+                    }}
+                  />
+                ) : null}
               </>
             ) : (
               <circle

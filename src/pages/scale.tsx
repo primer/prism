@@ -18,11 +18,11 @@ import { colorToHex, getColor, getRange } from "../utils";
 export function Scale({
   paletteId = "",
   scaleId = "",
-  index = "",
   children,
 }: React.PropsWithChildren<
-  RouteComponentProps<{ paletteId: string; scaleId: string; index: string }>
+  RouteComponentProps<{ paletteId: string; scaleId: string }>
 >) {
+  const [index, setIndex] = React.useState("");
   const [state, send] = useGlobalState();
   const palette = state.context.palettes[paletteId];
   const scale = palette.scales[scaleId];
@@ -96,42 +96,45 @@ export function Scale({
             />
           </ButtonGroup>
         </Box>
-        <ZStack style={{ overflow: "auto" }}>
+        <ZStack>
           <Box
             sx={{
               display: "flex",
               width: "100%",
               height: "100%",
-              overflow: "hidden",
               borderRadius: 2,
             }}
           >
-            {scale.colors.map((_, index) => (
-              // <Link
-              //   to={`${routePrefix}/local/${paletteId}/scale/${scaleId}/${index}`}
-              //   replace={true}
-              //   getProps={({ isCurrent }) => {
-              //     const color = getColor(palette.curves, scale, index);
-              //     return {
-              //       style: {
-              //         width: "100%",
-              //         height: "100%",
-              //         backgroundColor: colorToHex(color),
-              //         boxShadow: isCurrent
-              //           ? `inset 0 3px 0 var(--color-background)`
-              //           : "none",
-              //       },
-              //     };
-              //   }}
-              // />
+            {scale.colors.map((_, i) => (
               <Box
+                tabIndex={0}
+                onFocus={() => setIndex(String(i))}
                 sx={{
+                  outline: "none",
                   width: "100%",
                   height: "100%",
                   backgroundColor: colorToHex(
-                    getColor(palette.curves, scale, index)
+                    getColor(palette.curves, scale, i)
                   ),
+                  borderTopLeftRadius: i === 0 ? 2 : 0,
+                  borderBottomLeftRadius: i === 0 ? 2 : 0,
+                  borderTopRightRadius: i === scale.colors.length - 1 ? 2 : 0,
+                  borderBottomRightRadius:
+                    i === scale.colors.length - 1 ? 2 : 0,
+                  position: "relative",
+                  "&::before": {
+                    content: '""',
+                    display: String(i) === index ? "block" : "none",
+                    position: "absolute",
+                    top: "-8px",
+                    height: 4,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: "var(--color-text)",
+                    borderRadius: 2,
+                  },
                 }}
+                onClick={() => setIndex(String(i))}
               />
             ))}
           </Box>
@@ -165,6 +168,7 @@ export function Scale({
                   )}
                   {...getRange(type)}
                   label={`${type[0].toUpperCase()}`}
+                  onFocus={index => setIndex(String(index))}
                   onChange={(values, shiftKey, index) => {
                     if (shiftKey && scale.curves[type]) {
                       send({
