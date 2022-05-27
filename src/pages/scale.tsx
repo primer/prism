@@ -1,6 +1,7 @@
 import { DashIcon, PlusIcon } from "@primer/octicons-react";
 import { Box, ButtonGroup } from "@primer/react";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
+import { getContrast, readableColor } from "color2k";
 import React from "react";
 import { Button, IconButton } from "../components/button";
 import { Color } from "../components/color";
@@ -13,16 +14,15 @@ import { VStack, ZStack } from "../components/stack";
 import { routePrefix } from "../constants";
 import { useGlobalState } from "../global-state";
 import { Curve } from "../types";
-import { colorToHex, getColor, getRange } from "../utils";
+import { colorToHex, getColor, getContrastScore, getRange } from "../utils";
 
 export function Scale({
   paletteId = "",
   scaleId = "",
-  children,
 }: React.PropsWithChildren<
   RouteComponentProps<{ paletteId: string; scaleId: string }>
 >) {
-  const [index, setIndex] = React.useState("");
+  const [index, setIndex] = React.useState("0");
   const [state, send] = useGlobalState();
   const palette = state.context.palettes[paletteId];
   const scale = palette.scales[scaleId];
@@ -40,6 +40,15 @@ export function Scale({
       </div>
     );
   }
+
+  let focusedHex: string | undefined;
+
+  try {
+    const focusedColor = index
+      ? getColor(palette.curves, scale, parseInt(index, 10))
+      : undefined;
+    focusedHex = focusedColor ? colorToHex(focusedColor) : undefined;
+  } catch (error) {}
 
   return (
     <div
@@ -105,38 +114,53 @@ export function Scale({
               borderRadius: 2,
             }}
           >
-            {scale.colors.map((_, i) => (
-              <Box
-                tabIndex={0}
-                onFocus={() => setIndex(String(i))}
-                sx={{
-                  outline: "none",
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: colorToHex(
-                    getColor(palette.curves, scale, i)
-                  ),
-                  borderTopLeftRadius: i === 0 ? 2 : 0,
-                  borderBottomLeftRadius: i === 0 ? 2 : 0,
-                  borderTopRightRadius: i === scale.colors.length - 1 ? 2 : 0,
-                  borderBottomRightRadius:
-                    i === scale.colors.length - 1 ? 2 : 0,
-                  position: "relative",
-                  "&::before": {
-                    content: '""',
-                    display: String(i) === index ? "block" : "none",
-                    position: "absolute",
-                    top: "-8px",
-                    height: 4,
-                    left: 0,
-                    right: 0,
-                    backgroundColor: "var(--color-text)",
-                    borderRadius: 2,
-                  },
-                }}
-                onClick={() => setIndex(String(i))}
-              />
-            ))}
+            {scale.colors.map((_, i) => {
+              const color = getColor(palette.curves, scale, i);
+              const hex = colorToHex(color);
+              const contrast = focusedHex
+                ? getContrast(hex, focusedHex)
+                : undefined;
+              const contrastScore = contrast
+                ? getContrastScore(contrast)
+                : undefined;
+              return (
+                <Box
+                  tabIndex={0}
+                  onFocus={() => setIndex(String(i))}
+                  sx={{
+                    outline: "none",
+                    width: "100%",
+                    height: "100%",
+                    color: readableColor(hex),
+                    backgroundColor: hex,
+                    borderTopLeftRadius: i === 0 ? 2 : 0,
+                    borderBottomLeftRadius: i === 0 ? 2 : 0,
+                    borderTopRightRadius: i === scale.colors.length - 1 ? 2 : 0,
+                    borderBottomRightRadius:
+                      i === scale.colors.length - 1 ? 2 : 0,
+                    position: "relative",
+                    fontSize: 1,
+                    display: "grid",
+                    placeItems: "end",
+                    p: 2,
+                    "&::before": {
+                      content: '""',
+                      display: String(i) === index ? "block" : "none",
+                      position: "absolute",
+                      top: "-8px",
+                      height: 4,
+                      left: 0,
+                      right: 0,
+                      backgroundColor: "var(--color-text)",
+                      borderRadius: 2,
+                    },
+                  }}
+                  onClick={() => setIndex(String(i))}
+                >
+                  {contrastScore !== "Fail" ? contrastScore : ""}
+                </Box>
+              );
+            })}
           </Box>
           {(
             Object.entries(scale.curves) as [
@@ -199,35 +223,48 @@ export function Scale({
               );
             })}
         </ZStack>
-        {/* {index ? (
-          <div style={{ flexShrink: 0, display: "flex", height: 32 }}>
+        {index ? (
+          <div style={{ flexShrink: 0, display: "flex", height: 48 }}>
             {Object.values(palette.scales)
               .filter(scale => scale.colors.length > parseInt(index))
-              .map(scale => (
-                <Link
-                  to={`${routePrefix}/local/${paletteId}/scale/${scale.id}/${index}`}
-                  replace={true}
-                  getProps={({ isCurrent }) => {
-                    const color = getColor(
-                      palette.curves,
-                      scale,
-                      parseInt(index)
-                    );
-                    return {
-                      style: {
-                        width: "100%",
-                        height: "100%",
-                        backgroundColor: colorToHex(color),
-                        boxShadow: isCurrent
-                          ? `inset 0 3px 0 var(--color-background)`
-                          : "none",
+              .map((currentScale, i) => {
+                const numScales = Object.values(palette.scales).filter(
+                  scale => scale.colors.length > parseInt(index)
+                ).length;
+                return (
+                  <Box
+                    as={Link}
+                    to={`${routePrefix}/local/${paletteId}/scale/${currentScale.id}`}
+                    replace={true}
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                      backgroundColor: colorToHex(
+                        getColor(palette.curves, currentScale, parseInt(index))
+                      ),
+                      borderTopLeftRadius: i === 0 ? 2 : 0,
+                      borderBottomLeftRadius: i === 0 ? 2 : 0,
+                      borderTopRightRadius: i === numScales - 1 ? 2 : 0,
+                      borderBottomRightRadius: i === numScales - 1 ? 2 : 0,
+                      position: "relative",
+                      "&::before": {
+                        content: '""',
+                        display:
+                          scale.id === currentScale.id ? "block" : "none",
+                        position: "absolute",
+                        top: "-8px",
+                        height: 4,
+                        left: 0,
+                        right: 0,
+                        backgroundColor: "var(--color-text)",
+                        borderRadius: 2,
                       },
-                    };
-                  }}
-                />
-              ))}
+                    }}
+                  />
+                );
+              })}
           </div>
-        ) : null} */}
+        ) : null}
       </div>
       <VStack
         style={{
