@@ -131,7 +131,7 @@ export function Scale({
                     outline: "none",
                     width: "100%",
                     height: "100%",
-                    color: readableColor(hex),
+                    color: focusedHex,
                     backgroundColor: hex,
                     borderTopLeftRadius: i === 0 ? 2 : 0,
                     borderBottomLeftRadius: i === 0 ? 2 : 0,
