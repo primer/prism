@@ -1,7 +1,7 @@
 import { DashIcon, PlusIcon } from "@primer/octicons-react";
 import { Box, ButtonGroup } from "@primer/react";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
-import { getContrast, readableColor } from "color2k";
+import { getContrast } from "color2k";
 import React from "react";
 import { Button, IconButton } from "../components/button";
 import { Color } from "../components/color";
