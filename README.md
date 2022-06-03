@@ -3,7 +3,7 @@
 
 A tool for creating and maintaining cohesive, consistent, and accessible color palettes
 
-https://primer.github.io/prism
+https://primer.style/prism
 
 > **Warning**
 > Primer Prism is experimental. Expect bugs and breaking changes as we continue to iterate. 
