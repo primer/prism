@@ -1,5 +1,17 @@
-import { MarkGithubIcon, PlusIcon } from "@primer/octicons-react";
-import { Box, Button, Heading, IconButton, Text } from "@primer/react";
+import {
+  LinkExternalIcon,
+  MarkGithubIcon,
+  PlusIcon,
+} from "@primer/octicons-react";
+import {
+  Box,
+  Button,
+  Heading,
+  IconButton,
+  Link as PrimerLink,
+  StyledOcticon,
+  Text,
+} from "@primer/react";
 import { Link, RouteComponentProps } from "@reach/router";
 import { readableColor } from "color2k";
 import React from "react";
@@ -26,12 +38,24 @@ export function Index(props: RouteComponentProps) {
             Primer Prism
           </Box>
         </Box>
-        <IconButton
-          aria-label="Create new palette"
-          icon={PlusIcon}
-          onClick={() => send("CREATE_PALETTE")}
-          sx={{ margin: 0 }}
-        />
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <PrimerLink
+            muted
+            href="https://github.com/primer/prism"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ mr: 4, "&:hover": { textDecoration: "underline" } }}
+          >
+            GitHub
+            <StyledOcticon icon={LinkExternalIcon} sx={{ marginLeft: 1 }} />
+          </PrimerLink>
+          <IconButton
+            aria-label="Create new palette"
+            icon={PlusIcon}
+            onClick={() => send("CREATE_PALETTE")}
+            sx={{ margin: 0 }}
+          />
+        </Box>
       </Box>
       <Box sx={{ p: 3 }}>
         <Box
