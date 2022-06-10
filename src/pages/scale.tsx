@@ -1,5 +1,5 @@
 import { CheckIcon, DashIcon, PlusIcon, XIcon } from "@primer/octicons-react";
-import { Box, ButtonGroup } from "@primer/react";
+import { Box, ButtonGroup, Text } from "@primer/react";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import { getContrast } from "color2k";
 import React from "react";
@@ -470,6 +470,88 @@ export function Scale({
           <>
             <Separator />
             <Color paletteId={paletteId} scaleId={scaleId} index={index} />
+            <Separator />
+            {/* TODO: Pull this into a separate component */}
+            <SidebarPanel title={`Contrast of ${scale.name}.${index}`}>
+              <Box
+                as="ul"
+                sx={{
+                  m: 0,
+                  p: 0,
+                  listStyle: "none",
+                  display: "grid",
+                  gap: 2,
+                  fontSize: 1,
+                }}
+              >
+                {[
+                  {
+                    name: "bg",
+                    hex: palette.backgroundColor,
+                    contrast: getContrast(
+                      palette.backgroundColor,
+                      focusedHex || ""
+                    ),
+                  },
+                  ...scale.colors
+                    .map((_, i) => {
+                      const hex = colorToHex(
+                        getColor(palette.curves, scale, i)
+                      );
+                      const contrast = getContrast(hex, focusedHex || "");
+                      return {
+                        name: `${scale.name}.${i}`,
+                        hex,
+                        contrast,
+                      };
+                    })
+                    .filter((_, i) => i !== Number(index)),
+                ].map(({ name, hex, contrast }) => (
+                  <Box
+                    as="li"
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 2,
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      <Box
+                        aria-hidden
+                        sx={{
+                          color: focusedHex,
+                          bg: hex,
+                          border: "1px solid",
+                          borderColor: "var(--color-border)",
+                          width: 32,
+                          height: 32,
+                          display: "grid",
+                          placeItems: "center",
+                          borderRadius: 2,
+                        }}
+                      >
+                        Aa
+                      </Box>
+                      <span>on {name}</span>
+                    </Box>
+                    <span>
+                      <Text sx={{ mr: 2 }}>{contrast.toFixed(2)}</Text>
+                      <Text sx={{ fontWeight: "bold" }}>
+                        {getContrastScore(getContrast(hex, focusedHex || ""))}{" "}
+                        {getContrastScore(
+                          getContrast(hex, focusedHex || "")
+                        ) === "Fail" ? (
+                          <XIcon />
+                        ) : (
+                          <CheckIcon />
+                        )}
+                      </Text>
+                    </span>
+                  </Box>
+                ))}
+              </Box>
+            </SidebarPanel>
           </>
         ) : null}
       </VStack>

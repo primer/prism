@@ -4,7 +4,6 @@ import React from "react";
 import { useGlobalState } from "../global-state";
 import { colorToHex, getColor } from "../utils";
 import { Button } from "./button";
-import { ContrastPanel } from "./contrast-panel";
 import { Input } from "./input";
 import { SidebarPanel } from "./sidebar-panel";
 import { VStack } from "./stack";
@@ -135,7 +134,6 @@ export function Color({
           {toHsla(hex)}
         </Box>
 
-        <ContrastPanel color1={hex} color2={palette.backgroundColor} />
         <Button
           onClick={() =>
             send({
