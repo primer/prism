@@ -83,7 +83,7 @@ export function Palette({
         >
           <Text sx={{ display: "flex", alignItems: "center" }}>
             <MarkGithubIcon size={32} />
-            <Text sx={{ ml: 2, fontSize: 3, fontWeight: "bold" }}>
+            <Text as="h1" sx={{ m: 0, ml: 2, fontSize: 3, fontWeight: "bold" }}>
               Primer Prism
             </Text>
           </Text>

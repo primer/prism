@@ -9,7 +9,12 @@ export function SidebarPanel({
 }) {
   return (
     <Box sx={{ p: 3 }}>
-      <Text sx={{ fontWeight: "bold", mb: 2, display: "block" }}>{title}</Text>
+      <Text
+        as="h2"
+        sx={{ fontWeight: "bold", fontSize: 2, m: 0, mb: 2, display: "block" }}
+      >
+        {title}
+      </Text>
       <Box>{children}</Box>
     </Box>
   );

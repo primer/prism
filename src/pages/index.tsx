@@ -34,7 +34,7 @@ export function Index(props: RouteComponentProps) {
       >
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <MarkGithubIcon size={32} />
-          <Box sx={{ ml: 2, fontSize: 3, fontWeight: "bold" }}>
+          <Box as="h1" sx={{ m: 0, ml: 2, fontSize: 3, fontWeight: "bold" }}>
             Primer Prism
           </Box>
         </Box>
@@ -150,7 +150,7 @@ export function Index(props: RouteComponentProps) {
               maxWidth: "50ch",
             }}
           >
-            <Heading as="h1" sx={{ marginBottom: 1 }}>
+            <Heading as="h2" sx={{ marginBottom: 1 }}>
               Welcome
             </Heading>
             <Text sx={{ marginBottom: 5, fontSize: 3, color: "fg.muted" }}>

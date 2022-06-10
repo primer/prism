@@ -1,4 +1,4 @@
-import { DashIcon, PlusIcon } from "@primer/octicons-react";
+import { CheckIcon, DashIcon, PlusIcon, XIcon } from "@primer/octicons-react";
 import { Box, ButtonGroup } from "@primer/react";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import { getContrast } from "color2k";
@@ -78,6 +78,8 @@ export function Scale({
             {Object.entries(visibleCurves).map(([type, isVisible]) => {
               return (
                 <Button
+                  aria-label={`Toggle ${type} curve visibility`}
+                  aria-pressed={isVisible}
                   onClick={() =>
                     setVisibleCurves({ ...visibleCurves, [type]: !isVisible })
                   }
@@ -143,6 +145,7 @@ export function Scale({
                     display: "grid",
                     placeItems: "end",
                     p: 2,
+                    fontWeight: "bold",
                     "&::before": {
                       content: '""',
                       display: String(i) === index ? "block" : "none",
@@ -157,7 +160,15 @@ export function Scale({
                   }}
                   onClick={() => setIndex(String(i))}
                 >
-                  {contrastScore !== "Fail" ? contrastScore : ""}
+                  {contrastScore !== "Fail" ? (
+                    <span>
+                      {contrastScore} <CheckIcon />
+                    </span>
+                  ) : (
+                    <span>
+                      Fail <XIcon />
+                    </span>
+                  )}
                 </Box>
               );
             })}
@@ -234,6 +245,7 @@ export function Scale({
                 return (
                   <Box
                     as={Link}
+                    aria-label={`Go to ${currentScale.name} scale`}
                     to={`${routePrefix}/local/${paletteId}/scale/${currentScale.id}`}
                     replace={true}
                     sx={{
@@ -309,7 +321,7 @@ export function Scale({
         <SidebarPanel title="Linked curves">
           <VStack spacing={16}>
             <VStack spacing={4}>
-              <label htmlFor="lightness-curve" style={{ fontSize: 14 }}>
+              <label htmlFor="hue-curve" style={{ fontSize: 14 }}>
                 Hue curve
               </label>
               <div
@@ -343,6 +355,7 @@ export function Scale({
                     ))}
                 </Select>
                 <IconButton
+                  aria-label="Create hue curve"
                   icon={PlusIcon}
                   onClick={() =>
                     send({
@@ -391,6 +404,7 @@ export function Scale({
                 </Select>
                 <IconButton
                   icon={PlusIcon}
+                  aria-label="Create saturation curve"
                   onClick={() =>
                     send({
                       type: "CREATE_CURVE_FROM_SCALE",
@@ -436,8 +450,8 @@ export function Scale({
                       </option>
                     ))}
                 </Select>
-
                 <IconButton
+                  aria-label="Create lightness curve"
                   icon={PlusIcon}
                   onClick={() =>
                     send({
