@@ -1,5 +1,5 @@
 import { MarkGithubIcon } from "@primer/octicons-react";
-import { Box, Text } from "@primer/react";
+import { Box, Text, Label } from "@primer/react";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import { mix, readableColor } from "color2k";
 import React from "react";
@@ -83,9 +83,17 @@ export function Palette({
         >
           <Text sx={{ display: "flex", alignItems: "center" }}>
             <MarkGithubIcon size={32} />
-            <Text as="h1" sx={{ m: 0, ml: 2, fontSize: 3, fontWeight: "bold" }}>
+            <Text as="h1" sx={{ m: 0, mx: 2, fontSize: 3, fontWeight: "bold" }}>
               Primer Prism
             </Text>
+            <Label
+              sx={{
+                color: "var(--color-text)",
+                borderColor: "var(--color-text)",
+              }}
+            >
+              Experimental
+            </Label>
           </Text>
         </Link>
 

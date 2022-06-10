@@ -8,6 +8,7 @@ import {
   Button,
   Heading,
   IconButton,
+  Label,
   Link as PrimerLink,
   StyledOcticon,
   Text,
@@ -34,9 +35,10 @@ export function Index(props: RouteComponentProps) {
       >
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <MarkGithubIcon size={32} />
-          <Box as="h1" sx={{ m: 0, ml: 2, fontSize: 3, fontWeight: "bold" }}>
+          <Box as="h1" sx={{ m: 0, mx: 2, fontSize: 3, fontWeight: "bold" }}>
             Primer Prism
           </Box>
+          <Label variant="attention">Experimental</Label>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <PrimerLink
