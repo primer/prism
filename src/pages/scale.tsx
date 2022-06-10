@@ -1,4 +1,9 @@
-import { CheckIcon, DashIcon, PlusIcon, XIcon } from "@primer/octicons-react";
+import {
+  CheckCircleFillIcon,
+  DashIcon,
+  PlusIcon,
+  XCircleIcon,
+} from "@primer/octicons-react";
 import { Box, ButtonGroup, Text } from "@primer/react";
 import { Link, navigate, RouteComponentProps } from "@reach/router";
 import { getContrast } from "color2k";
@@ -162,11 +167,11 @@ export function Scale({
                 >
                   {contrastScore !== "Fail" ? (
                     <span>
-                      {contrastScore} <CheckIcon />
+                      {contrastScore} <CheckCircleFillIcon />
                     </span>
                   ) : (
                     <span>
-                      Fail <XIcon />
+                      Fail <XCircleIcon />
                     </span>
                   )}
                 </Box>
@@ -542,9 +547,9 @@ export function Scale({
                         {getContrastScore(
                           getContrast(hex, focusedHex || "")
                         ) === "Fail" ? (
-                          <XIcon />
+                          <XCircleIcon />
                         ) : (
-                          <CheckIcon />
+                          <CheckCircleFillIcon />
                         )}
                       </Text>
                     </span>
