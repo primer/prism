@@ -1,6 +1,6 @@
 ---
-name: Prism bug report
-about: Create a report to help us improve Prism
+name: Bug report
+about: Help us improve Prism by reporting a bug
 
 ---
 
