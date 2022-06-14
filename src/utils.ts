@@ -1,6 +1,7 @@
-import {Color, Curve, Scale} from './types'
+import {Color, Curve, Palette, Scale} from './types'
 import hsluv from 'hsluv'
 import {toHex} from 'color2k'
+import {camelCase} from 'lodash-es'
 
 export function hexToColor(hex: string): Color {
   const [hue, saturation, lightness] = hsluv.hexToHsluv(toHex(hex)).map(value => Math.round(value * 100) / 100)
@@ -40,4 +41,21 @@ export function getRange(type: Curve['type']) {
 
 export function getContrastScore(contrast: number) {
   return contrast < 3 ? 'Fail' : contrast < 4.5 ? 'AA Large' : contrast < 7 ? 'AA' : 'AAA'
+}
+
+export function getHexScales(curves: Palette['curves'], scales: Palette['scales']) {
+  return Object.values(scales).reduce<Record<string, string | string[]>>((acc, scale) => {
+    let key = camelCase(scale.name)
+    let i = 1
+
+    while (key in acc) {
+      i++
+      key = `${camelCase(scale.name)}${i}`
+    }
+
+    const colors = scale.colors.map((_, index) => getColor(curves, scale, index)).map(colorToHex)
+
+    acc[key] = colors.length === 1 ? colors[0] : colors
+    return acc
+  }, {})
 }

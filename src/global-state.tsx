@@ -8,7 +8,7 @@ import {interpret, Machine} from 'xstate'
 import cssColorNames from './css-color-names.json'
 import exampleScales from './example-scales.json'
 import {Color, Curve, Palette, Scale} from './types'
-import {getColor, hexToColor, randomIntegerInRange} from './utils'
+import {getColor, getHexScales, hexToColor, randomIntegerInRange} from './utils'
 import {routePrefix} from './constants'
 
 const GLOBAL_STATE_KEY = 'global_state'
@@ -127,6 +127,7 @@ type MachineEvent =
   | {type: 'UNDO'}
   | {type: 'REDO'}
 
+// prettier-ignore
 const machine = Machine<MachineContext, MachineEvent>({
   id: 'global-state',
   context: {
@@ -380,6 +381,7 @@ const machine = Machine<MachineContext, MachineEvent>({
   },
   states: {
     idle: {
+      entry: ['postComputedPaletteToParent'],
       exit: assign((context, event) => {
         // Insert present state at the end of the past
         context.past.push(context.palettes)
@@ -400,7 +402,19 @@ const machine = Machine<MachineContext, MachineEvent>({
       }
     }
   }
-})
+},
+  {
+    actions: {
+      postComputedPaletteToParent: (context) => {
+        const payload = Object.fromEntries(Object.entries(context.palettes).map(([id, palette]) => (
+          [id, { name: palette.name, scales: getHexScales(palette.curves, palette.scales) }]
+        )));
+
+        window.parent.postMessage(payload, "*");
+      }
+    }
+  }
+)
 
 const GlobalStateContext = React.createContext(interpret(machine))
 
