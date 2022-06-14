@@ -1,10 +1,9 @@
 import { Button as PrimerButton, Textarea } from "@primer/react";
 import { Dialog } from "@primer/react/lib-esm/Dialog/Dialog";
 import copy from "copy-to-clipboard";
-import { camelCase } from "lodash-es";
 import React from "react";
 import { Palette } from "../types";
-import { colorToHex, getColor } from "../utils";
+import { getHexScales } from "../utils";
 import { Button } from "./button";
 import { VStack } from "./stack";
 
@@ -15,26 +14,7 @@ type ExportScalesProps = {
 export function ExportScales({ palette }: ExportScalesProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const hexScales = React.useMemo(
-    () =>
-      Object.values(palette.scales).reduce<Record<string, string | string[]>>(
-        (acc, scale) => {
-          let key = camelCase(scale.name);
-          let i = 1;
-
-          while (key in acc) {
-            i++;
-            key = `${camelCase(scale.name)}${i}`;
-          }
-
-          const colors = scale.colors
-            .map((_, index) => getColor(palette.curves, scale, index))
-            .map(colorToHex);
-
-          acc[key] = colors.length === 1 ? colors[0] : colors;
-          return acc;
-        },
-        {}
-      ),
+    () => getHexScales(palette.curves, palette.scales),
     [palette.curves, palette.scales]
   );
 
