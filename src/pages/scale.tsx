@@ -134,7 +134,7 @@ export function Scale({
                     position: 'relative',
                     fontSize: 1,
                     display: 'grid',
-                    placeItems: 'end',
+                    placeItems: 'end center',
                     p: 2,
                     fontWeight: 'bold',
                     '&::before': {
@@ -151,15 +151,21 @@ export function Scale({
                   }}
                   onClick={() => setIndex(String(i))}
                 >
-                  {contrastScore !== 'Fail' ? (
-                    <span>
-                      {contrastScore} <CheckCircleFillIcon />
+                  <Box display="flex" alignItems="center" flexDirection="column">
+                    <span
+                      style={{
+                        transform: 'rotate(180deg)',
+                        textOrientation: 'sideways',
+                        writingMode: 'vertical-lr',
+                        whiteSpace: 'nowrap',
+                        textAlign: 'right',
+                        marginInlineEnd: 5
+                      }}
+                    >
+                      {contrastScore}{' '}
                     </span>
-                  ) : (
-                    <span>
-                      Fail <XCircleIcon />
-                    </span>
-                  )}
+                    {contrastScore === 'Fail' ? <XCircleIcon /> : <CheckCircleFillIcon />}
+                  </Box>
                 </Box>
               )
             })}
