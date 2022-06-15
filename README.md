@@ -4,13 +4,14 @@
 # Primer Prism
 
 
-A tool for creating and maintaining cohesive, consistent, and accessible color palettes
+Primer Prism is a tool for creating and maintaining cohesive, consistent, and accessible color palettes.
 
-[primer.style/prism](https://primer.style/prism)
+- 🌈 [primer.style/prism](https://primer.style/prism)
+- 📝 [Read the blog post](https://github.blog/2022-06-14-accelerating-github-theme-creation-with-color-tooling/)
+
 
 > **Warning**
 > Primer Prism is experimental. Expect bugs and breaking changes as we continue to iterate. 
-
 
 
 
