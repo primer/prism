@@ -104,6 +104,7 @@ export function Scale({
               icon={DashIcon}
               aria-label="Remove color from end of scale"
               onClick={() => send({ type: "POP_COLOR", paletteId, scaleId })}
+              disabled={scale.colors.length === 1}
             />
             <IconButton
               icon={PlusIcon}
