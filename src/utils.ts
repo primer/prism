@@ -59,3 +59,7 @@ export function getHexScales(curves: Palette['curves'], scales: Palette['scales'
     return acc
   }, {})
 }
+
+export function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t;
+}

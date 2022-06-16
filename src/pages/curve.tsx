@@ -10,6 +10,7 @@ import {routePrefix} from '../constants'
 import {useGlobalState} from '../global-state'
 import {Color} from '../types'
 import {colorToHex, getColor} from '../utils'
+import {ApplyEasingFunction} from '../components/apply-easing-function'
 
 const ranges = {
   hue: {min: 0, max: 360},
@@ -143,6 +144,18 @@ export function Curve({paletteId = '', curveId = ''}: RouteComponentProps<{palet
             </Button>
           </VStack>
         </SidebarPanel>
+        <Separator />
+        <ApplyEasingFunction
+          onApply={easingFn => {
+            console.debug('onapply')
+            send({
+              type: 'APPLY_EASING_FUNCTION',
+              paletteId,
+              curveId,
+              easingFunction: easingFn
+            })
+          }}
+        />
         <Separator />
         <SidebarPanel title="Values">
           <VStack spacing={16}>
