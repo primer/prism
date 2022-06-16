@@ -14,7 +14,9 @@ import { HStack, VStack } from "../components/stack";
 import { routePrefix } from "../constants";
 import { useGlobalState } from "../global-state";
 import { Color } from "../types";
-import { colorToHex, getColor } from "../utils";
+import { colorToHex, getColor, getHexScales } from "../utils";
+// @ts-ignore
+import debounce from 'debounce';
 
 const Wrapper = styled.div<{ backgroundColor: string }>`
   --color-text: ${props => readableColor(props.backgroundColor)};
@@ -27,9 +29,9 @@ const Wrapper = styled.div<{ backgroundColor: string }>`
     mix(readableColor(props.backgroundColor), props.backgroundColor, 0.75)};
 
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 300px 1fr 1fr;
   grid-template-rows: auto 1fr;
-  grid-template-areas: "header header" "sidebar main";
+  grid-template-areas: "header header header" "sidebar main preview";
   color: var(--color-text);
   background-color: var(--color-background);
   height: 100vh;
@@ -51,6 +53,18 @@ export function Palette({
 }: React.PropsWithChildren<RouteComponentProps<{ paletteId: string }>>) {
   const [state, send] = useGlobalState();
   const palette = state.context.palettes[paletteId];
+
+  const palettes = state.context.palettes;
+  const iframeRef = React.useRef<HTMLIFrameElement>(null);
+  React.useEffect(debounce(() => {
+    if (iframeRef.current != null) {
+      const payload = Object.fromEntries(Object.entries(palettes).map(([id, palette]) => (
+        [id, { name: palette.name, scales: getHexScales(palette.curves, palette.scales) }]
+      )));
+      // @ts-ignore
+      iframeRef.current.contentWindow.postMessage({type: 'prism', payload}, '*');
+    }
+  }, 500), [palettes]);
 
   if (!palette) {
     return (
@@ -356,6 +370,11 @@ export function Palette({
         </SidebarPanel>
       </div>
       <Main>{children}</Main>
+      <div style={{
+        gridArea: 'preview'
+      }}>
+        <iframe ref={iframeRef} src="http://localhost:3333" style={{width: '100%', height: '100%'}} />
+      </div>
     </Wrapper>
   );
 }
