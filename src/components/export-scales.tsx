@@ -19,6 +19,8 @@ export function ExportScales({palette}: ExportScalesProps) {
 
   const svg = React.useMemo(() => generateSvg(hexScales), [hexScales])
 
+  const figmaTokens = React.useMemo(() => JSON.stringify(generateFigmaTokens(hexScales), null, 2), [hexScales])
+
   return (
     <>
       <Button onClick={() => setIsOpen(true)}>Export</Button>
@@ -36,12 +38,13 @@ export function ExportScales({palette}: ExportScalesProps) {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
+                gridTemplateColumns: '1fr 1fr 1fr',
                 gap: 16
               }}
             >
               <PrimerButton onClick={() => copy(code)}>Copy JSON</PrimerButton>
               <PrimerButton onClick={() => copy(svg)}>Copy SVG</PrimerButton>
+              <PrimerButton onClick={() => copy(figmaTokens)}>Copy Figma Tokens</PrimerButton>
             </div>
           </VStack>
         </Dialog>
@@ -75,4 +78,18 @@ function generateSvg(scales: Record<string, string | string[]>) {
   </g>`
   })}
 </svg>`
+}
+
+function generateFigmaTokens(scales: Record<string, string | string[]>) {
+  return Object.fromEntries(
+    Object.entries(scales).map(([key, colors]) => {
+      const colorsArray = Array.isArray(colors) ? colors : [colors]
+      const colorsObject = Object.fromEntries(
+        colorsArray.map((color, i) => {
+          return [i, {value: color, type: 'color'}]
+        })
+      )
+      return [key, colorsObject]
+    })
+  )
 }
