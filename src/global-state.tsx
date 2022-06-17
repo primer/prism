@@ -2,7 +2,7 @@ import {navigate} from '@reach/router'
 import {assign} from '@xstate/immer'
 import {useInterpret, useService} from '@xstate/react'
 import bezier from 'bezier-easing'
-import {isArray, keyBy} from 'lodash-es'
+import {debounce, isArray, keyBy} from 'lodash-es'
 import React from 'react'
 import {v4 as uniqueId} from 'uuid'
 import {interpret, Machine} from 'xstate'
@@ -483,7 +483,7 @@ const machine = Machine<MachineContext, MachineEvent>({
         context.past.push(context.palettes)
 
         // Limit length of past
-        const size = 50
+        const size = 25
         context.past = context.past.slice(-size)
 
         // Clear the future
@@ -524,9 +524,11 @@ export function GlobalStateProvider({children}: React.PropsWithChildren<{}>) {
     palette.namingSchemes = palette.namingSchemes || {}
   })
 
-  const service = useInterpret(machine, {state: initialState, devTools: true}, state => {
+  const debouncedPersist = debounce(state => {
     localStorage.setItem(GLOBAL_STATE_KEY, JSON.stringify(state))
-  })
+  }, 200)
+
+  const service = useInterpret(machine, {state: initialState, devTools: true}, debouncedPersist)
 
   return <GlobalStateContext.Provider value={service}>{children}</GlobalStateContext.Provider>
 }
