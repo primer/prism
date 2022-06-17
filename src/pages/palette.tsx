@@ -343,6 +343,46 @@ export function Palette({paletteId = '', children}: React.PropsWithChildren<Rout
             ))}
           </VStack>
         </SidebarPanel>
+        <Separator />
+        <SidebarPanel title="Naming schemes">
+          <VStack spacing={8}>
+            {Object.values(palette.namingSchemes).map(namingScheme => (
+              <Link
+                key={namingScheme.id}
+                to={`naming-scheme/${namingScheme.id}`}
+                style={{
+                  color: "inherit",
+                  fontSize: 14,
+                  textDecoration: "none",
+                }}
+              >
+                <VStack spacing={4}>
+                  <span>{namingScheme.name}</span>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    borderRadius={4}
+                    overflow="hidden"
+                    sx={{ gap: 1 }}
+                  >
+                    {namingScheme.names.map(namingScheme => {
+                      return (
+                        <Box
+                          px={2}
+                          py={1}
+                          bg="var(--color-background-secondary)"
+                          fontSize={10}
+                        >
+                          {namingScheme}
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                </VStack>
+              </Link>
+            ))}
+          </VStack>
+        </SidebarPanel>
       </div>
       <Main>{children}</Main>
     </Wrapper>

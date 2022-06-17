@@ -1,12 +1,12 @@
 import {BaseStyles, themeGet} from '@primer/react'
 import {Router} from '@reach/router'
-import React from 'react'
 import {useHotkeys} from 'react-hotkeys-hook'
 import {createGlobalStyle} from 'styled-components'
 import {routePrefix} from './constants'
 import {useGlobalState} from './global-state'
 import {Index} from './pages'
 import {Curve} from './pages/curve'
+import {NamingScheme} from './pages/naming-scheme'
 import {NotFound} from './pages/not-found'
 import {Palette} from './pages/palette'
 import {Scale} from './pages/scale'
@@ -31,6 +31,7 @@ export function App() {
         <Palette path={`${routePrefix}/local/:paletteId`}>
           <Scale path="scale/:scaleId"></Scale>
           <Curve path="curve/:curveId"></Curve>
+          <NamingScheme path="naming-scheme/:namingSchemeId"></NamingScheme>
         </Palette>
         <NotFound default />
       </Router>

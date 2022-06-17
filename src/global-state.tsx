@@ -8,7 +8,7 @@ import {v4 as uniqueId} from 'uuid'
 import {interpret, Machine} from 'xstate'
 import cssColorNames from './css-color-names.json'
 import exampleScales from './example-scales.json'
-import {Color, Curve, Palette, Scale} from './types'
+import {Color, Curve, Palette, Scale, NamingScheme} from './types'
 import {getColor, getHexScales, hexToColor, lerp, randomIntegerInRange} from './utils'
 import {routePrefix} from './constants'
 
@@ -89,6 +89,11 @@ type MachineEvent =
       curveType: Curve['type']
     }
   | {
+      type: 'CREATE_NAMING_SCHEME_FROM_SCALE'
+      paletteId: string
+      scaleId: string
+    }
+  | {
       type: 'CHANGE_CURVE_NAME'
       paletteId: string
       curveId: string
@@ -105,6 +110,12 @@ type MachineEvent =
       scaleId: string
       curveType: Curve['type']
       curveId: string
+    }
+  | {
+      type: 'CHANGE_SCALE_NAMING_SCHEME'
+      paletteId: string
+      scaleId: string
+      namingSchemeId: string | null
     }
   | {
       type: 'CHANGE_CURVE_VALUE'
@@ -130,6 +141,11 @@ type MachineEvent =
       paletteId: string
       curveId: string
       easingFunction: bezier.EasingFunction
+    }
+  | {
+      type: 'UPDATE_NAMING_SCHEME'
+      paletteId: string
+      namingScheme: NamingScheme
     }
   | {type: 'UNDO'}
   | {type: 'REDO'}
@@ -174,14 +190,24 @@ const machine = Machine<MachineContext, MachineEvent>({
         const scales: Scale[] = Object.entries(exampleScales).map(([name, scale]) => {
           const id = uniqueId()
           const scaleArray = isArray(scale) ? scale : [scale]
-          return {id, name, colors: scaleArray.map(hexToColor), curves: {}}
+          return {id, name, colors: scaleArray.map(hexToColor), curves: {}, namingSchemeId: null}
         })
         context.palettes[paletteId] = {
           id: paletteId,
           name: 'Untitled',
           backgroundColor: '#ffffff',
           scales: keyBy(scales, 'id'),
-          curves: {}
+          curves: {},
+          namingSchemes: {
+            '123': {
+              id: '123',
+              name: 'Default',
+              names: [
+                '100', '130', '160', '200', '230', '260', '300', '330', '345', '360', '400', '430', '460',
+                '500', '530', '560', '600', '630', '660', '700', '730', '760', '800', '830', '860', '900'
+              ]
+            }
+          }
         }
 
         navigate(`${routePrefix}/local/${paletteId}`)
@@ -227,7 +253,8 @@ const machine = Machine<MachineContext, MachineEvent>({
           id: scaleId,
           name,
           colors: [color],
-          curves: {}
+          curves: {},
+          namingSchemeId: null
         }
       })
     },
@@ -263,17 +290,16 @@ const machine = Machine<MachineContext, MachineEvent>({
     POP_COLOR: {
       target: 'debouncing',
       actions: assign((context, event) => {
-        const colors = context.palettes[event.paletteId].scales[event.scaleId].colors
-
-        if (colors.length > 1) {
-          colors.pop()
-        }
+        const {colors, namingSchemeId} = context.palettes[event.paletteId].scales[event.scaleId]
+        if (colors.length > 1 || namingSchemeId != null) return
+        colors.pop()
       })
     },
     DELETE_COLOR: {
       target: 'debouncing',
       actions: assign((context, event) => {
-        const colors = context.palettes[event.paletteId].scales[event.scaleId].colors
+        const {colors, namingSchemeId} = context.palettes[event.paletteId].scales[event.scaleId]
+        if (namingSchemeId != null) return
 
         if (colors.length > 1) {
           colors.splice(event.index, 1)
@@ -312,6 +338,25 @@ const machine = Machine<MachineContext, MachineEvent>({
           ...color,
           [event.curveType]: 0
         }))
+      })
+    },
+    CREATE_NAMING_SCHEME_FROM_SCALE: {
+      target: 'debouncing',
+      actions: assign((context, event) => {
+        const palette = context.palettes[event.paletteId]
+        const scale = palette.scales[event.scaleId]
+        const namingSchemeId = uniqueId()
+
+        const name = `${scale.name} naming scheme`
+        const names = scale.colors.map((_, i) => i.toString())
+
+        palette.namingSchemes[namingSchemeId] = {
+          id: namingSchemeId,
+          name,
+          names
+        }
+
+        scale.namingSchemeId = namingSchemeId
       })
     },
     CHANGE_CURVE_NAME: {
@@ -367,6 +412,26 @@ const machine = Machine<MachineContext, MachineEvent>({
         }
       })
     },
+    CHANGE_SCALE_NAMING_SCHEME: {
+      target: 'debouncing',
+      actions: assign((context, event) => {
+        const palette = context.palettes[event.paletteId]
+        const scale = palette.scales[event.scaleId]
+        scale.namingSchemeId = event.namingSchemeId
+        if (!event.namingSchemeId) return
+
+        const names = palette.namingSchemes[event.namingSchemeId].names
+        const lastColor = scale.colors[scale.colors.length - 1]
+
+        scale.colors = names.map((_, index) => {
+          if (index >= scale.colors.length) {
+            return lastColor
+          }
+
+          return scale.colors[index]
+        })
+      })
+    },
     CHANGE_CURVE_VALUE: {
       target: 'debouncing',
       actions: assign((context, event) => {
@@ -382,28 +447,33 @@ const machine = Machine<MachineContext, MachineEvent>({
     CHANGE_SCALE_COLORS: {
       target: 'debouncing',
       actions: assign((context, event) => {
-        context.palettes[event.paletteId].scales[event.scaleId].colors =
-          event.colors;
-      }),
+        context.palettes[event.paletteId].scales[event.scaleId].colors = event.colors
+      })
     },
     APPLY_EASING_FUNCTION: {
-      target: "debouncing",
+      target: 'debouncing',
       actions: assign((context, event) => {
-        const { paletteId, curveId, easingFunction } = event;
-        const curve = context.palettes[paletteId].curves[curveId];
+        const {paletteId, curveId, easingFunction} = event
+        const curve = context.palettes[paletteId].curves[curveId]
 
-        const startingPoint = curve.values[0];
-        const endingPoint = curve.values[curve.values.length - 1];
+        const startingPoint = curve.values[0]
+        const endingPoint = curve.values[curve.values.length - 1]
 
-        if (startingPoint == null || endingPoint == null) return;
+        if (startingPoint == null || endingPoint == null) return
 
         curve.values = curve.values.map((_, index) => {
-          const t = index / (curve.values.length - 1);
-          const newValue = lerp(startingPoint, endingPoint, easingFunction(t));
-          return Math.round(newValue * 10) / 10;
-        });
-      }),
+          const t = index / (curve.values.length - 1)
+          const newValue = lerp(startingPoint, endingPoint, easingFunction(t))
+          return Math.round(newValue * 10) / 10
+        })
+      })
     },
+    UPDATE_NAMING_SCHEME: {
+      target: 'debouncing',
+      actions: assign((context, event) => {
+        context.palettes[event.paletteId].namingSchemes[event.namingScheme.id] = event.namingScheme
+      })
+    }
   },
   states: {
     idle: {
@@ -435,13 +505,13 @@ const machine = Machine<MachineContext, MachineEvent>({
         const payload = Object.fromEntries(
           Object.entries(context.palettes).map(([id, palette]) => [
             id,
-            { name: palette.name, scales: getHexScales(palette.curves, palette.scales) },
+            {name: palette.name, scales: getHexScales(palette)}
           ])
-        );
+        )
 
-        window.parent.postMessage(payload, "*");
-      },
-    },
+        window.parent.postMessage(payload, '*')
+      }
+    }
   }
 )
 
@@ -449,6 +519,10 @@ const GlobalStateContext = React.createContext(interpret(machine))
 
 export function GlobalStateProvider({children}: React.PropsWithChildren<{}>) {
   const initialState = React.useMemo(() => getPersistedState() ?? machine.initialState, [])
+
+  Object.values(initialState.context.palettes).forEach(palette => {
+    palette.namingSchemes = palette.namingSchemes || {}
+  })
 
   const service = useInterpret(machine, {state: initialState, devTools: true}, state => {
     localStorage.setItem(GLOBAL_STATE_KEY, JSON.stringify(state))

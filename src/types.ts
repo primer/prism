@@ -16,6 +16,13 @@ export type Scale = {
   name: string
   colors: Color[]
   curves: Partial<Record<Curve['type'], string>>
+  namingSchemeId: string | null
+}
+
+export type NamingScheme = {
+  id: string
+  name: string
+  names: string[]
 }
 
 export type Palette = {
@@ -24,4 +31,5 @@ export type Palette = {
   backgroundColor: string
   scales: Record<string, Scale>
   curves: Record<string, Curve>
+  namingSchemes: Record<string, NamingScheme>
 }

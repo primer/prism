@@ -147,7 +147,6 @@ export function Curve({paletteId = '', curveId = ''}: RouteComponentProps<{palet
         <Separator />
         <ApplyEasingFunction
           onApply={easingFn => {
-            console.debug('onapply')
             send({
               type: 'APPLY_EASING_FUNCTION',
               paletteId,

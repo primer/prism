@@ -42,6 +42,9 @@ export function Scale({
   let focusedHex: string | undefined
   const index = String(Math.min(Number(selectedIndex), scale.colors.length - 1))
 
+  const name = palette.namingSchemes[scale.namingSchemeId || '']?.names?.[+index]
+  const colorName = `${scale.name}-${name || index}`
+
   try {
     const focusedColor = index ? getColor(palette.curves, scale, parseInt(index, 10)) : undefined
     focusedHex = focusedColor ? colorToHex(focusedColor) : undefined
@@ -93,12 +96,13 @@ export function Scale({
               icon={DashIcon}
               aria-label="Remove color from end of scale"
               onClick={() => send({type: 'POP_COLOR', paletteId, scaleId})}
-              disabled={scale.colors.length === 1}
+              disabled={scale.namingSchemeId != null || scale.colors.length === 1}
             />
             <IconButton
               icon={PlusIcon}
               aria-label="Add color to end of scale"
               onClick={() => send({type: 'CREATE_COLOR', paletteId, scaleId})}
+              disabled={scale.namingSchemeId != null}
             />
           </ButtonGroup>
         </Box>
@@ -301,6 +305,53 @@ export function Scale({
           </VStack>
         </SidebarPanel>
         <Separator />
+        <SidebarPanel title="Linked naming scheme">
+          <VStack spacing={4}>
+            <label htmlFor="hue-curve" style={{fontSize: 14}}>
+              Naming scheme
+            </label>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr auto',
+                gap: 8
+              }}
+            >
+              <Select
+                key={`${scale.name}-naming-scheme`}
+                id="naming-scheme"
+                value={scale.namingSchemeId ?? ''}
+                onChange={event => {
+                  send({
+                    type: 'CHANGE_SCALE_NAMING_SCHEME',
+                    paletteId,
+                    scaleId,
+                    namingSchemeId: event.target.value || null
+                  })
+                }}
+              >
+                <option value="">None</option>
+                {Object.values(palette.namingSchemes).map(namingScheme => (
+                  <option key={namingScheme.id} value={namingScheme.id}>
+                    {namingScheme.name}
+                  </option>
+                ))}
+              </Select>
+              <IconButton
+                aria-label="Create naming scheme"
+                icon={PlusIcon}
+                onClick={() =>
+                  send({
+                    type: 'CREATE_NAMING_SCHEME_FROM_SCALE',
+                    paletteId,
+                    scaleId
+                  })
+                }
+              />
+            </div>
+          </VStack>
+        </SidebarPanel>
+        <Separator />
         <SidebarPanel title="Linked curves">
           <VStack spacing={16}>
             <VStack spacing={4}>
@@ -455,7 +506,7 @@ export function Scale({
             <Color paletteId={paletteId} scaleId={scaleId} index={index} />
             <Separator />
             {/* TODO: Pull this into a separate component */}
-            <SidebarPanel title={`Contrast of ${scale.name}.${index}`}>
+            <SidebarPanel title={`Contrast of ${colorName}`}>
               <Box
                 as="ul"
                 sx={{
@@ -477,8 +528,9 @@ export function Scale({
                     .map((_, i) => {
                       const hex = colorToHex(getColor(palette.curves, scale, i))
                       const contrast = getContrast(hex, focusedHex || '')
+                      const name = palette.namingSchemes[scale.namingSchemeId || '']?.names[i]
                       return {
-                        name: `${scale.name}.${i}`,
+                        name: `${scale.name}-${name || i}`,
                         hex,
                         contrast
                       }

@@ -14,6 +14,7 @@ export function Color({paletteId = '', scaleId = '', index = ''}: {paletteId: st
   const scale = palette.scales[scaleId]
   const indexAsNumber = parseInt(index, 10)
   const color = scale.colors[indexAsNumber]
+  const colorName = palette.namingSchemes[scale.namingSchemeId || '']?.names?.[indexAsNumber]
 
   if (!color) {
     return null
@@ -23,7 +24,7 @@ export function Color({paletteId = '', scaleId = '', index = ''}: {paletteId: st
   const hex = colorToHex(computedColor)
 
   return (
-    <SidebarPanel title={`${scale.name}.${index}`}>
+    <SidebarPanel title={`${scale.name}-${colorName || index}`}>
       <VStack spacing={16}>
         <Box sx={{width: '100%', height: 48, background: hex, borderRadius: 1}} />
         <div
@@ -124,6 +125,7 @@ export function Color({paletteId = '', scaleId = '', index = ''}: {paletteId: st
         </Box>
 
         <Button
+          disabled={scale.namingSchemeId != null || scale.namingSchemeId != null}
           onClick={() =>
             send({
               type: 'DELETE_COLOR',
@@ -132,7 +134,6 @@ export function Color({paletteId = '', scaleId = '', index = ''}: {paletteId: st
               index: parseInt(index)
             })
           }
-          disabled={scale.colors.length === 1}
         >
           Delete color
         </Button>
