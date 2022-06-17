@@ -40,7 +40,7 @@ export function Scale({
   }
 
   let focusedHex: string | undefined
-  const index = Number(selectedIndex) > scale.colors.length - 1 ? String(scale.colors.length - 1) : selectedIndex
+  const index = String(Math.min(Number(selectedIndex), scale.colors.length - 1))
 
   try {
     const focusedColor = index ? getColor(palette.curves, scale, parseInt(index, 10)) : undefined
