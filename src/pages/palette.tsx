@@ -1,39 +1,37 @@
-import { MarkGithubIcon } from "@primer/octicons-react";
-import { Box, Text, Label } from "@primer/react";
-import { Link, navigate, RouteComponentProps } from "@reach/router";
-import { mix, readableColor } from "color2k";
-import React from "react";
-import styled from "styled-components";
-import { Button, IconButton } from "../components/button";
-import { ExportScales } from "../components/export-scales";
-import { ImportScales } from "../components/import-scales";
-import { Input } from "../components/input";
-import { Separator } from "../components/separator";
-import { SidebarPanel } from "../components/sidebar-panel";
-import { HStack, VStack } from "../components/stack";
-import { routePrefix } from "../constants";
-import { useGlobalState } from "../global-state";
-import { Color } from "../types";
-import { colorToHex, getColor } from "../utils";
+import {MarkGithubIcon} from '@primer/octicons-react'
+import {Box, Text, Label} from '@primer/react'
+import {Link, navigate, RouteComponentProps} from '@reach/router'
+import {mix, readableColor} from 'color2k'
+import React from 'react'
+import styled from 'styled-components'
+import {Button, IconButton} from '../components/button'
+import {ExportScales} from '../components/export-scales'
+import {ImportScales} from '../components/import-scales'
+import {Input} from '../components/input'
+import {Separator} from '../components/separator'
+import {SidebarPanel} from '../components/sidebar-panel'
+import {HStack, VStack} from '../components/stack'
+import {routePrefix} from '../constants'
+import {useGlobalState} from '../global-state'
+import {Color} from '../types'
+import {colorToHex, getColor} from '../utils'
 
-const Wrapper = styled.div<{ backgroundColor: string }>`
+const Wrapper = styled.div<{backgroundColor: string}>`
   --color-text: ${props => readableColor(props.backgroundColor)};
   --color-background: ${props => props.backgroundColor};
-  --color-background-secondary: ${props =>
-    mix(readableColor(props.backgroundColor), props.backgroundColor, 0.9)};
+  --color-background-secondary: ${props => mix(readableColor(props.backgroundColor), props.backgroundColor, 0.9)};
   --color-background-secondary-hover: ${props =>
     mix(readableColor(props.backgroundColor), props.backgroundColor, 0.85)};
-  --color-border: ${props =>
-    mix(readableColor(props.backgroundColor), props.backgroundColor, 0.75)};
+  --color-border: ${props => mix(readableColor(props.backgroundColor), props.backgroundColor, 0.75)};
 
   display: grid;
   grid-template-columns: 300px 1fr;
   grid-template-rows: auto 1fr;
-  grid-template-areas: "header header" "sidebar main";
+  grid-template-areas: 'header header' 'sidebar main';
   color: var(--color-text);
   background-color: var(--color-background);
   height: 100vh;
-`;
+`
 
 const Main = styled.main`
   grid-area: main;
@@ -43,53 +41,50 @@ const Main = styled.main`
   & > * {
     flex-grow: 1;
   }
-`;
+`
 
-export function Palette({
-  paletteId = "",
-  children,
-}: React.PropsWithChildren<RouteComponentProps<{ paletteId: string }>>) {
-  const [state, send] = useGlobalState();
-  const palette = state.context.palettes[paletteId];
+export function Palette({paletteId = '', children}: React.PropsWithChildren<RouteComponentProps<{paletteId: string}>>) {
+  const [state, send] = useGlobalState()
+  const palette = state.context.palettes[paletteId]
 
   if (!palette) {
     return (
-      <div style={{ padding: 16 }}>
-        <p style={{ marginTop: 0 }}>Palette not found</p>
+      <div style={{padding: 16}}>
+        <p style={{marginTop: 0}}>Palette not found</p>
         <Link to={`${routePrefix}/`}>Go home</Link>
       </div>
-    );
+    )
   }
 
   return (
     <Wrapper backgroundColor={palette.backgroundColor}>
       <header
         style={{
-          gridArea: "header",
-          display: "flex",
-          alignItems: "center",
+          gridArea: 'header',
+          display: 'flex',
+          alignItems: 'center',
           // gridTemplateColumns: "repeat(3,1fr)",
-          justifyContent: "space-between",
+          justifyContent: 'space-between',
           padding: 16,
-          borderBottom: "1px solid var(--color-border, gainsboro)",
+          borderBottom: '1px solid var(--color-border, gainsboro)'
         }}
       >
         <Link
           to={`${routePrefix}/`}
           style={{
-            color: "inherit",
-            textDecoration: "none",
+            color: 'inherit',
+            textDecoration: 'none'
           }}
         >
-          <Text sx={{ display: "flex", alignItems: "center" }}>
+          <Text sx={{display: 'flex', alignItems: 'center'}}>
             <MarkGithubIcon size={32} />
-            <Text as="h1" sx={{ m: 0, mx: 2, fontSize: 3, fontWeight: "bold" }}>
+            <Text as="h1" sx={{m: 0, mx: 2, fontSize: 3, fontWeight: 'bold'}}>
               Primer Prism
             </Text>
             <Label
               sx={{
-                color: "var(--color-text)",
-                borderColor: "var(--color-text)",
+                color: 'var(--color-text)',
+                borderColor: 'var(--color-text)'
               }}
             >
               Experimental
@@ -109,7 +104,7 @@ export function Palette({
                 viewBox="0 0 32 32"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
-                style={{ verticalAlign: "text-top" }}
+                style={{verticalAlign: 'text-top'}}
               >
                 <path
                   fill-rule="evenodd"
@@ -118,7 +113,7 @@ export function Palette({
                 />
               </svg>
             )}
-            onClick={() => send("UNDO")}
+            onClick={() => send('UNDO')}
             disabled={state.context.past.length === 0}
           >
             Undo
@@ -134,7 +129,7 @@ export function Palette({
                 viewBox="0 0 32 32"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
-                style={{ verticalAlign: "text-top" }}
+                style={{verticalAlign: 'text-top'}}
               >
                 <path
                   fill-rule="evenodd"
@@ -143,7 +138,7 @@ export function Palette({
                 />
               </svg>
             )}
-            onClick={() => send("REDO")}
+            onClick={() => send('REDO')}
             disabled={state.context.future.length === 0}
           />
           {/* <input
@@ -166,38 +161,34 @@ export function Palette({
               })
             }
           /> */}
-          <ImportScales
-            onImport={(scales, replace) =>
-              send({ type: "IMPORT_SCALES", paletteId, scales, replace })
-            }
-          />
+          <ImportScales onImport={(scales, replace) => send({type: 'IMPORT_SCALES', paletteId, scales, replace})} />
           <ExportScales palette={palette} />
         </HStack>
       </header>
       <div
         style={{
-          gridArea: "sidebar",
-          overflow: "auto",
-          borderRight: "1px solid var(--color-border, gainsboro)",
-          paddingBottom: 16,
+          gridArea: 'sidebar',
+          overflow: 'auto',
+          borderRight: '1px solid var(--color-border, gainsboro)',
+          paddingBottom: 16
         }}
       >
         <SidebarPanel title="Palette">
           <VStack spacing={16}>
             <VStack spacing={4}>
-              <label htmlFor="palette-name" style={{ fontSize: 14 }}>
+              <label htmlFor="palette-name" style={{fontSize: 14}}>
                 Name
               </label>
               <Input
                 type="text"
                 id="palette-name"
                 value={palette.name}
-                style={{ width: "100%" }}
+                style={{width: '100%'}}
                 onChange={event =>
                   send({
-                    type: "CHANGE_PALETTE_NAME",
+                    type: 'CHANGE_PALETTE_NAME',
                     paletteId,
-                    name: event.target.value,
+                    name: event.target.value
                   })
                 }
               />
@@ -208,35 +199,34 @@ export function Palette({
                 type="color"
                 value={palette.backgroundColor}
                 style={{
-                  appearance: "none",
-                  border: "1px solid var(--color-border, darkgray)",
-                  backgroundColor:
-                    "var(--color-background-secondary, gainsboro)",
-                  padding: "0px 2px",
+                  appearance: 'none',
+                  border: '1px solid var(--color-border, darkgray)',
+                  backgroundColor: 'var(--color-background-secondary, gainsboro)',
+                  padding: '0px 2px',
                   margin: 0,
                   borderRadius: 6,
                   height: 32,
-                  width: 64,
+                  width: 64
                 }}
                 onChange={event =>
                   send({
-                    type: "CHANGE_PALETTE_BACKGROUND_COLOR",
+                    type: 'CHANGE_PALETTE_BACKGROUND_COLOR',
                     paletteId,
-                    backgroundColor: event.target.value,
+                    backgroundColor: event.target.value
                   })
                 }
               />
-              <label htmlFor="bg-color" style={{ fontSize: 14 }}>
+              <label htmlFor="bg-color" style={{fontSize: 14}}>
                 Background color
               </label>
             </HStack>
             <Button
               aria-label="Delete palette"
               onClick={() => {
-                send({ type: "DELETE_PALETTE", paletteId });
+                send({type: 'DELETE_PALETTE', paletteId})
 
                 // Navigate to home page after deleting a palette
-                navigate(`${routePrefix}/`);
+                navigate(`${routePrefix}/`)
               }}
             >
               Delete palette
@@ -251,42 +241,39 @@ export function Palette({
                 key={scale.id}
                 to={`scale/${scale.id}`}
                 style={{
-                  color: "inherit",
+                  color: 'inherit',
                   fontSize: 14,
-                  textDecoration: "none",
+                  textDecoration: 'none'
                 }}
               >
                 <VStack spacing={4}>
                   <span>{scale.name}</span>
                   <Box
                     sx={{
-                      display: "flex",
+                      display: 'flex',
                       height: 24,
                       borderRadius: 1,
-                      overflow: "hidden",
+                      overflow: 'hidden'
                     }}
                   >
                     {scale.colors.map((_, index) => {
-                      const color = getColor(palette.curves, scale, index);
+                      const color = getColor(palette.curves, scale, index)
                       return (
                         <div
                           style={{
-                            width: "100%",
-                            height: "100%",
-                            backgroundColor: colorToHex(color),
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: colorToHex(color)
                           }}
                         />
-                      );
+                      )
                     })}
                   </Box>
                 </VStack>
               </Link>
             ))}
           </VStack>
-          <Button
-            style={{ marginTop: 16, width: "100%" }}
-            onClick={() => send({ type: "CREATE_SCALE", paletteId })}
-          >
+          <Button style={{marginTop: 16, width: '100%'}} onClick={() => send({type: 'CREATE_SCALE', paletteId})}>
             New scale
           </Button>
         </SidebarPanel>
@@ -298,55 +285,55 @@ export function Palette({
                 key={curve.id}
                 to={`curve/${curve.id}`}
                 style={{
-                  color: "inherit",
+                  color: 'inherit',
                   fontSize: 14,
-                  textDecoration: "none",
+                  textDecoration: 'none'
                 }}
               >
                 <VStack spacing={4}>
                   <span>{curve.name}</span>
                   <div
                     style={{
-                      display: "flex",
+                      display: 'flex',
                       height: 24,
                       borderRadius: 4,
-                      overflow: "hidden",
+                      overflow: 'hidden'
                     }}
                   >
                     {curve.values.map(value => {
-                      let color: Color;
+                      let color: Color
 
                       switch (curve.type) {
-                        case "hue":
+                        case 'hue':
                           color = {
                             hue: value,
                             saturation: 100,
-                            lightness: 50,
-                          };
-                          break;
+                            lightness: 50
+                          }
+                          break
 
-                        case "saturation":
+                        case 'saturation':
                           color = {
                             hue: 0,
                             saturation: 0,
-                            lightness: 100 - value,
-                          };
-                          break;
+                            lightness: 100 - value
+                          }
+                          break
 
-                        case "lightness":
-                          color = { hue: 0, saturation: 0, lightness: value };
-                          break;
+                        case 'lightness':
+                          color = {hue: 0, saturation: 0, lightness: value}
+                          break
                       }
 
                       return (
                         <div
                           style={{
-                            width: "100%",
-                            height: "100%",
-                            backgroundColor: colorToHex(color),
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: colorToHex(color)
                           }}
                         />
-                      );
+                      )
                     })}
                   </div>
                 </VStack>
@@ -357,5 +344,5 @@ export function Palette({
       </div>
       <Main>{children}</Main>
     </Wrapper>
-  );
+  )
 }
