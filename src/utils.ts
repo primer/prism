@@ -43,8 +43,9 @@ export function getContrastScore(contrast: number) {
   return contrast < 3 ? 'Fail' : contrast < 4.5 ? 'AA+' : contrast < 7 ? 'AA' : 'AAA'
 }
 
-export function getHexScales(curves: Palette['curves'], scales: Palette['scales']) {
-  return Object.values(scales).reduce<Record<string, string | string[]>>((acc, scale) => {
+export function getHexScales(palette: Palette) {
+  const {scales, curves, namingSchemes} = palette
+  return Object.values(scales).reduce<Record<string, string | {[name: string]: string}>>((acc, scale) => {
     let key = camelCase(scale.name)
     let i = 1
 
@@ -55,11 +56,17 @@ export function getHexScales(curves: Palette['curves'], scales: Palette['scales'
 
     const colors = scale.colors.map((_, index) => getColor(curves, scale, index)).map(colorToHex)
 
-    acc[key] = colors.length === 1 ? colors[0] : colors
+    const namingScheme = namingSchemes[scale.namingSchemeId || '']
+
+    const colorsWithNames = Object.fromEntries(
+      colors.map((color, index) => [namingScheme ? namingScheme.names[index] : index.toString(), color])
+    )
+
+    acc[key] = colors.length === 1 ? colors[0] : colorsWithNames
     return acc
   }, {})
 }
 
 export function lerp(a: number, b: number, t: number) {
-  return a + (b - a) * t;
+  return a + (b - a) * t
 }
