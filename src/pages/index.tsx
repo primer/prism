@@ -2,6 +2,7 @@ import {
   LinkExternalIcon,
   MarkGithubIcon,
   PlusIcon,
+  TrashIcon,
 } from "@primer/octicons-react";
 import {
   Box,
@@ -95,7 +96,7 @@ export function Index(props: RouteComponentProps) {
                     overflow: "hidden",
                     display: "flex",
                     height: 160,
-                    gap: 2,
+                    gap: 3,
                   }}
                 >
                   {Object.values(palette.scales).map(scale => (
@@ -127,7 +128,21 @@ export function Index(props: RouteComponentProps) {
                     </Box>
                   ))}
                 </Box>
-                <Text sx={{ lineHeight: "1" }}>{palette.name}</Text>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    justifyContent: "space-between",
+                    gap: 2,
+                  }}
+                >
+                  <Text sx={{ lineHeight: "1" }}>{palette.name}</Text>
+                  <IconButton
+                    aria-label="Delete palette"
+                    icon={TrashIcon}
+                    onClick={() => send({ type: "DELETE_PALETTE", paletteId: palette.id })}
+                  />
+                </Box>
               </Box>
             </li>
           ))}
