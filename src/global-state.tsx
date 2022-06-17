@@ -255,7 +255,13 @@ const machine = Machine<MachineContext, MachineEvent>({
     POP_COLOR: {
       target: 'debouncing',
       actions: assign((context, event) => {
-        context.palettes[event.paletteId].scales[event.scaleId].colors.pop()
+        const colors = context.palettes[event.paletteId].scales[event.scaleId].colors
+
+        if (colors.length > 1) {
+          colors.pop()
+        }
+
+        return colors
       })
     },
     DELETE_COLOR: {
