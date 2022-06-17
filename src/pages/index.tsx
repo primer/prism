@@ -140,7 +140,10 @@ export function Index(props: RouteComponentProps) {
                   <IconButton
                     aria-label="Delete palette"
                     icon={TrashIcon}
-                    onClick={() => send({ type: "DELETE_PALETTE", paletteId: palette.id })}
+                    onClick={(e: PointerEvent) => {
+                      send({ type: "DELETE_PALETTE", paletteId: palette.id })
+                      e.preventDefault()
+                    }}
                   />
                 </Box>
               </Box>
