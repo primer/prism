@@ -112,8 +112,8 @@ export function Palette({
                 style={{ verticalAlign: "text-top" }}
               >
                 <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
                   d="M11.5606 5.56066C12.1464 4.97487 12.1464 4.02513 11.5606 3.43934C10.9748 2.85355 10.0251 2.85355 9.43929 3.43934L2.43929 10.4393C1.85351 11.0251 1.85351 11.9749 2.43929 12.5607L9.43929 19.5607C10.0251 20.1464 10.9748 20.1464 11.5606 19.5607C12.1464 18.9749 12.1464 18.0251 11.5606 17.4393L7.12127 13H21C24.3137 13 27 15.6863 27 19C27 22.3137 24.3137 25 21 25H17.5C16.6715 25 16 25.6716 16 26.5C16 27.3284 16.6715 28 17.5 28H21C25.9705 28 30 23.9706 30 19C30 14.0294 25.9705 10 21 10H7.12127L11.5606 5.56066Z"
                 />
               </svg>
@@ -137,8 +137,8 @@ export function Palette({
                 style={{ verticalAlign: "text-top" }}
               >
                 <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
                   d="M20.4394 5.56066C19.8536 4.97487 19.8536 4.02513 20.4394 3.43934C21.0252 2.85355 21.9749 2.85355 22.5607 3.43934L29.5607 10.4393C30.1465 11.0251 30.1465 11.9749 29.5607 12.5607L22.5607 19.5607C21.9749 20.1464 21.0252 20.1464 20.4394 19.5607C19.8536 18.9749 19.8536 18.0251 20.4394 17.4393L24.8787 13H11C7.68634 13 5.00005 15.6863 5.00005 19C5.00005 22.3137 7.68634 25 11 25H14.5C15.3285 25 16 25.6716 16 26.5C16 27.3284 15.3285 28 14.5 28H11C6.02948 28 2.00005 23.9706 2.00005 19C2.00005 14.0294 6.02948 10 11 10H24.8787L20.4394 5.56066Z"
                 />
               </svg>
@@ -270,6 +270,7 @@ export function Palette({
                       const color = getColor(palette.curves, scale, index);
                       return (
                         <div
+                          key={index}
                           style={{
                             width: "100%",
                             height: "100%",
@@ -313,7 +314,7 @@ export function Palette({
                       overflow: "hidden",
                     }}
                   >
-                    {curve.values.map(value => {
+                    {curve.values.map((value, index) => {
                       let color: Color;
 
                       switch (curve.type) {
@@ -340,6 +341,7 @@ export function Palette({
 
                       return (
                         <div
+                          key={index}
                           style={{
                             width: "100%",
                             height: "100%",

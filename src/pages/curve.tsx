@@ -157,6 +157,7 @@ export function Curve({
             {curve.values.map((value, index) => {
               return (
                 <div
+                  key={index}
                   style={{
                     display: "grid",
                     gridTemplateColumns: "24px 1fr",
@@ -262,6 +263,7 @@ export function Curve({
                       const color = getColor(palette.curves, scale, index);
                       return (
                         <div
+                          key={index}
                           style={{
                             width: "100%",
                             height: "100%",
