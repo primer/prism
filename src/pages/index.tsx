@@ -103,6 +103,7 @@ export function Index(props: RouteComponentProps) {
                         const color = getColor(palette.curves, scale, index)
                         return (
                           <Box
+                            key={index}
                             style={{
                               width: '100%',
                               height: '100%',

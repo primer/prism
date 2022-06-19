@@ -74,6 +74,7 @@ export function Scale({
             {Object.entries(visibleCurves).map(([type, isVisible]) => {
               return (
                 <Button
+                  key={type}
                   aria-label={`Toggle ${type} curve visibility`}
                   aria-pressed={isVisible}
                   onClick={() => setVisibleCurves({...visibleCurves, [type]: !isVisible})}
@@ -116,6 +117,7 @@ export function Scale({
               const contrastScore = contrast ? getContrastScore(contrast) : undefined
               return (
                 <Box
+                  key={i}
                   tabIndex={0}
                   onFocus={() => setIndex(String(i))}
                   sx={{
@@ -168,6 +170,7 @@ export function Scale({
 
               return (
                 <CurveEditor
+                  key={curveId}
                   values={palette.curves[curveId].values}
                   {...getRange(type)}
                   disabled
@@ -180,6 +183,7 @@ export function Scale({
             .map(type => {
               return (
                 <CurveEditor
+                  key={type}
                   values={scale.colors.map((color, index) => getColor(palette.curves, scale, index)[type])}
                   {...getRange(type)}
                   label={`${type[0].toUpperCase()}`}
@@ -218,6 +222,7 @@ export function Scale({
                 ).length
                 return (
                   <Box
+                    key={i}
                     as={Link}
                     aria-label={`Go to ${currentScale.name} scale`}
                     to={`${routePrefix}/local/${paletteId}/scale/${currentScale.id}`}
@@ -474,6 +479,7 @@ export function Scale({
                     .filter((_, i) => i !== Number(index))
                 ].map(({name, hex, contrast}) => (
                   <Box
+                    key={name}
                     as="li"
                     sx={{
                       display: 'flex',
