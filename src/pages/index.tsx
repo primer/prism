@@ -1,24 +1,11 @@
-import {
-  LinkExternalIcon,
-  MarkGithubIcon,
-  PlusIcon,
-  TrashIcon
-} from "@primer/octicons-react";
-import {
-  Box,
-  Button,
-  Heading,
-  IconButton,
-  Label,
-  Link as PrimerLink,
-  StyledOcticon,
-  Text
-} from "@primer/react";
-import { Link, RouteComponentProps } from "@reach/router";
-import { readableColor } from "color2k";
-import { routePrefix } from "../constants";
-import { useGlobalState } from "../global-state";
-import { colorToHex, getColor } from "../utils";
+import {LinkExternalIcon, MarkGithubIcon, PlusIcon, TrashIcon} from '@primer/octicons-react'
+import {Box, Button, Heading, IconButton, Label, Link as PrimerLink, StyledOcticon, Text} from '@primer/react'
+import {Link, RouteComponentProps} from '@reach/router'
+import {readableColor} from 'color2k'
+import React from 'react'
+import {routePrefix} from '../constants'
+import {useGlobalState} from '../global-state'
+import {colorToHex, getColor} from '../utils'
 
 export function Index(props: RouteComponentProps) {
   const [state, send] = useGlobalState()
@@ -130,18 +117,18 @@ export function Index(props: RouteComponentProps) {
                 </Box>
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    justifyContent: "space-between",
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    justifyContent: 'space-between',
                     gap: 2,
                   }}
                 >
-                  <Text sx={{ lineHeight: "1" }}>{palette.name}</Text>
+                  <Text sx={{ lineHeight: '1' }}>{palette.name}</Text>
                   <IconButton
-                    aria-label="Delete palette"
+                    aria-label='Delete palette'
                     icon={TrashIcon}
                     onClick={(e: PointerEvent) => {
-                      send({ type: "DELETE_PALETTE", paletteId: palette.id })
+                      send({ type: 'DELETE_PALETTE', paletteId: palette.id })
                       e.preventDefault()
                     }}
                   />
