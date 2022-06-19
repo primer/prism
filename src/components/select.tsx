@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const Select = styled.select`
   height: 32px;
@@ -11,4 +11,4 @@ export const Select = styled.select`
   color: var(--color-text);
   background-color: var(--color-background);
   margin: 0;
-`;
+`

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const Input = styled.input`
   height: 32px;
@@ -10,4 +10,4 @@ export const Input = styled.input`
   border-radius: 6px;
   color: var(--color-text);
   background-color: var(--color-background);
-`;
+`

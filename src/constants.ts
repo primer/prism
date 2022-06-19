@@ -1,1 +1,1 @@
-export const routePrefix =  process.env.PUBLIC_URL || '';
+export const routePrefix = process.env.PUBLIC_URL || ''
