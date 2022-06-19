@@ -1,8 +1,5 @@
-import {
-  Button as PrimerButton,
-  IconButton as PrimerIconButton,
-} from "@primer/react";
-import styled from "styled-components";
+import {Button as PrimerButton, IconButton as PrimerIconButton} from '@primer/react'
+import styled from 'styled-components'
 
 export const Button = styled(PrimerButton)`
   color: var(--color-text);
@@ -21,7 +18,7 @@ export const Button = styled(PrimerButton)`
     color: var(--color-text);
     opacity: 0.5;
   }
-`;
+`
 
 export const IconButton = styled(PrimerIconButton)`
   color: var(--color-text);
@@ -38,4 +35,4 @@ export const IconButton = styled(PrimerIconButton)`
     color: var(--color-text);
     opacity: 0.5;
   }
-`;
+`

@@ -1,12 +1,12 @@
-import { Button as PrimerButton, Flash, Textarea } from "@primer/react";
-import { Dialog } from "@primer/react/lib-esm/Dialog/Dialog";
-import { isArray, keyBy } from "lodash-es";
-import React from "react";
-import { v4 as uniqueId } from "uuid";
-import { Scale } from "../types";
-import { hexToColor } from "../utils";
-import { Button } from "./button";
-import { HStack, VStack } from "./stack";
+import {Button as PrimerButton, Flash, Textarea} from '@primer/react'
+import {Dialog} from '@primer/react/lib-esm/Dialog/Dialog'
+import {isArray, keyBy} from 'lodash-es'
+import React from 'react'
+import {v4 as uniqueId} from 'uuid'
+import {Scale} from '../types'
+import {hexToColor} from '../utils'
+import {Button} from './button'
+import {HStack, VStack} from './stack'
 
 const PLACEHOLDER = `{
   "gray": [
@@ -14,47 +14,45 @@ const PLACEHOLDER = `{
     "#ddd",
     "#ccc"
   ]
-}`;
+}`
 
 type ImportScalesProps = {
-  onImport: (scales: Record<string, Scale>, replace: boolean) => void;
-};
+  onImport: (scales: Record<string, Scale>, replace: boolean) => void
+}
 
-export function ImportScales({ onImport }: ImportScalesProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [code, setCode] = React.useState("");
-  const [error, setError] = React.useState("");
-  const [replace, setReplace] = React.useState(false);
+export function ImportScales({onImport}: ImportScalesProps) {
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [code, setCode] = React.useState('')
+  const [error, setError] = React.useState('')
+  const [replace, setReplace] = React.useState(false)
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault()
 
     try {
-      const parsedCode: Record<string, string | string[]> = JSON.parse(code);
+      const parsedCode: Record<string, string | string[]> = JSON.parse(code)
 
-      const scales: Scale[] = Object.entries(parsedCode).map(
-        ([name, scale]) => {
-          const id = uniqueId();
-          const scaleArray = isArray(scale) ? scale : [scale];
-          return { id, name, colors: scaleArray.map(hexToColor), curves: {} };
-        }
-      );
+      const scales: Scale[] = Object.entries(parsedCode).map(([name, scale]) => {
+        const id = uniqueId()
+        const scaleArray = isArray(scale) ? scale : [scale]
+        return {id, name, colors: scaleArray.map(hexToColor), curves: {}}
+      })
 
-      onImport(keyBy(scales, "id"), replace);
+      onImport(keyBy(scales, 'id'), replace)
 
       // Reset state
-      setIsOpen(false);
-      setCode("");
-      setError("");
-      setReplace(false);
+      setIsOpen(false)
+      setCode('')
+      setError('')
+      setReplace(false)
     } catch (error) {
       if (error instanceof Error) {
-        setError(error.message);
+        setError(error.message)
       } else {
-        setError(String(error));
+        setError(String(error))
       }
     }
-  };
+  }
 
   return (
     <>
@@ -65,13 +63,13 @@ export function ImportScales({ onImport }: ImportScalesProps) {
             <VStack spacing={16}>
               {error ? <Flash variant="danger">{error}</Flash> : null}
               <VStack spacing={4}>
-                <label htmlFor="code" style={{ fontSize: 14 }}>
+                <label htmlFor="code" style={{fontSize: 14}}>
                   Paste JSON
                 </label>
                 <Textarea
                   id="code"
                   rows={12}
-                  sx={{ fontFamily: "mono" }}
+                  sx={{fontFamily: 'mono'}}
                   placeholder={PLACEHOLDER}
                   value={code}
                   onChange={event => setCode(event.target.value)}
@@ -84,10 +82,7 @@ export function ImportScales({ onImport }: ImportScalesProps) {
                   checked={replace}
                   onChange={event => setReplace(event.target.checked)}
                 />
-                <label
-                  htmlFor="replace"
-                  style={{ fontSize: 14, lineHeight: 1 }}
-                >
+                <label htmlFor="replace" style={{fontSize: 14, lineHeight: 1}}>
                   Replace existing scales
                 </label>
               </HStack>
@@ -97,5 +92,5 @@ export function ImportScales({ onImport }: ImportScalesProps) {
         </Dialog>
       ) : null}
     </>
-  );
+  )
 }
