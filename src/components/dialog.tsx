@@ -1,7 +1,7 @@
-import * as Dialog from "@radix-ui/react-dialog";
-import styled from "styled-components";
+import * as Dialog from '@radix-ui/react-dialog'
+import styled from 'styled-components'
 
-export { Root, Trigger, Close } from "@radix-ui/react-dialog";
+export {Root, Trigger, Close} from '@radix-ui/react-dialog'
 
 export const Overlay = styled(Dialog.Overlay)`
   background-color: rgba(0, 0, 0, 0.15);
@@ -10,7 +10,7 @@ export const Overlay = styled(Dialog.Overlay)`
   left: 0;
   right: 0;
   bottom: 0;
-`;
+`
 
 export const Content = styled(Dialog.Content)`
   position: fixed;
@@ -26,4 +26,4 @@ export const Content = styled(Dialog.Content)`
   border-radius: 6px;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
   overflow: auto;
-`;
+`

@@ -1,27 +1,27 @@
-import { Box } from "@primer/react";
-import { guard } from "color2k";
-import { scaleLinear } from "d3-scale";
-import produce from "immer";
-import React from "react";
-import { DraggableCore } from "react-draggable";
-import useMeasure from "react-use-measure";
+import {Box} from '@primer/react'
+import {guard} from 'color2k'
+import {scaleLinear} from 'd3-scale'
+import produce from 'immer'
+import React from 'react'
+import {DraggableCore} from 'react-draggable'
+import useMeasure from 'react-use-measure'
 
 function round(num: number, step: number) {
-  return Math.round(num * (1 / step)) / (1 / step);
+  return Math.round(num * (1 / step)) / (1 / step)
 }
 
 type CurveEditorProps = {
-  values: number[];
-  min: number;
-  max: number;
-  step?: number;
-  onChange?: (values: number[], shiftKey: boolean, index?: number) => void;
-  onFocus?: (index: number) => void;
-  onBlur?: () => void;
-  disabled?: boolean;
-  label?: string;
-  style?: React.SVGAttributes<SVGSVGElement>["style"];
-};
+  values: number[]
+  min: number
+  max: number
+  step?: number
+  onChange?: (values: number[], shiftKey: boolean, index?: number) => void
+  onFocus?: (index: number) => void
+  onBlur?: () => void
+  disabled?: boolean
+  label?: string
+  style?: React.SVGAttributes<SVGSVGElement>['style']
+}
 
 // TODO: arrow key support
 // TODO: snap to guides
@@ -36,16 +36,14 @@ export function CurveEditor({
   onBlur,
   step = 0.1,
   disabled = false,
-  label = "",
-  style = {},
+  label = '',
+  style = {}
 }: CurveEditorProps) {
-  const [ref, { width, height }] = useMeasure();
-  const nodeRadius = 20;
-  const columnWidth = width / values.length;
-  const [dragging, setDragging] = React.useState<number | "line" | false>(
-    false
-  );
-  const [focused, setFocused] = React.useState<number | "line" | false>(false);
+  const [ref, {width, height}] = useMeasure()
+  const nodeRadius = 20
+  const columnWidth = width / values.length
+  const [dragging, setDragging] = React.useState<number | 'line' | false>(false)
+  const [focused, setFocused] = React.useState<number | 'line' | false>(false)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const xScale = React.useCallback(
@@ -53,7 +51,7 @@ export function CurveEditor({
       .domain([0, values.length - 1])
       .range([columnWidth / 2, width - columnWidth / 2]),
     [values.length, width, columnWidth]
-  );
+  )
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const yScale = React.useCallback(
@@ -61,13 +59,12 @@ export function CurveEditor({
       .domain([min, max])
       .range([height - nodeRadius, nodeRadius]),
     [min, max, height, nodeRadius]
-  );
+  )
 
   const points = React.useMemo(
-    () =>
-      values.map((value, index) => ({ x: xScale(index), y: yScale(value) })),
+    () => values.map((value, index) => ({x: xScale(index), y: yScale(value)})),
     [values, xScale, yScale]
-  );
+  )
 
   return (
     <svg
@@ -77,101 +74,91 @@ export function CurveEditor({
       fill="none"
       pointerEvents="none"
       opacity={disabled ? 0.5 : 1}
-      style={{ position: "relative" }}
+      style={{position: 'relative'}}
       onKeyDown={event => {
-        let delta: number | undefined;
+        let delta: number | undefined
         switch (event.key) {
-          case "ArrowUp":
-            delta = 1;
-            break;
-          case "ArrowDown":
-            delta = -1;
-            break;
+          case 'ArrowUp':
+            delta = 1
+            break
+          case 'ArrowDown':
+            delta = -1
+            break
         }
 
         if (delta) {
-          if (focused === "line") {
+          if (focused === 'line') {
             const clampedDelta = values.reduce((acc, value) => {
               if (value + acc < min) {
-                return min - value;
+                return min - value
               }
 
               if (value + acc > max) {
-                return max - value;
+                return max - value
               }
 
-              return acc;
-            }, delta);
+              return acc
+            }, delta)
 
             onChange?.(
               values.map(value => round(value + clampedDelta, step)),
               event.shiftKey
-            );
-          } else if (typeof focused === "number") {
+            )
+          } else if (typeof focused === 'number') {
             onChange?.(
               produce(values, draft => {
-                const value = guard(
-                  min,
-                  max,
-                  yScale.invert(points[focused].y) + (delta || 0)
-                );
-                draft[focused] = round(value, step);
+                const value = guard(min, max, yScale.invert(points[focused].y) + (delta || 0))
+                draft[focused] = round(value, step)
               }),
               event.shiftKey,
               focused
-            );
+            )
           }
         }
       }}
     >
       <DraggableCore
         disabled={disabled}
-        onStart={() => setDragging("line")}
+        onStart={() => setDragging('line')}
         onStop={() => setDragging(false)}
         onDrag={(event, data) => {
-          const delta =
-            yScale.invert(points[0].y + data.deltaY) -
-            yScale.invert(points[0].y);
+          const delta = yScale.invert(points[0].y + data.deltaY) - yScale.invert(points[0].y)
 
           const clampedDelta = values.reduce((acc, value) => {
             if (value + acc < min) {
-              return min - value;
+              return min - value
             }
 
             if (value + acc > max) {
-              return max - value;
+              return max - value
             }
 
-            return acc;
-          }, delta);
+            return acc
+          }, delta)
 
           onChange?.(
             values.map(value => round(value + clampedDelta, step)),
             event.shiftKey
-          );
+          )
         }}
       >
         <Box
           as="g"
-          pointerEvents={
-            disabled || (dragging !== false && dragging !== "line")
-              ? "none"
-              : "all"
-          }
+          pointerEvents={disabled || (dragging !== false && dragging !== 'line') ? 'none' : 'all'}
           sx={{
-            outline: "none",
-            "& .target": {
-              opacity: dragging === "line" ? 1 : 0,
+            outline: 'none',
+            '& .target': {
+              opacity: dragging === 'line' ? 1 : 0
             },
-            "&:hover .target": {
-              opacity: 1,
-            },
+            '&:hover .target': {
+              opacity: 1
+            }
           }}
           onFocus={() => {
-            setFocused("line");
+            setFocused('line')
           }}
           onBlur={() => {
-            setFocused(false);
+            setFocused(false)
           }}
           tabIndex={disabled ? undefined : 0}
         >
@@ -179,7 +166,7 @@ export function CurveEditor({
             className="target"
             stroke="rgba(0,0,0,0.1)"
             strokeWidth={nodeRadius * 2}
-            points={points.map(({ x, y }) => `${x},${y}`).join(" ")}
+            points={points.map(({x, y}) => `${x},${y}`).join(' ')}
             strokeLinejoin="round"
             strokeLinecap="round"
           />
@@ -187,20 +174,20 @@ export function CurveEditor({
             <>
               <polyline
                 stroke="white"
-                strokeWidth={focused === "line" ? 6 : 4}
-                points={points.map(({ x, y }) => `${x},${y}`).join(" ")}
+                strokeWidth={focused === 'line' ? 6 : 4}
+                points={points.map(({x, y}) => `${x},${y}`).join(' ')}
                 strokeLinejoin="round"
-                opacity={focused === "line" ? 1 : 0.5}
+                opacity={focused === 'line' ? 1 : 0.5}
               />
-              {focused === "line" ? (
+              {focused === 'line' ? (
                 <Box
                   as="polyline"
                   className="line-focus-ring"
-                  points={points.map(({ x, y }) => `${x},${y}`).join(" ")}
+                  points={points.map(({x, y}) => `${x},${y}`).join(' ')}
                   strokeLinejoin="round"
                   fill="none"
                   sx={{
-                    stroke: (theme: any) => theme.colors.accent.emphasis,
+                    stroke: (theme: any) => theme.colors.accent.emphasis
                   }}
                   strokeWidth="2"
                 />
@@ -210,14 +197,14 @@ export function CurveEditor({
             <polyline
               stroke="white"
               strokeWidth={2}
-              points={points.map(({ x, y }) => `${x},${y}`).join(" ")}
+              points={points.map(({x, y}) => `${x},${y}`).join(' ')}
               strokeLinejoin="round"
             />
           )}
         </Box>
       </DraggableCore>
 
-      {points.map(({ x, y }, index) => (
+      {points.map(({x, y}, index) => (
         <DraggableCore
           key={index}
           disabled={disabled}
@@ -226,35 +213,35 @@ export function CurveEditor({
           onDrag={(event, data) => {
             onChange?.(
               produce(values, draft => {
-                const value = guard(min, max, yScale.invert(y + data.deltaY));
-                draft[index] = round(value, step);
+                const value = guard(min, max, yScale.invert(y + data.deltaY))
+                draft[index] = round(value, step)
               }),
               event.shiftKey,
               index
-            );
+            )
           }}
         >
           <Box
             as="g"
-            pointerEvents={disabled ? "none" : "all"}
+            pointerEvents={disabled ? 'none' : 'all'}
             sx={{
-              "& .target": {
-                opacity: dragging === index ? 1 : 0,
+              '& .target': {
+                opacity: dragging === index ? 1 : 0
               },
-              "&:hover .target": {
-                opacity: 1,
+              '&:hover .target': {
+                opacity: 1
               },
-              "&:focus": {
-                outline: "none",
-              },
+              '&:focus': {
+                outline: 'none'
+              }
             }}
             onFocus={() => {
-              setFocused(index);
-              onFocus?.(index);
+              setFocused(index)
+              onFocus?.(index)
             }}
             onBlur={() => {
-              setFocused(false);
-              onBlur?.();
+              setFocused(false)
+              onBlur?.()
             }}
             tabIndex={disabled ? undefined : 0}
           >
@@ -264,7 +251,7 @@ export function CurveEditor({
               cy={y}
               r={nodeRadius}
               fill="rgba(0,0,0,0.1)"
-              style={{ transformOrigin: `${x}px ${y}px` }}
+              style={{transformOrigin: `${x}px ${y}px`}}
             />
             {!disabled ? (
               <>
@@ -272,7 +259,7 @@ export function CurveEditor({
                   className="border"
                   cx={x}
                   cy={y}
-                  r={focused === index || focused === "line" ? 10.5 : 8.5}
+                  r={focused === index || focused === 'line' ? 10.5 : 8.5}
                   fill="none"
                   stroke="rgba(0,0,0,0.2)"
                   strokeWidth="1"
@@ -281,10 +268,10 @@ export function CurveEditor({
                   className="handle"
                   cx={x}
                   cy={y}
-                  r={focused === index || focused === "line" ? 10 : 8}
-                  fill={"white"}
+                  r={focused === index || focused === 'line' ? 10 : 8}
+                  fill={'white'}
                 />
-                {focused === index || focused === "line" ? (
+                {focused === index || focused === 'line' ? (
                   <Box
                     as="circle"
                     className="focus-ring"
@@ -294,19 +281,13 @@ export function CurveEditor({
                     fill="none"
                     strokeWidth="2"
                     sx={{
-                      stroke: (theme: any) => theme.colors.accent.emphasis,
+                      stroke: (theme: any) => theme.colors.accent.emphasis
                     }}
                   />
                 ) : null}
               </>
             ) : (
-              <circle
-                className="node-handle"
-                cx={x}
-                cy={y}
-                r={4}
-                fill="white"
-              />
+              <circle className="node-handle" cx={x} cy={y} r={4} fill="white" />
             )}
 
             {index === 0 ? (
@@ -315,10 +296,10 @@ export function CurveEditor({
                 y={y}
                 fill="black"
                 style={{
-                  textTransform: "uppercase",
-                  fontFamily: "system-ui, sans-serif",
+                  textTransform: 'uppercase',
+                  fontFamily: 'system-ui, sans-serif',
                   fontSize: 14,
-                  lineHeight: 1,
+                  lineHeight: 1
                 }}
                 textAnchor="end"
                 alignmentBaseline="middle"
@@ -330,5 +311,5 @@ export function CurveEditor({
         </DraggableCore>
       ))}
     </svg>
-  );
+  )
 }

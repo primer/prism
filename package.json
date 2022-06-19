@@ -45,7 +45,10 @@
     "build:preview": "react-scripts build",
     "build": "PUBLIC_URL=/prism react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "prettier --check \"src/**/*.{ts,tsx}\"",
+    "lint:fix": "yarn lint --write",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -64,5 +67,15 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "prettier": "@github/prettier-config",
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": "npm run lint"
+  },
+  "devDependencies": {
+    "@github/prettier-config": "0.0.4",
+    "husky": "^8.0.0",
+    "lint-staged": "13.0.2",
+    "prettier": "2.7.1"
   }
 }

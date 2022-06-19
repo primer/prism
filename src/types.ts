@@ -1,27 +1,27 @@
 export type Color = {
-  hue: number; // 0-360
-  saturation: number; // 0-100
-  lightness: number; // 0-100
-};
+  hue: number // 0-360
+  saturation: number // 0-100
+  lightness: number // 0-100
+}
 
 export type Curve = {
-  id: string;
-  name: string;
-  type: "hue" | "saturation" | "lightness";
-  values: number[];
-};
+  id: string
+  name: string
+  type: 'hue' | 'saturation' | 'lightness'
+  values: number[]
+}
 
 export type Scale = {
-  id: string;
-  name: string;
-  colors: Color[];
-  curves: Partial<Record<Curve["type"], string>>;
-};
+  id: string
+  name: string
+  colors: Color[]
+  curves: Partial<Record<Curve['type'], string>>
+}
 
 export type Palette = {
-  id: string;
-  name: string;
-  backgroundColor: string;
-  scales: Record<string, Scale>;
-  curves: Record<string, Curve>;
-};
+  id: string
+  name: string
+  backgroundColor: string
+  scales: Record<string, Scale>
+  curves: Record<string, Curve>
+}
