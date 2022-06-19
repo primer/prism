@@ -302,7 +302,7 @@ export function Palette({paletteId = '', children}: React.PropsWithChildren<Rout
                     }}
                   >
                     {curve.values.map((value, index) => {
-                      let color: Color;
+                      let color: Color
 
                       switch (curve.type) {
                         case 'hue':
