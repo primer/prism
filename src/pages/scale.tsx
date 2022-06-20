@@ -20,7 +20,7 @@ export function Scale({
   paletteId = '',
   scaleId = ''
 }: React.PropsWithChildren<RouteComponentProps<{paletteId: string; scaleId: string}>>) {
-  const [index, setIndex] = React.useState('0')
+  const [selectedIndex, setIndex] = React.useState('0')
   const [state, send] = useGlobalState()
   const palette = state.context.palettes[paletteId]
   const scale = palette.scales[scaleId]
@@ -40,6 +40,7 @@ export function Scale({
   }
 
   let focusedHex: string | undefined
+  const index = String(Math.min(Number(selectedIndex), scale.colors.length - 1))
 
   try {
     const focusedColor = index ? getColor(palette.curves, scale, parseInt(index, 10)) : undefined
