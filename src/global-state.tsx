@@ -267,7 +267,13 @@ const machine = Machine<MachineContext, MachineEvent>({
     DELETE_COLOR: {
       target: 'debouncing',
       actions: assign((context, event) => {
-        context.palettes[event.paletteId].scales[event.scaleId].colors.splice(event.index, 1)
+        const colors = context.palettes[event.paletteId].scales[event.scaleId].colors
+
+        if (colors.length > 1) {
+          colors.splice(event.index, 1)
+        }
+
+        return colors
       })
     },
     CHANGE_COLOR_VALUE: {

@@ -132,6 +132,7 @@ export function Color({paletteId = '', scaleId = '', index = ''}: {paletteId: st
               index: parseInt(index)
             })
           }
+          disabled={scale.colors.length === 1}
         >
           Delete color
         </Button>
