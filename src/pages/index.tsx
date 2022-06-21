@@ -55,7 +55,8 @@ export function Index(props: RouteComponentProps) {
             listStyle: 'none',
             display: 'grid',
             gap: 3,
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))'
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gridTemplateRows: '230px'
           }}
         >
           {Object.values(state.context.palettes).map(palette => (
@@ -63,18 +64,18 @@ export function Index(props: RouteComponentProps) {
               <Box
                 as={Link}
                 to={`${routePrefix}/local/${palette.id}`}
+                p={3}
                 sx={{
                   display: 'grid',
                   gap: 3,
-                  p: 3,
-                  pb: 3,
                   textDecoration: 'none',
                   borderRadius: 2,
                   // border: "1px solid",
                   // borderColor: "border.default",
                   overflow: 'hidden',
                   color: readableColor(palette.backgroundColor),
-                  backgroundColor: palette.backgroundColor
+                  backgroundColor: palette.backgroundColor,
+                  height:'100%'
                 }}
               >
                 <Box
@@ -116,7 +117,13 @@ export function Index(props: RouteComponentProps) {
                     </Box>
                   ))}
                 </Box>
-                <Text sx={{ lineHeight: '1' }}>{palette.name}</Text>
+                <Text sx={{
+                  lineHeight: '1',
+                  textOverflow: 'ellipsis',
+                  width: '80%',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap'
+                }}>{palette.name}</Text>
               </Box>
               <IconButton
                   aria-label='Delete Palette'
@@ -141,7 +148,7 @@ export function Index(props: RouteComponentProps) {
                         0.85),
                     }
                   }}
-                >Delete alette</IconButton>
+                />
             </li>
           ))}
         </Box>
