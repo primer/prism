@@ -30,3 +30,15 @@ yarn
 # Start the development server
 yarn start
 ```
+
+## Prior art
+
+- [ColorBox by Lyft](https://lyft-colorbox.herokuapp.com/)
+- [Components AI](https://components.ai/)
+- [Huetone by Alexey Ardov](https://huetone.ardov.me/)
+- [Leonardo by Adobe](https://leonardocolor.io/theme.html)
+- [Palettte by Gabriel Adorf](https://palettte.app/)
+- [Palx by Brent Jackson](https://palx.jxnblk.com/)
+- [Scale by Hayk An](https://hihayk.github.io/scale)
+
+
