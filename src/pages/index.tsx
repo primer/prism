@@ -60,7 +60,7 @@ export function Index(props: RouteComponentProps) {
           }}
         >
           {Object.values(state.context.palettes).map(palette => (
-            <li key={palette.id} style={{ position: 'relative' }}>
+            <li key={palette.id} style={{position: 'relative'}}>
               <Box
                 as={Link}
                 to={`${routePrefix}/local/${palette.id}`}
@@ -75,7 +75,7 @@ export function Index(props: RouteComponentProps) {
                   overflow: 'hidden',
                   color: readableColor(palette.backgroundColor),
                   backgroundColor: palette.backgroundColor,
-                  height:'100%'
+                  height: '100%'
                 }}
               >
                 <Box
@@ -84,7 +84,7 @@ export function Index(props: RouteComponentProps) {
                     overflow: 'hidden',
                     display: 'flex',
                     height: 160,
-                    gap: 3,
+                    gap: 3
                   }}
                 >
                   {Object.values(palette.scales).map(scale => (
@@ -117,38 +117,36 @@ export function Index(props: RouteComponentProps) {
                     </Box>
                   ))}
                 </Box>
-                <Text sx={{
-                  lineHeight: '1',
-                  textOverflow: 'ellipsis',
-                  width: '80%',
-                  overflow: 'hidden',
-                  whiteSpace: 'nowrap'
-                }}>{palette.name}</Text>
+                <Text
+                  sx={{
+                    lineHeight: '1',
+                    textOverflow: 'ellipsis',
+                    width: '80%',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {palette.name}
+                </Text>
               </Box>
               <IconButton
-                  aria-label='Delete Palette'
-                  icon={TrashIcon}
-                  onClick={() => {
-                    send({ type: 'DELETE_PALETTE', paletteId: palette.id })
-                  }}
-                  sx={{
-                    color: readableColor(palette.backgroundColor),
-                    backgroundColor: palette.backgroundColor,
-                    borderColor: mix(
-                      readableColor(palette.backgroundColor),
-                      palette.backgroundColor,
-                      0.75),
-                    position: 'absolute',
-                    right: 3,
-                    bottom: 2,
-                    '&:hover:not([disabled])': {
-                      backgroundColor: mix(
-                        readableColor(palette.backgroundColor),
-                        palette.backgroundColor,
-                        0.85),
-                    }
-                  }}
-                />
+                aria-label="Delete Palette"
+                icon={TrashIcon}
+                onClick={() => {
+                  send({type: 'DELETE_PALETTE', paletteId: palette.id})
+                }}
+                sx={{
+                  color: readableColor(palette.backgroundColor),
+                  backgroundColor: palette.backgroundColor,
+                  borderColor: mix(readableColor(palette.backgroundColor), palette.backgroundColor, 0.75),
+                  position: 'absolute',
+                  right: 3,
+                  bottom: 2,
+                  '&:hover:not([disabled])': {
+                    backgroundColor: mix(readableColor(palette.backgroundColor), palette.backgroundColor, 0.85)
+                  }
+                }}
+              />
             </li>
           ))}
         </Box>
