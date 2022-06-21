@@ -56,7 +56,7 @@ export function Index(props: RouteComponentProps) {
             display: 'grid',
             gap: 3,
             gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-            gridTemplateRows: '230px'
+            lineClamp: 1
           }}
         >
           {Object.values(state.context.palettes).map(palette => (
