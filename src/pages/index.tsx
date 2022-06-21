@@ -59,7 +59,7 @@ export function Index(props: RouteComponentProps) {
           }}
         >
           {Object.values(state.context.palettes).map(palette => (
-            <li key={palette.id}>
+            <li key={palette.id} style={{ position: 'relative' }}>
               <Box
                 as={Link}
                 to={`${routePrefix}/local/${palette.id}`}
@@ -67,6 +67,7 @@ export function Index(props: RouteComponentProps) {
                   display: 'grid',
                   gap: 3,
                   p: 3,
+                  pb: 3,
                   textDecoration: 'none',
                   borderRadius: 2,
                   // border: "1px solid",
@@ -115,30 +116,32 @@ export function Index(props: RouteComponentProps) {
                     </Box>
                   ))}
                 </Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    justifyContent: 'space-between',
-                    gap: 2,
-                  }}
-                >
-                  <Text sx={{ lineHeight: '1' }}>{palette.name}</Text>
-                  <IconButton
-                    aria-label='Delete Palette'
-                    icon={TrashIcon}
-                    onClick={(e: PointerEvent) => {
-                      send({ type: 'DELETE_PALETTE', paletteId: palette.id })
-                      e.preventDefault()
-                    }}
-                    sx={{
-                      color: readableColor(palette.backgroundColor),
-                      backgroundColor: palette.backgroundColor,
-                      borderColor: mix(readableColor(palette.backgroundColor), palette.backgroundColor, 0.75),
-                    }}
-                  >Delete alette</IconButton>
-                </Box>
+                <Text sx={{ lineHeight: '1' }}>{palette.name}</Text>
               </Box>
+              <IconButton
+                  aria-label='Delete Palette'
+                  icon={TrashIcon}
+                  onClick={() => {
+                    send({ type: 'DELETE_PALETTE', paletteId: palette.id })
+                  }}
+                  sx={{
+                    color: readableColor(palette.backgroundColor),
+                    backgroundColor: palette.backgroundColor,
+                    borderColor: mix(
+                      readableColor(palette.backgroundColor),
+                      palette.backgroundColor,
+                      0.75),
+                    position: 'absolute',
+                    right: 3,
+                    bottom: 2,
+                    '&:hover:not([disabled])': {
+                      backgroundColor: mix(
+                        readableColor(palette.backgroundColor),
+                        palette.backgroundColor,
+                        0.85),
+                    }
+                  }}
+                >Delete alette</IconButton>
             </li>
           ))}
         </Box>
