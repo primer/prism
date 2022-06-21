@@ -30,3 +30,17 @@ yarn
 # Start the development server
 yarn start
 ```
+
+## Prior art
+
+Primer Prism is a combination of the best ideas from existing color tools:
+
+- [Palettte by Gabriel Adorf](https://palettte.app/)
+- [Huetone by Alexey Ardov](https://huetone.ardov.me/)
+- [ColorBox by Lyft](https://lyft-colorbox.herokuapp.com/)
+- [Components AI](https://components.ai/)
+- [Leonardo by Adobe](https://leonardocolor.io/theme.html)
+- [Palx by Brent Jackson](https://palx.jxnblk.com/)
+- [Scale by Hayk An](https://hihayk.github.io/scale)
+
+
