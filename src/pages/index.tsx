@@ -139,7 +139,7 @@ export function Index(props: RouteComponentProps) {
                 </Text>
               </Box>
               <IconButton
-                aria-label="Delete Palette"
+                aria-label="Delete palette"
                 icon={TrashIcon}
                 onClick={() => {
                   send({type: 'DELETE_PALETTE', paletteId: palette.id})
