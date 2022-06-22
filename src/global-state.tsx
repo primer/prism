@@ -260,8 +260,6 @@ const machine = Machine<MachineContext, MachineEvent>({
         if (colors.length > 1) {
           colors.pop()
         }
-
-        return colors
       })
     },
     DELETE_COLOR: {
@@ -272,8 +270,6 @@ const machine = Machine<MachineContext, MachineEvent>({
         if (colors.length > 1) {
           colors.splice(event.index, 1)
         }
-
-        return colors
       })
     },
     CHANGE_COLOR_VALUE: {
