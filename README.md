@@ -33,7 +33,7 @@ yarn start
 
 ## Prior art
 
-Primer Prism is a combination of the best ideas from existing color tools:
+Primer Prism builds on the ideas in many existing color tools:
 
 - [Palettte by Gabriel Adorf](https://palettte.app/)
 - [Huetone by Alexey Ardov](https://huetone.ardov.me/)
