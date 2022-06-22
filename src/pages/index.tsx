@@ -119,7 +119,7 @@ export function Index(props: RouteComponentProps) {
                 </Box>
                 <Text
                   sx={{
-                    lineHeight: '1',
+                    lineHeight: '1.2',
                     textOverflow: 'ellipsis',
                     width: '80%',
                     overflow: 'hidden',
