@@ -351,31 +351,20 @@ export function Palette({paletteId = '', children}: React.PropsWithChildren<Rout
                 key={namingScheme.id}
                 to={`naming-scheme/${namingScheme.id}`}
                 style={{
-                  color: "inherit",
+                  color: 'inherit',
                   fontSize: 14,
-                  textDecoration: "none",
+                  textDecoration: 'none'
                 }}
               >
                 <VStack spacing={4}>
                   <span>{namingScheme.name}</span>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    borderRadius={4}
-                    overflow="hidden"
-                    sx={{ gap: 1 }}
-                  >
+                  <Box display="flex" alignItems="center" borderRadius={4} overflow="hidden" sx={{gap: 1}}>
                     {namingScheme.names.map(namingScheme => {
                       return (
-                        <Box
-                          px={2}
-                          py={1}
-                          bg="var(--color-background-secondary)"
-                          fontSize={10}
-                        >
+                        <Box px={2} py={1} bg="var(--color-background-secondary)" fontSize={10}>
                           {namingScheme}
                         </Box>
-                      );
+                      )
                     })}
                   </Box>
                 </VStack>

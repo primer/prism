@@ -1,4 +1,4 @@
-import bezier from "bezier-easing";
+import bezier from 'bezier-easing'
 
 export const curves = {
   linear: bezier(0.5, 0.5, 0.5, 0.5),
@@ -29,5 +29,5 @@ export const curves = {
 
   easeInExpo: bezier(0.95, 0.05, 0.795, 0.035),
   easeOutExpo: bezier(0.19, 1, 0.22, 1),
-  easeInOutExpo: bezier(1, 0, 0, 1),
-};
+  easeInOutExpo: bezier(1, 0, 0, 1)
+}
