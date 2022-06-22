@@ -1,8 +1,17 @@
 import {LinkExternalIcon, MarkGithubIcon, PlusIcon, TrashIcon} from '@primer/octicons-react'
-import {Box, Button, Heading, IconButton, Label, Link as PrimerLink, StyledOcticon, Text} from '@primer/react'
+import {
+  Box,
+  Button,
+  Heading,
+  IconButton as PrimerIconButton,
+  Label,
+  Link as PrimerLink,
+  StyledOcticon,
+  Text
+} from '@primer/react'
 import {Link, RouteComponentProps} from '@reach/router'
 import {mix, readableColor} from 'color2k'
-import React from 'react'
+import {IconButton} from '../components/button'
 import {routePrefix} from '../constants'
 import {useGlobalState} from '../global-state'
 import {colorToHex, getColor} from '../utils'
@@ -38,7 +47,7 @@ export function Index(props: RouteComponentProps) {
             GitHub
             <StyledOcticon icon={LinkExternalIcon} sx={{marginLeft: 1}} />
           </PrimerLink>
-          <IconButton
+          <PrimerIconButton
             aria-label="Create new palette"
             icon={PlusIcon}
             onClick={() => send('CREATE_PALETTE')}
@@ -119,7 +128,7 @@ export function Index(props: RouteComponentProps) {
                 </Box>
                 <Text
                   sx={{
-                    lineHeight: '1.2',
+                    lineHeight: '24px',
                     textOverflow: 'ellipsis',
                     width: '80%',
                     overflow: 'hidden',
@@ -136,15 +145,22 @@ export function Index(props: RouteComponentProps) {
                   send({type: 'DELETE_PALETTE', paletteId: palette.id})
                 }}
                 sx={{
-                  color: readableColor(palette.backgroundColor),
-                  backgroundColor: palette.backgroundColor,
-                  borderColor: mix(readableColor(palette.backgroundColor), palette.backgroundColor, 0.75),
+                  '--color-text': readableColor(palette.backgroundColor),
+                  '--color-background': palette.backgroundColor,
+                  '--color-background-secondary': mix(
+                    readableColor(palette.backgroundColor),
+                    palette.backgroundColor,
+                    0.9
+                  ),
+                  '--color-background-secondary-hover': mix(
+                    readableColor(palette.backgroundColor),
+                    palette.backgroundColor,
+                    0.85
+                  ),
+                  '--color-border': mix(readableColor(palette.backgroundColor), palette.backgroundColor, 0.75),
                   position: 'absolute',
                   right: 3,
-                  bottom: 2,
-                  '&:hover:not([disabled])': {
-                    backgroundColor: mix(readableColor(palette.backgroundColor), palette.backgroundColor, 0.85)
-                  }
+                  bottom: '12px'
                 }}
               />
             </li>
