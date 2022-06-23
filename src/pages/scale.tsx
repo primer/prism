@@ -102,117 +102,146 @@ export function Scale({
             />
           </ButtonGroup>
         </Box>
-        <ZStack>
-          <Box
-            sx={{
-              display: 'flex',
-              width: '100%',
-              height: '100%',
-              borderRadius: 2
+        <div
+          style={{
+            flexGrow: 1,
+            display: 'grid',
+            gridTemplateRows: 'auto 1fr',
+            gap: 8
+          }}
+        >
+          <div
+            style={{
+              display: 'flex'
             }}
           >
             {scale.colors.map((_, i) => {
-              const color = getColor(palette.curves, scale, i)
-              const hex = colorToHex(color)
-              const contrast = focusedHex ? getContrast(hex, focusedHex) : undefined
-              const contrastScore = contrast ? getContrastScore(contrast) : undefined
               return (
-                <Box
+                <div
                   key={i}
-                  tabIndex={0}
-                  onFocus={() => setIndex(String(i))}
-                  sx={{
-                    outline: 'none',
+                  style={{
                     width: '100%',
-                    height: '100%',
-                    color: focusedHex,
-                    backgroundColor: hex,
-                    borderTopLeftRadius: i === 0 ? 2 : 0,
-                    borderBottomLeftRadius: i === 0 ? 2 : 0,
-                    borderTopRightRadius: i === scale.colors.length - 1 ? 2 : 0,
-                    borderBottomRightRadius: i === scale.colors.length - 1 ? 2 : 0,
-                    position: 'relative',
-                    fontSize: 1,
-                    display: 'grid',
-                    placeItems: 'end',
-                    p: 2,
-                    fontWeight: 'bold',
-                    '&::before': {
-                      content: '""',
-                      display: String(i) === index ? 'block' : 'none',
-                      position: 'absolute',
-                      top: '-8px',
-                      height: 4,
-                      left: 0,
-                      right: 0,
-                      backgroundColor: 'var(--color-text)',
-                      borderRadius: 2
-                    }
+                    textAlign: 'center',
+                    fontSize: 14
                   }}
-                  onClick={() => setIndex(String(i))}
                 >
-                  {contrastScore !== 'Fail' ? (
-                    <span>
-                      {contrastScore} <CheckCircleFillIcon />
-                    </span>
-                  ) : (
-                    <span>
-                      Fail <XCircleIcon />
-                    </span>
-                  )}
-                </Box>
+                  {String(i)}
+                </div>
               )
             })}
-          </Box>
-          {(Object.entries(scale.curves) as [Curve['type'], string | undefined][])
-            .filter(([type]) => visibleCurves[type])
-            .map(([type, curveId]) => {
-              if (!curveId) return null
+          </div>
+          <ZStack>
+            <Box
+              sx={{
+                display: 'flex',
+                width: '100%',
+                height: '100%',
+                borderRadius: 2
+              }}
+            >
+              {scale.colors.map((_, i) => {
+                const color = getColor(palette.curves, scale, i)
+                const hex = colorToHex(color)
+                const contrast = focusedHex ? getContrast(hex, focusedHex) : undefined
+                const contrastScore = contrast ? getContrastScore(contrast) : undefined
+                return (
+                  <Box
+                    key={i}
+                    tabIndex={0}
+                    onFocus={() => setIndex(String(i))}
+                    sx={{
+                      outline: 'none',
+                      width: '100%',
+                      height: '100%',
+                      color: focusedHex,
+                      backgroundColor: hex,
+                      borderTopLeftRadius: i === 0 ? 2 : 0,
+                      borderBottomLeftRadius: i === 0 ? 2 : 0,
+                      borderTopRightRadius: i === scale.colors.length - 1 ? 2 : 0,
+                      borderBottomRightRadius: i === scale.colors.length - 1 ? 2 : 0,
+                      position: 'relative',
+                      fontSize: 1,
+                      display: 'grid',
+                      placeItems: 'end',
+                      p: 2,
+                      fontWeight: 'bold',
+                      '&::before': {
+                        content: '""',
+                        display: String(i) === index ? 'block' : 'none',
+                        position: 'absolute',
+                        top: '-8px',
+                        height: 4,
+                        left: 0,
+                        right: 0,
+                        backgroundColor: 'var(--color-text)',
+                        borderRadius: 2
+                      }
+                    }}
+                    onClick={() => setIndex(String(i))}
+                  >
+                    {contrastScore !== 'Fail' ? (
+                      <span>
+                        {contrastScore} <CheckCircleFillIcon />
+                      </span>
+                    ) : (
+                      <span>
+                        Fail <XCircleIcon />
+                      </span>
+                    )}
+                  </Box>
+                )
+              })}
+            </Box>
+            {(Object.entries(scale.curves) as [Curve['type'], string | undefined][])
+              .filter(([type]) => visibleCurves[type])
+              .map(([type, curveId]) => {
+                if (!curveId) return null
 
-              return (
-                <CurveEditor
-                  key={curveId}
-                  values={palette.curves[curveId].values}
-                  {...getRange(type)}
-                  disabled
-                  label={`${type[0].toUpperCase()}`}
-                />
-              )
-            })}
-          {(['hue', 'saturation', 'lightness'] as const)
-            .filter(type => visibleCurves[type])
-            .map(type => {
-              return (
-                <CurveEditor
-                  key={type}
-                  values={scale.colors.map((color, index) => getColor(palette.curves, scale, index)[type])}
-                  {...getRange(type)}
-                  label={`${type[0].toUpperCase()}`}
-                  onFocus={index => setIndex(String(index))}
-                  onChange={(values, shiftKey, index) => {
-                    if (shiftKey && scale.curves[type]) {
-                      send({
-                        type: 'CHANGE_CURVE_VALUES',
-                        paletteId,
-                        curveId: scale.curves[type] ?? '',
-                        values: values.map((value, index) => value - scale.colors[index][type])
-                      })
-                    } else {
-                      send({
-                        type: 'CHANGE_SCALE_COLORS',
-                        paletteId,
-                        scaleId,
-                        colors: scale.colors.map((color, index) => ({
-                          ...color,
-                          [type]: values[index] - (palette.curves[scale.curves[type] ?? '']?.values[index] ?? 0)
-                        }))
-                      })
-                    }
-                  }}
-                />
-              )
-            })}
-        </ZStack>
+                return (
+                  <CurveEditor
+                    key={curveId}
+                    values={palette.curves[curveId].values}
+                    {...getRange(type)}
+                    disabled
+                    label={`${type[0].toUpperCase()}`}
+                  />
+                )
+              })}
+            {(['hue', 'saturation', 'lightness'] as const)
+              .filter(type => visibleCurves[type])
+              .map(type => {
+                return (
+                  <CurveEditor
+                    key={type}
+                    values={scale.colors.map((color, index) => getColor(palette.curves, scale, index)[type])}
+                    {...getRange(type)}
+                    label={`${type[0].toUpperCase()}`}
+                    onFocus={index => setIndex(String(index))}
+                    onChange={(values, shiftKey, index) => {
+                      if (shiftKey && scale.curves[type]) {
+                        send({
+                          type: 'CHANGE_CURVE_VALUES',
+                          paletteId,
+                          curveId: scale.curves[type] ?? '',
+                          values: values.map((value, index) => value - scale.colors[index][type])
+                        })
+                      } else {
+                        send({
+                          type: 'CHANGE_SCALE_COLORS',
+                          paletteId,
+                          scaleId,
+                          colors: scale.colors.map((color, index) => ({
+                            ...color,
+                            [type]: values[index] - (palette.curves[scale.curves[type] ?? '']?.values[index] ?? 0)
+                          }))
+                        })
+                      }
+                    }}
+                  />
+                )
+              })}
+          </ZStack>
+        </div>
         {index ? (
           <div style={{flexShrink: 0, display: 'flex', height: 48}}>
             {Object.values(palette.scales)
