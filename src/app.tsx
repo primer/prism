@@ -1,7 +1,8 @@
-import {BaseStyles, themeGet} from '@primer/react'
+import {BaseStyles, Box, themeGet} from '@primer/react'
 import {Router} from '@reach/router'
 import {useHotkeys} from 'react-hotkeys-hook'
 import {createGlobalStyle} from 'styled-components'
+import {DiscordPreview} from './components/discord-preview'
 import {routePrefix} from './constants'
 import {useGlobalState} from './global-state'
 import {Index} from './pages'
@@ -26,15 +27,23 @@ export function App() {
   return (
     <BaseStyles>
       <GlobalStyles />
-      <Router>
-        <Index path={`${routePrefix}/`} />
-        <Palette path={`${routePrefix}/local/:paletteId`}>
-          <Scale path="scale/:scaleId"></Scale>
-          <Curve path="curve/:curveId"></Curve>
-          <NamingScheme path="naming-scheme/:namingSchemeId"></NamingScheme>
-        </Palette>
-        <NotFound default />
-      </Router>
+      <Box display="flex">
+        <Box flex={1} alignItems="stretch">
+          <Router>
+            <Index path={`${routePrefix}/`} />
+            <Palette path={`${routePrefix}/local/:paletteId`}>
+              <Scale path="scale/:scaleId"></Scale>
+              <Curve path="curve/:curveId"></Curve>
+              <NamingScheme path="naming-scheme/:namingSchemeId"></NamingScheme>
+            </Palette>
+            <NotFound default />
+          </Router>
+        </Box>
+
+        <Box flex={1}>
+          <DiscordPreview />
+        </Box>
+      </Box>
     </BaseStyles>
   )
 }

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Box, Label, Text} from '@primer/react'
+import {Box, Text} from '@primer/react'
 import {RouteComponentProps} from '@reach/router'
 import {HStack, VStack} from '../components/stack'
 import {Textarea} from '../components/textarea'

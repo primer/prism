@@ -100,7 +100,7 @@ function generateFigmaTokens(scales: Record<string, string | {[name: string]: st
   )
 }
 
-function generateStyleDictionaryTokens(scales: Record<string, string | {[name: string]: string}>) {
+export function generateStyleDictionaryTokens(scales: Record<string, string | {[name: string]: string}>) {
   const result: any = {}
 
   for (const [scaleName, scale] of Object.entries(scales)) {
