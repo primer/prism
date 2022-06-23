@@ -41,3 +41,7 @@ export function getRange(type: Curve['type']) {
 export function getContrastScore(contrast: number) {
   return contrast < 3 ? 'Fail' : contrast < 4.5 ? 'AA Large' : contrast < 7 ? 'AA' : 'AAA'
 }
+
+export function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t
+}
