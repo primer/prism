@@ -35,6 +35,11 @@ export function ImportScales({onImport}: ImportScalesProps) {
       const scales: Scale[] = Object.entries(parsedCode).map(([name, scale]) => {
         const id = uniqueId()
         const scaleArray = isArray(scale) ? scale : [scale]
+
+        if (scaleArray.length === 0) {
+          throw new Error(`Please, provide at least one color for ${name} scale`)
+        }
+
         return {id, name, colors: scaleArray.map(hexToColor), curves: {}}
       })
 
