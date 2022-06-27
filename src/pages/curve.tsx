@@ -1,5 +1,6 @@
 import {Link, navigate, RouteComponentProps} from '@reach/router'
 import React from 'react'
+import {ApplyEasingFunction} from '../components/apply-easing-function'
 import {Button} from '../components/button'
 import {CurveEditor} from '../components/curve-editor'
 import {Input} from '../components/input'
@@ -143,6 +144,10 @@ export function Curve({paletteId = '', curveId = ''}: RouteComponentProps<{palet
             </Button>
           </VStack>
         </SidebarPanel>
+        <Separator />
+        <ApplyEasingFunction
+          onApply={easingFunction => send({type: 'APPLY_EASING_FUNCTION', paletteId, curveId, easingFunction})}
+        />
         <Separator />
         <SidebarPanel title="Values">
           <VStack spacing={16}>
