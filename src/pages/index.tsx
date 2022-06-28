@@ -96,35 +96,37 @@ export function Index(props: RouteComponentProps) {
                     gap: 3
                   }}
                 >
-                  {Object.values(palette.scales).map(scale => (
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        color: readableColor(palette.backgroundColor),
-                        backgroundColor: palette.backgroundColor,
-                        height: '100%',
-                        width: '100%',
-                        borderRadius: 1,
-                        overflow: 'hidden'
-                      }}
-                      key={scale.id}
-                    >
-                      {scale.colors.map((_, index) => {
-                        const color = getColor(palette.curves, scale, index)
-                        return (
-                          <Box
-                            key={index}
-                            style={{
-                              width: '100%',
-                              height: '100%',
-                              backgroundColor: colorToHex(color)
-                            }}
-                          />
-                        )
-                      })}
-                    </Box>
-                  ))}
+                  {Object.values(palette.scales)
+                    .slice(0, 12)
+                    .map(scale => (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          color: readableColor(palette.backgroundColor),
+                          backgroundColor: palette.backgroundColor,
+                          height: '100%',
+                          width: '100%',
+                          borderRadius: 1,
+                          overflow: 'hidden'
+                        }}
+                        key={scale.id}
+                      >
+                        {scale.colors.map((_, index) => {
+                          const color = getColor(palette.curves, scale, index)
+                          return (
+                            <Box
+                              key={index}
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                backgroundColor: colorToHex(color)
+                              }}
+                            />
+                          )
+                        })}
+                      </Box>
+                    ))}
                 </Box>
                 <Text
                   sx={{
