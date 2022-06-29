@@ -16,20 +16,11 @@ import {useGlobalState} from '../global-state'
 import {Color} from '../types'
 import {colorToHex, getColor} from '../utils'
 
-const Wrapper = styled.div<{backgroundColor: string}>`
-  --color-text: ${props => readableColor(props.backgroundColor)};
-  --color-background: ${props => props.backgroundColor};
-  --color-background-secondary: ${props => mix(readableColor(props.backgroundColor), props.backgroundColor, 0.9)};
-  --color-background-secondary-hover: ${props =>
-    mix(readableColor(props.backgroundColor), props.backgroundColor, 0.85)};
-  --color-border: ${props => mix(readableColor(props.backgroundColor), props.backgroundColor, 0.75)};
-
+const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 300px 1fr;
   grid-template-rows: auto 1fr;
   grid-template-areas: 'header header' 'sidebar main';
-  color: var(--color-text);
-  background-color: var(--color-background);
   height: 100vh;
 `
 
@@ -57,7 +48,23 @@ export function Palette({paletteId = '', children}: React.PropsWithChildren<Rout
   }
 
   return (
-    <Wrapper backgroundColor={palette.backgroundColor}>
+    <Wrapper
+      style={
+        {
+          '--color-text': readableColor(palette.backgroundColor),
+          '--color-background': palette.backgroundColor,
+          '--color-background-secondary': mix(readableColor(palette.backgroundColor), palette.backgroundColor, 0.9),
+          '--color-background-secondary-hover': mix(
+            readableColor(palette.backgroundColor),
+            palette.backgroundColor,
+            0.85
+          ),
+          '--color-border': mix(readableColor(palette.backgroundColor), palette.backgroundColor, 0.75),
+          color: readableColor(palette.backgroundColor),
+          backgroundColor: palette.backgroundColor
+        } as React.CSSProperties
+      }
+    >
       <header
         style={{
           gridArea: 'header',
