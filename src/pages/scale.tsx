@@ -58,7 +58,7 @@ export function Scale({
         style={{
           flexGrow: 1,
           display: 'grid',
-          gridTemplateRows: 'auto 1fr',
+          gridTemplateRows: 'auto auto 1fr',
           gap: 16,
           padding: 16,
           height: '100%'
@@ -102,6 +102,7 @@ export function Scale({
             />
           </ButtonGroup>
         </Box>
+        <div style={{height: 8}}></div>
         <ZStack>
           <Box
             sx={{
@@ -134,32 +135,51 @@ export function Scale({
                     position: 'relative',
                     fontSize: 1,
                     display: 'grid',
-                    placeItems: 'end',
+                    placeItems: 'end center',
                     p: 2,
                     fontWeight: 'bold',
                     '&::before': {
                       content: '""',
-                      display: String(i) === index ? 'block' : 'none',
+                      display: Number(index) === i ? 'block' : 'none',
                       position: 'absolute',
                       top: '-8px',
-                      height: 4,
+                      height: Number(index) === i ? 4 : '21px',
                       left: 0,
                       right: 0,
                       backgroundColor: 'var(--color-text)',
                       borderRadius: 2
+                    },
+                    '&::after': {
+                      content: `"${i}"`,
+                      position: 'absolute',
+                      display: 'block',
+                      width: '100%',
+                      top: '-26px',
+                      left: 0,
+                      color: 'var(--color-text)',
+                      fontSize: 0,
+                      fontWeight: Number(index) === i ? 'bold' : 'normal',
+                      textAlign: 'center'
                     }
                   }}
                   onClick={() => setIndex(String(i))}
                 >
-                  {contrastScore !== 'Fail' ? (
-                    <span>
-                      {contrastScore} <CheckCircleFillIcon />
+                  <Box display="flex" alignItems="center" flexDirection="column">
+                    <span
+                      style={{
+                        transform: 'rotate(180deg)',
+                        textOrientation: 'sideways',
+                        writingMode: 'vertical-lr',
+                        whiteSpace: 'nowrap',
+                        textAlign: 'right',
+                        marginInlineEnd: 5,
+                        lineHeight: 1
+                      }}
+                    >
+                      {contrastScore}{' '}
                     </span>
-                  ) : (
-                    <span>
-                      Fail <XCircleIcon />
-                    </span>
-                  )}
+                    {contrastScore === 'Fail' ? <XCircleIcon /> : <CheckCircleFillIcon />}
+                  </Box>
                 </Box>
               )
             })}
