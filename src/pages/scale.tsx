@@ -99,9 +99,9 @@ export function Scale({
               icon={PlusIcon}
               aria-label="Add color to end of scale"
               onClick={() => {
+                send({type: 'CREATE_COLOR', paletteId, scaleId})
                 setIndex(scale.colors.length.toString())
-                send({type: 'CREATE_COLOR', paletteId, scaleId})}
-              }
+              }}
             />
           </ButtonGroup>
         </Box>
