@@ -14,7 +14,7 @@ import {HStack, VStack} from '../components/stack'
 import {routePrefix} from '../constants'
 import {useGlobalState} from '../global-state'
 import {Color} from '../types'
-import {colorToHex, getColor} from '../utils'
+import {colorToHex, getColor, hexToColor} from '../utils'
 
 const Wrapper = styled.div<{backgroundColor: string}>`
   --color-text: ${props => readableColor(props.backgroundColor)};
@@ -31,6 +31,10 @@ const Wrapper = styled.div<{backgroundColor: string}>`
   color: var(--color-text);
   background-color: var(--color-background);
   height: 100vh;
+
+  color-scheme: ${props => (hexToColor(props.backgroundColor).lightness < 50 ? 'dark' : 'light')};
+  --color-scrollbar-thumb: ${props => readableColor(props.backgroundColor) + '3'};
+  --color-scrollbar-gutter: ${props => props.backgroundColor};
 `
 
 const Main = styled.main`

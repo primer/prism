@@ -11,4 +11,25 @@ body {
     sans-serif;
   line-height: 1.5;
   box-sizing: border-box;
+  --color-scrollbar-thumb: currentColor;
+  --color-scrollbar-gutter: background;
+}
+
+*::-webkit-scrollbar {
+  width: 11px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-gutter);
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--color-scrollbar-gutter);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-scrollbar-thumb);
+  border-radius: 6px;
+  border: 3px solid var(--color-scrollbar-gutter);
 }

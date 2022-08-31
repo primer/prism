@@ -23,6 +23,22 @@ export function App() {
   useHotkeys('command+z, ctrl+z', () => send('UNDO'))
   useHotkeys('command+shift+z, ctrl+shift+z', () => send('REDO'))
 
+  React.useEffect(() => {
+    window.addEventListener('load', () => {
+      registerSW()
+    })
+    // Register the Service Worker
+    async function registerSW() {
+      if ('serviceWorker' in navigator) {
+        try {
+          await navigator.serviceWorker.register('/sw.js')
+        } catch (e) {
+          console.log('SW registration failed')
+        }
+      }
+    }
+  }, [])
+
   return (
     <BaseStyles>
       <GlobalStyles />

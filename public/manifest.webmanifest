@@ -1,0 +1,21 @@
+{
+  "name": "Primer Prism",
+  "short_name": "Prism",
+  "description": "Create cohesive, consistent, and accessible color palettes",
+  "start_url": "./",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "icons": [
+    {
+      "src": "./favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "256x256"
+    },
+    {
+      "src": "./favicon.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    }
+  ]
+}
