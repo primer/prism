@@ -27,8 +27,8 @@ jobs:
           gh api graphql --header 'GraphQL-Features: projects_next_graphql' -f query='
             mutation($project:ID!,$issue:ID!) {
               addProjectV2ItemById(input: {projectId: $project, contentId: $issue}) {
-                projectNextItem {
+                item {
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f issue=$ISSUE_ID --jq '.data.addProjectNextItem.projectNextItem.id'
+            }' -f project=$PROJECT_ID -f issue=$ISSUE_ID --jq '.data.addProjectNextItem.item.id'
