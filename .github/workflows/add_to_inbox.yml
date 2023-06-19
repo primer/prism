@@ -12,7 +12,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       ISSUE_ID: ${{ github.event.issue.node_id }}
       REACT_LABEL_ID: 'LA_kwDOHZEuLs8AAAABETw05A'
-      PROJECT_ID: 'PN_kwDNJr_NNKA'
+      PROJECT_ID: 'PVT_kwDNJr_NNKA'
     steps:
       - name: Add react label to issue
         run: |
