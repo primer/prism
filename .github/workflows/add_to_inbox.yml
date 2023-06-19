@@ -9,6 +9,7 @@ jobs:
     if: ${{ github.repository == 'primer/prism' && (github.event.action == 'opened' || github.event.action == 'reopened') }}
     runs-on: ubuntu-latest
     env:
+      # TODO: Swap out personal access token for a GitHub App token
       GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       ISSUE_ID: ${{ github.event.issue.node_id }}
       REACT_LABEL_ID: 'LA_kwDOHZEuLs8AAAABETw05A'
