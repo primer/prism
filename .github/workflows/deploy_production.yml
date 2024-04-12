@@ -15,7 +15,7 @@ permissions:
 jobs:
   deploy:
     name: Deploy
-    uses: primer/.github/.github/workflows/deploy.yml@main
+    uses: primer/.github/.github/workflows/deploy.yml@v1.0.0
     with:
       node_version: 16
       install: yarn
