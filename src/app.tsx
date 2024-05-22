@@ -29,8 +29,8 @@ export function App() {
       <Router>
         <Index path={`${routePrefix}/`} />
         <Palette path={`${routePrefix}/local/:paletteId`}>
-          <Scale path="scale/:scaleId"></Scale>
-          <Curve path="curve/:curveId"></Curve>
+          <Scale path="scale/:scaleId" />
+          <Curve path="curve/:curveId" />
         </Palette>
         <NotFound default />
       </Router>
